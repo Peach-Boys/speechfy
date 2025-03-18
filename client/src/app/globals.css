@@ -21,6 +21,7 @@
 
 body {
   background: var(--background);
+  height: 100dvh;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
