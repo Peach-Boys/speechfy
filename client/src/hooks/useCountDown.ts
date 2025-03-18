@@ -1,3 +1,4 @@
+import playBeep from '@/utils/playBeep';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -5,8 +6,8 @@ interface Props {
   initialCount: number;
 }
 
-function useCountDown({ start, initialCount = 0 }: Props) {
-  const [count, setCount] = useState<number>(1);
+function useCountDown({ start, initialCount = 1 }: Props) {
+  const [count, setCount] = useState<number>(initialCount);
 
   useEffect(() => {
     if (!start) {
@@ -14,6 +15,8 @@ function useCountDown({ start, initialCount = 0 }: Props) {
       return;
     }
     if (count > 4) return;
+
+    playBeep(count === 1 ? 1000 : 800, 100);
 
     const timer = setTimeout(() => {
       setCount((prev) => prev + 1);

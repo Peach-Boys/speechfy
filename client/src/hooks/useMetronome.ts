@@ -1,3 +1,4 @@
+import playBeep from '@/utils/playBeep';
 import { useEffect, useState } from 'react';
 
 export function useMetronome(isRunning: boolean) {
@@ -5,6 +6,8 @@ export function useMetronome(isRunning: boolean) {
 
   useEffect(() => {
     if (!isRunning) return;
+
+    playBeep(metro === 0 ? 1000 : 800, 100);
 
     const timeoutId = setTimeout(() => {
       setMetro((prev) => (prev === 3 ? 0 : prev + 1));
