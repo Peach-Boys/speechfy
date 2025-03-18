@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 export function useMetronome(isRunning: boolean) {
-  const [metro, setMetro] = useState<number>(-1);
+  const [metro, setMetro] = useState<number>(0);
 
   useEffect(() => {
     if (!isRunning) return;
