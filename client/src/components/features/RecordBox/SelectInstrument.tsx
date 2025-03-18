@@ -7,7 +7,7 @@ interface Props {
   handleNextLevel: () => void;
 }
 
-function SelectIndstrument({ handleNextLevel }: Props) {
+function SelectInstrument({ handleNextLevel }: Props) {
   return (
     <div className='w-full flex justify-between items-center'>
       <div
@@ -38,4 +38,4 @@ function SelectIndstrument({ handleNextLevel }: Props) {
   );
 }
 
-export default SelectIndstrument;
+export default SelectInstrument;

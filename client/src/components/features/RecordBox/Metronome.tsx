@@ -1,25 +1,13 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useMetronome } from '@/hooks/Metronome';
 
 interface Props {
   isRunning: boolean;
-  beat: number;
 }
 
-function Metronome({ isRunning, beat }: Props) {
-  const [metro, setMetro] = useState<number>(-1);
-  useEffect(() => {
-    if (beat == 32) return;
-    if (!isRunning) return;
-
-    const timeoutId = setTimeout(() => {
-      setMetro((prevMetro) => (prevMetro === 3 ? 0 : prevMetro + 1));
-      beat++;
-    }, 450);
-
-    return () => clearTimeout(timeoutId);
-  }, [metro, isRunning]);
+function Metronome({ isRunning }: Props) {
+  const metro = useMetronome(isRunning);
 
   return (
     <ul className='w-full flex justify-around'>

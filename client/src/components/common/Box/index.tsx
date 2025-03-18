@@ -1,16 +1,26 @@
+import clsx from 'clsx';
 import React from 'react';
 
 interface Props {
   children: React.ReactNode;
-  borderStyle: string;
+  borderStyle: 'dotted' | 'solid' | 'dashed';
   onClick?: () => void;
 }
 
+const borderClasses = {
+  dotted: 'border-dotted',
+  solid: 'border-solid',
+  dashed: 'border-dashed',
+};
+
 function Box({ children, borderStyle, onClick }: Props) {
-  const isNew = borderStyle === 'dotted';
   return (
     <div
-      className={`w-full p-[15px] border-2 rounded-md border-${borderStyle} text-center ${isNew ? 'cursor-pointer' : ''}`}
+      className={clsx(
+        'w-full p-[15px] border-2 rounded-md text-center',
+        borderClasses[borderStyle],
+        borderStyle === 'dotted' && 'cursor-pointer'
+      )}
       onClick={onClick}
     >
       {children}

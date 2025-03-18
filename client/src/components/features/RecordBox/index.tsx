@@ -4,7 +4,7 @@ import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
 import { useState } from 'react';
 import Recording from './Recording';
-import SelectIndstrument from './SelectInstrument';
+import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
 
 interface Props {
@@ -34,7 +34,7 @@ function RecordBox({ handleCloseCreate }: Props) {
             <IconClose width={15} height={15} color='#ffffff' />
           </div>
         </div>
-        {level == 0 && <SelectIndstrument handleNextLevel={handleNextLevel} />}
+        {level == 0 && <SelectInstrument handleNextLevel={handleNextLevel} />}
         {level == 1 && <SelectMode handleNextLevel={handleNextLevel} />}
         {level == 2 && <Recording />}
       </div>

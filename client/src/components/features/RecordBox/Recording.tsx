@@ -8,8 +8,6 @@ import { useState } from 'react';
 function Recording() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
 
-  let beat = 0;
-
   return (
     <div className='w-full flex flex-col items-center gap-10'>
       <div
@@ -22,7 +20,7 @@ function Recording() {
           <IconPlay />
         )}
       </div>
-      <Metronome isRunning={isRunning} beat={beat} />
+      <Metronome isRunning={isRunning} />
     </div>
   );
 }
