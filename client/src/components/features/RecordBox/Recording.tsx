@@ -8,7 +8,7 @@ import { useState } from 'react';
 
 function Recording() {
   const [isRunning, setIsRunning] = useState<boolean>(false);
-  const countdown = useCountDown({ start: isRunning, initialCount: 1 });
+  const countdown = useCountDown(isRunning);
 
   function handleChangeRunning() {
     if (isRunning) {

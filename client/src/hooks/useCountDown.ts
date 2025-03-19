@@ -1,12 +1,11 @@
 import playBeep from '@/utils/playBeep';
 import { useEffect, useState } from 'react';
 
-interface Props {
-  start: boolean;
-  initialCount: number;
-}
-
-function useCountDown({ start, initialCount = 1 }: Props) {
+function useCountDown(
+  start: boolean,
+  initialCount: number = 1,
+  bpm: number = 125
+) {
   const [count, setCount] = useState<number>(initialCount);
 
   useEffect(() => {
@@ -18,9 +17,10 @@ function useCountDown({ start, initialCount = 1 }: Props) {
 
     playBeep(count === 1 ? 1000 : 800, 100);
 
+    const time = 60000 / bpm;
     const timer = setTimeout(() => {
       setCount((prev) => prev + 1);
-    }, 480); // 기본 125bpm의 시간 480ms
+    }, time); // 기본 125bpm의 시간 480ms
 
     return () => clearTimeout(timer);
   }, [start, count, initialCount]);

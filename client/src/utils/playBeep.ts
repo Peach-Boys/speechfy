@@ -18,7 +18,7 @@ function playBeep(frequency: number, duration: number) {
   const oscillator = audioContext.createOscillator(); // 소리 생성 객체
   const gainNode = audioContext.createGain(); // 소리 볼륨 조절 노드
 
-  oscillator.type = 'sine'; // Sine wave로 부드러운 소리 발생생, 1000Hz -> 높은 소리 / 400Hz -> 낮은 소리
+  oscillator.type = 'sine'; // Sine wave로 부드러운 소리 발생, 1000Hz -> 높은 소리 / 400Hz -> 낮은 소리
   oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
 
   // 볼륨 설정
