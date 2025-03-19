@@ -1,6 +1,6 @@
 'use client';
 
-import { useMetronome } from '@/hooks/Metronome';
+import { useMetronome } from '@/hooks/useMetronome';
 
 interface Props {
   isRunning: boolean;
