@@ -1,8 +1,10 @@
 'use client';
+import { useDDSP } from '@/hooks/useDDSP';
 import { useRecord } from '@/hooks/useRecord';
 
 export default function DdspPage() {
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
+  const { loading, convertedUrl, initialize, toneTransfer } = useDDSP(audio);
   return (
     <div className='flex flex-col gap-4 p-4'>
       <h1>DDSP demo</h1>
@@ -27,16 +29,23 @@ export default function DdspPage() {
       </section>
       <section className='bg-gray-200 p-4 rounded-xl'>
         <h2 className='text-black'>2. Init DDSP Model</h2>
-        <button className='p-1 bg-white rounded-xl text-black hover:cursor-pointer'>
+        <button
+          className='p-1 bg-white rounded-xl text-black hover:cursor-pointer'
+          onClick={initialize}
+        >
           Initialize
         </button>
       </section>
       <section className='bg-gray-200 p-4 rounded-xl'>
         <h2 className='text-black'>3. Transfer Tone to tenor saxophone</h2>
-        <button className='p-1 bg-white rounded-xl text-black hover:cursor-pointer'>
+        <button
+          className='p-1 bg-white rounded-xl text-black hover:cursor-pointer'
+          onClick={() => toneTransfer()}
+        >
           Convert
         </button>
-        <audio src='' controls></audio>
+        {loading && <>loading</>}
+        {convertedUrl !== '' && <audio src={convertedUrl} controls></audio>}
       </section>
     </div>
   );

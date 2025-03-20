@@ -12,7 +12,17 @@
     "clsx": "^2.1.1",
     "next": "15.2.2",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "@magenta/music": "^1.23.1",
+    "@tensorflow/tfjs": "^2.7.0",
+    "@tensorflow/tfjs-backend-webgl": "^2.7.0",
+    "@tonejs/midi": "^2.0.15",
+    "fft.js": "^4.0.3",
+    "ndarray-resample": "^1.0.1",
+    "protobufjs": "^6.8.6",
+    "staffrender": "^0.2.1",
+    "tonal": "^2.0.0",
+    "tone": "~14.7.77"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
