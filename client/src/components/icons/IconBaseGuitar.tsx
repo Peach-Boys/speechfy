@@ -5,7 +5,6 @@ interface Props {
 }
 
 function IconBaseGuitar({ width = 16, height = 21, color = '#000000' }: Props) {
-  console.log(width);
   return (
     <svg
       width={width}
