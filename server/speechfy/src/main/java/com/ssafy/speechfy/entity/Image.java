@@ -25,5 +25,7 @@ public class Image extends BaseEntity {
     @Column(name = "file_path")
     private String filePath;
 
-    // onetomany
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Song song;
 }
