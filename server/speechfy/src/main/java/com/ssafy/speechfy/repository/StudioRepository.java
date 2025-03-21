@@ -14,7 +14,4 @@ import java.util.Optional;
 public interface StudioRepository extends JpaRepository<Studio, Integer>  {
     List<Studio> findByUser(User user);
 
-    Optional<StudioTrack> findStudioById(int id);
-
-    Optional<StudioTrack> findByStudio(Studio studio);
 }

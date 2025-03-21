@@ -16,17 +16,17 @@ import java.util.Optional;
 
 @Service
 public class WorkService {
-    private final WorkService workService;
+
     private final RecordReposiotry recordReposiotry;
     private final TrackRepository trackReposiotry;
     private final StudioRepository studioReposiotry;
     private final StudioTrackRepository studioTrackRepository;
     private final UserRepository userReposiotry;
 
-    public WorkService(RecordReposiotry recordReposiotry, TrackRepository trackReposiotry, WorkService workService, StudioRepository studioReposiotry, StudioTrackRepository studioTrackRepository, UserRepository userReposiotry) {
+    public WorkService(RecordReposiotry recordReposiotry, TrackRepository trackReposiotry, StudioRepository studioReposiotry, StudioTrackRepository studioTrackRepository, UserRepository userReposiotry) {
         this.recordReposiotry = recordReposiotry;
         this.trackReposiotry = trackReposiotry;
-        this.workService = workService;
+
         this.studioReposiotry = studioReposiotry;
 
         this.studioTrackRepository = studioTrackRepository;
@@ -46,7 +46,7 @@ public class WorkService {
         List<studioDto> studioDtoList = new ArrayList<>();
         if (studioList.size() > 0) {
             for (Studio studio : studioList) {
-                studioDto dto = workService.getStudioDto(studio.getId());
+                studioDto dto = getStudioDto(studio.getId());
                 studioDtoList.add(dto);
             }
         }
@@ -76,7 +76,7 @@ public class WorkService {
         List<workDto> trackList = new ArrayList<>();
         if (studioTrackList.size() > 0) {
             for (StudioTrack studioTrack : studioTrackList) {
-                workDto dto = workService.getWorkDto(studioId,studioTrack.getTrack().getId());
+                workDto dto = getWorkDto(studioId,studioTrack.getTrack().getId());
                 trackList.add(dto);
             }
         }
@@ -102,7 +102,7 @@ public class WorkService {
 
 
     public trackResponseDto getTrack(Integer trackId){
-        trackDto trackDto = workService.getTrackDto(trackId);
+        trackDto trackDto = getTrackDto(trackId);
         if(trackDto == null){return null;}
         else return new trackResponseDto(trackDto);
 
@@ -116,7 +116,7 @@ public class WorkService {
 
     // 레코드 반환
     public recordResponseDto getRecord(Integer trackId){
-        recordDto dto = workService.getRecordDto(trackId); //레코드 dto호출
+        recordDto dto = getRecordDto(trackId); //레코드 dto호출
         if(dto == null){
               return null;
         }else{
@@ -190,10 +190,10 @@ public class WorkService {
     }
 
     public workDto getWorkDto(Integer studioId, Integer trackId){
-        recordDto recordDto = workService.getRecordDto(trackId);//레코드 dto호출
+        recordDto recordDto = getRecordDto(trackId);//레코드 dto호출
         if(recordDto == null){return null;}
 
-        trackDto trackDto = workService.getTrackDto(trackId);// 트랙 dto호출
+        trackDto trackDto = getTrackDto(trackId);// 트랙 dto호출
         if(trackDto == null){return null;}
 /// ////////////////////////////////////////////
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
