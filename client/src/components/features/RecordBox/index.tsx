@@ -2,19 +2,17 @@
 
 import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
+import { useRecordStatusStore } from '@/stores/recordStatusStore';
 import { useState } from 'react';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
 
-interface Props {
-  handleCloseCreate: () => void;
-}
-
 const label = ['악기 선택', '녹음', '녹음 중'];
 
-function RecordBox({ handleCloseCreate }: Props) {
-  const [level, setLevel] = useState<number>(0);
+function RecordBox() {
+  const { setRecordStatus } = useRecordStatusStore();
+  const [level, setLevel] = useState<number>(0); // 녹음 절차
 
   function handleNextLevel() {
     setLevel(level + 1);
@@ -22,7 +20,7 @@ function RecordBox({ handleCloseCreate }: Props) {
 
   function handleClose() {
     setLevel(0);
-    handleCloseCreate();
+    setRecordStatus(false);
   }
 
   return (
