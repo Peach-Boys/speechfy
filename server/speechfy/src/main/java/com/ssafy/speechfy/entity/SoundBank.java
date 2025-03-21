@@ -19,6 +19,4 @@ public class SoundBank extends BaseEntity {
     @JoinColumn(name = "track_id")
     private Track track;
 
-    @Column(name = "order")
-    private int order;
 }

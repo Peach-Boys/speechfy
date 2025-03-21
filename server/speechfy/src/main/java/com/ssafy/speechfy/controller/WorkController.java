@@ -49,11 +49,11 @@ public class WorkController {
         return ResponseEntity.ok(null);
     }
 
-    @DeleteMapping("/studio/{studioId}")
-    public ResponseEntity<String> deleteWorkList(){
-
-        return ResponseEntity.ok(null);
-    }
+//    @DeleteMapping("/studio/{studioId}")
+//    public ResponseEntity<String> deleteWorkList(){
+//
+//        return ResponseEntity.ok(null);
+//    }
 
     @PostMapping("/track")
     public ResponseEntity<workResponseDto> createWork(@CookieValue(name = "userId") Integer userId, @RequestBody workCreateDto workCreateDto ){
