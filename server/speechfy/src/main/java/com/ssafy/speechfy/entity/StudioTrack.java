@@ -1,9 +1,17 @@
 package com.ssafy.speechfy.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Table(name = "studio_track")
+@Setter
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudioTrack extends BaseEntity {
 
     @EmbeddedId

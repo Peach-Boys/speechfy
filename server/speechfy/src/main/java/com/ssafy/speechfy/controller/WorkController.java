@@ -20,9 +20,9 @@ public class WorkController {
     }
 
     @GetMapping("/studio")
-    public ResponseEntity<workListResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
-        workListResponseDto responseDto = workService.getStudioList();
-        return ResponseEntity.ok(null);
+    public ResponseEntity<studioResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
+        studioResponseDto responseDto = workService.getStudioList(userId);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/studio")
@@ -39,8 +39,8 @@ public class WorkController {
 
     @GetMapping("/studio/{studioId}")
     public ResponseEntity<workListResponseDto> getWorkList(@PathVariable Integer studioId){
-
-        return ResponseEntity.ok(null);
+        workListResponseDto responseDto = workService.getWorkList(studioId);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PatchMapping("/studio/{studioId}")
@@ -57,7 +57,7 @@ public class WorkController {
 
     @PostMapping("/track")
     public ResponseEntity<workResponseDto> createWork(@CookieValue(name = "userId") Integer userId, @RequestBody workCreateDto workCreateDto ){
-
+        workResponseDto responseDto = workService.createWork(userId,workCreateDto);
        return ResponseEntity.ok(null);
     }
 
