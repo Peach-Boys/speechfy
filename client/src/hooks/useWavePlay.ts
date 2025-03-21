@@ -6,15 +6,16 @@ import { useEffect, useRef, useState } from 'react';
  * @param {boolean} isPlay 애니메이션을 실행할지 여부
  * @returns {number} 현재 애니메이션의 인덱스 (0~19 사이를 반복)
  */
-function useWavePlay(isPlay: boolean) {
+function useWavePlay(isPlay: boolean): number {
   const [longIdx, setLongIdx] = useState<number>(-1);
   const [direction, setDirection] = useState<number>(1); // 1이면 오른쪽, -1이면 왼쪽
   const aniRef = useRef<number | null>(null);
-  const lastTimeRef = useRef<number>(performance.now()); // 마지막으로 <div>가 바뀐 시간간
+  const lastTimeRef = useRef<number>(performance.now()); // 마지막으로 <div>가 바뀐 시간
 
   useEffect(() => {
     if (!isPlay) {
       setLongIdx(-1);
+      setDirection(1);
       return;
     }
 
