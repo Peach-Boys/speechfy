@@ -25,7 +25,7 @@ function WavePlay({ isPlay }: Props) {
       {Array.from({ length: 20 }).map((_, idx) => {
         const distance = Math.abs(longIdx - idx);
         const baseScale = 0.5;
-        const maxScale = 3;
+        const maxScale = 4;
         const waveEffect = Math.max(baseScale, maxScale - distance * 0.3);
 
         return (
