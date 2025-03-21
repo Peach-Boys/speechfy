@@ -27,6 +27,6 @@ public class StudioTrack extends BaseEntity {
     @JoinColumn(name = "track_id")
     private Track track;
 
-    @Column(name = "order")
+    @Column(name = "`order`")
     private int order;
 }

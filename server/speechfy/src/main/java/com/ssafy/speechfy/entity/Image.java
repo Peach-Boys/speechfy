@@ -26,6 +26,6 @@ public class Image extends BaseEntity {
     private String filePath;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "song_id")
     private Song song;
 }
