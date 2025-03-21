@@ -1,6 +1,6 @@
 'use client';
 
-import NewRecord from '@/components/features/NewRecord/NewRecord';
+import NewRecord from '@/components/features/NewRecord';
 import RecordBox from '@/components/features/RecordBox';
 import { useState } from 'react';
 
