@@ -24,37 +24,43 @@ public class SongController {
 
     @GetMapping("/{studioId}")
     public ResponseEntity<songListResponseDto> getSongList(@PathVariable Integer studioId) {
-        return null;
+
+
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/{studioId}")
     public ResponseEntity<?> createSongList(@PathVariable Integer studioId) {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/{studioId}")
     public ResponseEntity<?> updateSongList(@PathVariable Integer studioId, @RequestBody songListUpdateDto updateDto) {
-        return null;
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/{studioId}")
     public ResponseEntity<?> deleteSongList(@PathVariable Integer studioId) {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/download/{studioId}")
     public ResponseEntity<?> getSong(@PathVariable Integer studioId) {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/download/{studioId}")
     public ResponseEntity<?> deleteSong(@PathVariable Integer studioId) {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("cover/{studioId}")
     public ResponseEntity<?> createCover(@PathVariable Integer studioId, @RequestBody imageCreateDto createDto) {
-        return null;
+        return ResponseEntity.ok(null);
     }
 
 

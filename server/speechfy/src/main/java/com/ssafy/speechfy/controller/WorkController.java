@@ -20,54 +20,62 @@ public class WorkController {
     }
 
     @GetMapping("/studio")
-    public ResponseEntity<workListResponseDto> getStudioList(){
-        return null;
+    public ResponseEntity<workListResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
+        workListResponseDto responseDto = workService.getStudioList();
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/studio")
-    public ResponseEntity<String> createStudio(){
-        return null;
+    public ResponseEntity<String> createStudio(@CookieValue(name = "userId") Integer userId){
+
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/studio/{studioId}")
     public ResponseEntity<String> deleteStudio(@PathVariable Integer studioId){
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/studio/{studioId}")
     public ResponseEntity<workListResponseDto> getWorkList(@PathVariable Integer studioId){
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @PatchMapping("/studio/{studioId}")
     public ResponseEntity<String> updateWorkList(
             @PathVariable Integer studioId ,@RequestBody workListUpdateDto workListUpdateDto){
-        return null;
+        return ResponseEntity.ok(null);
     }
 
     @DeleteMapping("/studio/{studioId}")
     public ResponseEntity<String> deleteWorkList(){
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 
     @PostMapping("/track")
-    public ResponseEntity<workResponseDto> createWork(@RequestBody workCreateDto workCreateDto ){
-        return null;
+    public ResponseEntity<workResponseDto> createWork(@CookieValue(name = "userId") Integer userId, @RequestBody workCreateDto workCreateDto ){
+
+       return ResponseEntity.ok(null);
     }
 
     @GetMapping("/track/{trackId}")
-    public ResponseEntity<trackResponseDto> getTrack(@PathVariable Integer trackId){
-        return null;
+    public ResponseEntity<trackResponseDto> getTrack(@CookieValue(name = "userId") Integer userId, @PathVariable Integer trackId){
+
+        return ResponseEntity.ok(null);
     }
     @PatchMapping("/track/{trackId}")
-    public ResponseEntity<String> updateTrack(
+    public ResponseEntity<String> updateTrack( @CookieValue(name = "userId") Integer userId,
             @PathVariable Integer trackId, @RequestBody trackUpdateDto trackUpdateDto ){
-        return null;
+        return ResponseEntity.ok(null);
     }
 
     @GetMapping("/record/{trackId}")
     public ResponseEntity<recordResponseDto> getRecord(@PathVariable Integer trackId){
-        return null;
+        recordResponseDto responseDto = workService.getRecord(trackId);
+       return ResponseEntity.ok(responseDto);
     }
 }
 
