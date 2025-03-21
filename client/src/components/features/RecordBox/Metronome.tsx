@@ -4,10 +4,12 @@ import { useMetronome } from '@/hooks/useMetronome';
 
 interface Props {
   isRunning: boolean;
+  bpm: number;
+  onFinish: () => void;
 }
 
-function Metronome({ isRunning }: Props) {
-  const metro = useMetronome(isRunning);
+function Metronome({ isRunning, bpm, onFinish }: Props) {
+  const metro = useMetronome(isRunning, bpm, onFinish);
 
   return (
     <ul className='w-full flex justify-around'>
