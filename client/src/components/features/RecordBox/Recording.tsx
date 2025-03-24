@@ -22,27 +22,17 @@ function Recording({ setIsCreate }: Props) {
   }
 
   return (
-    <div className='w-full flex flex-col items-center gap-10'>
+    <div className='w-full flex flex-col items-center'>
       {isRecording ? (
-        <div
-          className={clsx(
-            'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
-            countdown > 4 ? 'block' : 'none'
-          )}
-          onClick={handleFinishRecording}
-        >
-          <IconStop width={20} height={20} color='#000000' />
-        </div>
-      ) : (
-        <div>
+        <div className='w-full flex flex-col items-center gap-10'>
           <div
             className={clsx(
               'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
               countdown > 4 ? 'block' : 'none'
             )}
-            onClick={startRecording}
+            onClick={handleFinishRecording}
           >
-            <IconPlay />
+            <IconStop width={20} height={20} color='#000000' />
           </div>
           {countdown > 4 ? (
             <Metronome
@@ -55,6 +45,16 @@ function Recording({ setIsCreate }: Props) {
               {countdown == 4 ? 'GO!' : countdown}
             </span>
           )}
+        </div>
+      ) : (
+        <div
+          className={clsx(
+            'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
+            countdown > 4 ? 'block' : 'none'
+          )}
+          onClick={startRecording}
+        >
+          <IconPlay />
         </div>
       )}
     </div>
