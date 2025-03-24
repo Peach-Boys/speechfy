@@ -67,7 +67,7 @@ function Track() {
           </div>
           <Button
             onClick={handlePlayTrack}
-            buttonStyle='btn-jihyegra text-white'
+            buttonStyle='bg-jihyegra text-white'
           >
             트랙 재생
           </Button>

@@ -4,17 +4,19 @@ import NewRecord from '@/components/features/CreateRecord/NewRecord';
 import RecordBox from '@/components/features/RecordBox';
 import { useState } from 'react';
 
-function CreateRecord() {
+interface Props {
+  tracks: []; // 추후 type 만들면 상세 타입 명시
+}
+
+function CreateRecord({ tracks }: Props) {
   const [isCreate, setIsCreate] = useState<boolean>(false);
-  const traks = ['']; // 추후 트랙 데이터를 받아오는 과정에 수정 예정
-  console.log(isCreate);
 
   return (
-    <div>
+    <div className='w-full'>
       {isCreate ? (
         <RecordBox setIsCreate={setIsCreate} />
       ) : (
-        <NewRecord initial={traks.length === 0} setIsCreate={setIsCreate} />
+        <NewRecord initial={tracks.length === 0} setIsCreate={setIsCreate} />
       )}
     </div>
   );
