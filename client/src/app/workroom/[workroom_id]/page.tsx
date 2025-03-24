@@ -18,7 +18,7 @@ async function WorkroomPage({ params }: Props) {
 
   return (
     <div className='w-full h-full flex flex-col'>
-      <ul className='w-full h-fit flex'>
+      <ul className='w-full h-fit flex mb-2'>
         {ROUTE_TABS.map((tab) => (
           <li
             key={tab.tabSrc}
@@ -31,6 +31,9 @@ async function WorkroomPage({ params }: Props) {
           </li>
         ))}
       </ul>
+      <div className='w-full flex justify-center text-xl h-fit'>
+        당근할아버지 프로젝트
+      </div>
       <TrackTab />
       <div className='w-full px-5'>
         <button className='w-full h-fit py-3 rounded-[10px] bg-gray-600'>
