@@ -4,40 +4,59 @@ import Metronome from '@/components/features/RecordBox/Metronome';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import useCountDown from '@/hooks/useCountDown';
-import { useState } from 'react';
+import { useRecord } from '@/hooks/useRecord';
+import clsx from 'clsx';
+import React, { SetStateAction } from 'react';
 
-function Recording() {
-  const [isRunning, setIsRunning] = useState<boolean>(false);
-  const countdown = useCountDown(isRunning);
+interface Props {
+  setIsCreate: React.Dispatch<SetStateAction<boolean>>;
+}
 
-  function handleChangeRunning() {
-    if (isRunning) {
-      setIsRunning(false);
-      return;
-    }
-    setIsRunning(true);
+function Recording({ setIsCreate }: Props) {
+  const { isRecording, startRecording, stopRecording } = useRecord();
+  const countdown = useCountDown(isRecording);
+
+  function handleFinishRecording() {
+    setIsCreate(false);
+    stopRecording();
   }
 
   return (
     <div className='w-full flex flex-col items-center gap-10'>
-      <div
-        className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={handleChangeRunning}
-      >
-        {isRunning ? (
+      {isRecording ? (
+        <div
+          className={clsx(
+            'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
+            countdown > 4 ? 'block' : 'none'
+          )}
+          onClick={handleFinishRecording}
+        >
           <IconStop width={20} height={20} color='#000000' />
-        ) : (
-          <IconPlay />
-        )}
-      </div>
-      {isRunning &&
-        (countdown > 4 ? (
-          <Metronome isRunning={isRunning} />
-        ) : (
-          <span className='text-xl font-bold'>
-            {countdown == 4 ? 'GO!' : countdown}
-          </span>
-        ))}
+        </div>
+      ) : (
+        <div>
+          <div
+            className={clsx(
+              'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
+              countdown > 4 ? 'block' : 'none'
+            )}
+            onClick={startRecording}
+          >
+            <IconPlay />
+          </div>
+          {countdown > 4 ? (
+            <Metronome
+              isRecording={isRecording}
+              bpm={125}
+              onFinish={handleFinishRecording}
+            />
+          ) : (
+            <span className='text-xl font-bold'>
+              {countdown == 4 ? 'GO!' : countdown}
+            </span>
+          )}
+        </div>
+      )}
     </div>
   );
 }
