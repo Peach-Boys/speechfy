@@ -2,14 +2,15 @@ package com.ssafy.speechfy.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
 @Embeddable
 @EqualsAndHashCode
 @NoArgsConstructor
+@Setter
+@Getter
 public class SoundBankId implements Serializable {
 
     @Column(name = "user_id")

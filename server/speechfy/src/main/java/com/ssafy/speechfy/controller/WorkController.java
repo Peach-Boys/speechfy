@@ -55,9 +55,12 @@ public class WorkController {
 //        return ResponseEntity.ok(null);
 //    }
 
-    @PostMapping("/track")
-    public ResponseEntity<workResponseDto> createWork(@CookieValue(name = "userId") Integer userId, @RequestBody workCreateDto workCreateDto ){
-        workResponseDto responseDto = workService.createWork(userId,workCreateDto);
+    @PostMapping("/track/{studioId}")
+    public ResponseEntity<workResponseDto> createWork(
+            @CookieValue(name = "userId") Integer userId,
+            @RequestParam Integer studioId,
+            @RequestBody workCreateDto workCreateDto ){
+        workResponseDto responseDto = workService.createWork(userId,studioId, workCreateDto);
        return ResponseEntity.ok(null);
     }
 
