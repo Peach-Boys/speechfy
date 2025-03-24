@@ -27,35 +27,36 @@ function Recording({ setIsCreate }: Props) {
         <div
           className={clsx(
             'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
-            isRecording ? (countdown > 4 ? 'block' : 'none') : 'block'
+            countdown > 4 ? 'block' : 'none'
           )}
           onClick={handleFinishRecording}
         >
           <IconStop width={20} height={20} color='#000000' />
         </div>
       ) : (
-        <div
-          className={clsx(
-            'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
-            isRecording ? (countdown > 4 ? 'block' : 'none') : 'block'
+        <div>
+          <div
+            className={clsx(
+              'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
+              countdown > 4 ? 'block' : 'none'
+            )}
+            onClick={startRecording}
+          >
+            <IconPlay />
+          </div>
+          {countdown > 4 ? (
+            <Metronome
+              isRecording={isRecording}
+              bpm={125}
+              onFinish={handleFinishRecording}
+            />
+          ) : (
+            <span className='text-xl font-bold'>
+              {countdown == 4 ? 'GO!' : countdown}
+            </span>
           )}
-          onClick={startRecording}
-        >
-          <IconPlay />
         </div>
       )}
-      {isRecording &&
-        (countdown > 4 ? (
-          <Metronome
-            isRecording={isRecording}
-            bpm={125}
-            onFinish={handleFinishRecording}
-          />
-        ) : (
-          <span className='text-xl font-bold'>
-            {countdown == 4 ? 'GO!' : countdown}
-          </span>
-        ))}
     </div>
   );
 }
