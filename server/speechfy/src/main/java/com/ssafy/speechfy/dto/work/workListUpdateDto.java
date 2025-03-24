@@ -13,5 +13,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class workListUpdateDto {
-    private List<trackDto> trackList;
+    private List<trackUpdateDto> updateList;
 }

@@ -23,21 +23,20 @@ public class WorkService {
     private final StudioRepository studioReposiotry;
     private final StudioTrackRepository studioTrackRepository;
     private final UserRepository userReposiotry;
-
-
     private final SoundBankRepository soundBankReposiotry;
 
+    private final S3Service s3Service;
 
-    public WorkService(RecordReposiotry recordReposiotry, TrackRepository trackReposiotry, StudioRepository studioReposiotry, StudioTrackRepository studioTrackRepository, UserRepository userReposiotry,   SoundBankRepository soundBankReposiotry) {
+
+    public WorkService(RecordReposiotry recordReposiotry, TrackRepository trackReposiotry, StudioRepository studioReposiotry, StudioTrackRepository studioTrackRepository, UserRepository userReposiotry, SoundBankRepository soundBankReposiotry, S3Service s3Service) {
         this.recordReposiotry = recordReposiotry;
         this.trackReposiotry = trackReposiotry;
         this.studioReposiotry = studioReposiotry;
         this.studioTrackRepository = studioTrackRepository;
         this.userReposiotry = userReposiotry;
-
-
         this.soundBankReposiotry = soundBankReposiotry;
 
+        this.s3Service = s3Service;
     }
 
     public studioResponseDto getStudioList(Integer userId) {
@@ -46,7 +45,7 @@ public class WorkService {
 
         List<Studio> studioList = studioReposiotry.findByUser(user);
         List<studioDto> studioDtoList = new ArrayList<>();
-        if (studioList.size() > 0) {
+        if (!studioList.isEmpty()) {
             for (Studio studio : studioList) {
                 studioDto dto = getStudioDto(studio.getId());
                 studioDtoList.add(dto);
@@ -55,12 +54,21 @@ public class WorkService {
         return new studioResponseDto(studioDtoList);
     }
 
-    public void createStudio(){
+    public void createStudio(Integer userId, studioCreateDto studioCreateDto){
+        Optional<User> optionalUser = userReposiotry.findById(userId);
+        User user = checkElementException(optionalUser, "User not found");
 
+        Studio studio = new Studio(
+                0,
+                user,
+                studioCreateDto.getStudioName()
+        );
+        studioReposiotry.save(studio);
     }
 
-    public void deleteStudio(){
-
+    public void deleteStudio( Integer userId, Integer studioId){
+        deleteWorkList(userId,studioId);
+        studioReposiotry.deleteById(studioId);
     }
 
     public workListResponseDto getWorkList(Integer studioId) {
@@ -70,7 +78,7 @@ public class WorkService {
 
         List<StudioTrack> studioTrackList = studioTrackRepository.findByStudio(studio);
         List<workDto> trackList = new ArrayList<>();
-        if (studioTrackList.size() > 0) {
+        if (!studioTrackList.isEmpty()) {
             for (StudioTrack studioTrack : studioTrackList) {
                 workDto dto = getWorkDto(studioId,studioTrack.getTrack().getId());
                 trackList.add(dto);
@@ -80,12 +88,28 @@ public class WorkService {
 
     }
 
-    public void updateWorkList(){
+    public void updateWorkList(Integer studioId, workListUpdateDto workListUpdateDto){
+        // 트랙 내용 변경
+        List<trackUpdateDto> dtoList = workListUpdateDto.getUpdateList();
+        if(!dtoList.isEmpty()){
+            for (trackUpdateDto trackUpdateDto : dtoList) {
+                int trackId = trackUpdateDto.getTrack().getTrackId();
+                updateTrack(studioId,trackId,trackUpdateDto);
+            }
+        }
+
 
     }
 
-    public void deleteWorkList(){
+    public void deleteWorkList(Integer userId ,Integer studioId){
+        // 스튜디오 트랙 리스트 호출
+        Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
+        Studio studio = checkElementException(optionalStudio, "Studio not found");
+        List<StudioTrack> StudioTrackList = studioTrackRepository.findByStudio(studio);
+        // 스튜디오 트랙 리스트 삭제
+        if (!StudioTrackList.isEmpty()) studioTrackRepository.deleteAll(StudioTrackList);
 
+        // 사운드뱅크에 없는 트랙 삭제하기
     }
 
     public workResponseDto createWork(Integer userId, Integer studioId, workCreateDto workCreateDto) {
@@ -100,11 +124,30 @@ public class WorkService {
         //악기이넘사용
         Instrument instrument = Instrument.values()[workCreateDto.getInstrumentId()];
 
+        // 트랙 이름 자동 생성
+        String trackName = null;
+        // 어떻게 생성해야할지 모르겠음
+
         // 레코드 엔티티 불러오기
         Optional<Record> optionalRecord = recordReposiotry.findById(workCreateDto.getRecordId());
-        Record record = checkElementException(optionalRecord, "Record not found");
+        Record record;
+        if (optionalRecord.isPresent()) {
+            record = optionalRecord.get();
+        }
+        else{
+            record = new Record(
+                    0,
+                    s3Service.generatePresignedUrl("레코드 파일이름 어떻게 저장할지 정해야함")
+            );
+            recordReposiotry.save(record);
+            //저장한 것 다시 반환(id 값 받기위해서)
+           optionalRecord = recordReposiotry.findById(workCreateDto.getRecordId());
+           record = checkElementException(optionalRecord, "Record not found");
+        }
+
 
         //S3이용해 트랙Id불러오기
+        String filePath = s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
         //????
         /// //////////
 
@@ -114,8 +157,8 @@ public class WorkService {
                 user,
                 instrument, //인스트러먼트 이넘이라 모르겠으
                 record,
-                null,   // dto에서 네임을 안받은듯
-                 null
+                trackName,   // dto에서 네임을 안받은듯, 먼저 백에서 네임 자동생성 방식인ㄷ ㅡㅅ
+                filePath
         );
         trackReposiotry.save(track);
 
@@ -147,22 +190,34 @@ public class WorkService {
         );
         soundBankReposiotry.save(soundBank);
 
+
+
         // workResponseDto생성
         workDto dto = getWorkDto(studio.getId(), track.getId());
         return new workResponseDto(dto);
     }
 
+/// /////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-    public trackResponseDto getTrack(Integer trackId){
+    // 트랙ID에 해당하는 트랙 반환
+    public trackResponseDto getTrack(Integer trackId, Integer id){
         trackDto trackDto = getTrackDto(trackId);
         return new trackResponseDto(trackDto);
-
-
-
     }
 
-    public void updateTrack(){
+    public void updateTrack(Integer studioId,Integer trackId, trackUpdateDto trackUpdateDto){
+        Optional<Track> optionalTrack = trackReposiotry.findById(trackUpdateDto.getTrack().getTrackId());
+        Track track = checkElementException(optionalTrack, "Track not found");
+        Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
+        Studio studio = checkElementException(optionalStudio, "Studio not found");
+        Optional<StudioTrack> optionalStudioTrack = studioTrackRepository.findByStudioAndTrack(studio, track);
+        StudioTrack studioTrack = checkElementException(optionalStudioTrack, "StudioTrack not found");
+
+        track.setName(trackUpdateDto.getTrack().getTrackName());
+        trackReposiotry.save(track);
+        studioTrack.setOrder(trackUpdateDto.getOrder());
+        studioTrackRepository.save(studioTrack);
+
 
     }
 
@@ -172,6 +227,7 @@ public class WorkService {
         return new recordResponseDto(dto);
     }
 
+    // 레코드 저장
     private recordDto getRecordDto(Integer trackId){
         Optional<Record> optionalRecord = recordReposiotry.findById(trackId);
         Record record = checkElementException(optionalRecord, "Record not found");
@@ -198,7 +254,7 @@ public class WorkService {
         List<StudioTrack> StudioTrackList = studioTrackRepository.findByStudio(studio);
         List<String> instrumentList = new ArrayList<String>();
 
-        if(StudioTrackList.size() > 0) {
+        if(!StudioTrackList.isEmpty()) {
             for (StudioTrack studioTrack : StudioTrackList) {
                 Optional<Track> optionalTrack = trackReposiotry.findById(studioTrack.getTrack().getId()); /// studioTrack.getTrackId넣기 지금 안되서 못넣음
                 Track track = checkElementException(optionalTrack, "Track not found");
@@ -241,6 +297,64 @@ public class WorkService {
             throw new NoSuchElementException(message);
         }
     }
+
+    public void deleteTrackList(Integer userId ,Integer studioId) {
+        // 스튜디오트랙 리스트 가져오기
+        Optional<User> optionalUser = userReposiotry.findById(userId);
+        User user = checkElementException(optionalUser, "User not found");
+        Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
+        Studio studio = checkElementException(optionalStudio, "Studio not found");
+        List<StudioTrack> studioTrackList = studioTrackRepository.findByStudio(studio);
+
+        // 사운드 뱅크에 없는 트랙 삭제하기
+        if (!studioTrackList.isEmpty()) {
+            for (StudioTrack studioTrack : studioTrackList) {
+                Optional<Track> optionalTrack = trackReposiotry.findById(studioTrack.getTrack().getId());
+                Track track = checkElementException(optionalTrack, "Track not found");
+                SoundBankId soundBankId = new SoundBankId(
+                        user.getId(),
+                        studio.getId()
+                );
+                Optional<SoundBank> optionalSoundBank = soundBankReposiotry.findById(soundBankId);
+                if (optionalSoundBank.isEmpty()) {
+                    trackReposiotry.delete(track);
+                }
+            }
+        }
+    }
+
+
+//    public void deleteSoundBankList(Integer userId) { // 삭제시 트랙도 삭제
+//        // 스튜디오트랙 리스트 가져오기
+//        Optional<User> optionalUser = userReposiotry.findById(userId);
+//        User user = checkElementException(optionalUser, "User not found");
+//        List<SoundBank> soundBankList = soundBankReposiotry.findByUser(user);
+//
+//        //  해당 사운드뱅크 안의 트랙 삭제후 해당 뱅크 삭제 삭제하기
+//        if (soundBankList.size() > 0) {
+//            for (SoundBank soundBank : soundBankList) {
+//                trackReposiotry.delete(soundBank.getTrack());
+//                soundBankReposiotry.delete(soundBank);
+//            }
+//        }
+//    }
+
+
+//        public void deleteStudioList(Integer userId){ // 유저의 스튜디오 전체 삭제
+//            // 스튜디오 리스트 가져오기
+//            Optional<User> optionalUser = userReposiotry.findById(userId);
+//            User user = checkElementException(optionalUser, "User not found");
+//            List<Studio> studioList = studioReposiotry.findByUser(user);
+//
+//            //  해당 사운드뱅크 안의 트랙 삭제후 해당 뱅크 삭제 삭제하기
+//            if (studioList.size() > 0) {
+//                for (Studio studio : studioList) {
+//                    deleteStudio(userId, studio.getId());
+//                }
+//            }
+//        }
+//    }
+
 
 
 
