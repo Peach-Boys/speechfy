@@ -2,7 +2,7 @@ import IconPeachPeach from '@/components/icons/IconPeachPeach';
 
 function Header() {
   return (
-    <header className='fixed w-full h-[44px] max-w-[500px] p-1 flex items-center gap-2 bg-gray-800'>
+    <header className='fixed w-full h-[60px] max-w-[500px] px-3 flex items-center gap-3 bg-gray-800'>
       <div className='w-[40px] h-[40px] flex justify-center items-center rounded-full bg-jihyegra'>
         <IconPeachPeach width={30} height={30} />
       </div>
