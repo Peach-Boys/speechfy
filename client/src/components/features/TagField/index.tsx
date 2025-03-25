@@ -19,10 +19,8 @@ function TagField({ select, setSelect }: Props) {
   return (
     <div className='w-full min-h-1/2 max-h-5/6 p-8 flex flex-col items-center gap-10 rounded-xl bg-gray-900 overflow-auto'>
       <div className='w-full h-full flex flex-col items-center gap-3'>
-        <span className='w-full flex justify-center text-2xl font-[SEBANG]'>
-          장르
-        </span>
-        <div className='flex flex-wrap gap-1 justify-center font-[SEBANG]'>
+        <span className='w-full flex justify-center text-2xl'>장르</span>
+        <div className='flex flex-wrap gap-1 justify-center'>
           {TAGS.genre.map((g) => (
             <Tag
               key={g.id}
@@ -34,10 +32,8 @@ function TagField({ select, setSelect }: Props) {
         </div>
       </div>
       <div className='w-full h-full flex flex-col items-center gap-3'>
-        <span className='w-full flex justify-center text-2xl font-[SEBANG]'>
-          분위기
-        </span>
-        <div className='flex flex-wrap gap-1 justify-center text-black font-[SEBANG]'>
+        <span className='w-full flex justify-center text-2xl'>분위기</span>
+        <div className='flex flex-wrap gap-1 justify-center text-black'>
           {TAGS.mood.map((m) => (
             <Tag
               key={m.id}

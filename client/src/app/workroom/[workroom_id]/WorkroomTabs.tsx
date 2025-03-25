@@ -9,7 +9,7 @@ interface Props {
 
 function WorkroomTabs({ tab, setTab }: Props) {
   return (
-    <ul className='w-full h-fit flex mb-5'>
+    <ul className='w-full h-fit flex mb-10'>
       {ROUTE_TABS.map((t) => (
         <li
           key={t.tabSrc}
