@@ -14,5 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class workListResponseDto {
+    private String studioName;
     private List<workDto> trackList;
 }

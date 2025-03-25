@@ -68,6 +68,7 @@ public class WorkService {
         studioReposiotry.save(studio);
     }
 
+    @Transactional
     public void deleteStudio( Integer userId, Integer studioId){
         deleteWorkList(userId,studioId);
         studioReposiotry.deleteById(studioId);
@@ -86,7 +87,7 @@ public class WorkService {
                 trackList.add(dto);
             }
         }
-        return new workListResponseDto(trackList);
+        return new workListResponseDto(studio.getName(), trackList);
 
     }
 
