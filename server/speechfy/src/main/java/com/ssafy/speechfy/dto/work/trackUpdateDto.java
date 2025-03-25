@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class trackUpdateDto {
-    private trackDto track;
     private int order;
+    private trackDto track;
+
 }

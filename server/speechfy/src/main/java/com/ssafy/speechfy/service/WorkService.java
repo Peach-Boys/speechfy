@@ -9,7 +9,9 @@ import com.ssafy.speechfy.entity.Record;
 import com.ssafy.speechfy.repository.*;
 import com.ssafy.speechfy.entity.*;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -53,7 +55,7 @@ public class WorkService {
         }
         return new studioResponseDto(studioDtoList);
     }
-
+    @Transactional
     public void createStudio(Integer userId, studioCreateDto studioCreateDto){
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
@@ -88,6 +90,7 @@ public class WorkService {
 
     }
 
+    @Transactional
     public void updateWorkList(Integer studioId, workListUpdateDto workListUpdateDto){
         // 트랙 내용 변경
         List<trackUpdateDto> dtoList = workListUpdateDto.getUpdateList();
@@ -100,7 +103,7 @@ public class WorkService {
 
 
     }
-
+    @Transactional
     public void deleteWorkList(Integer userId ,Integer studioId){
         // 스튜디오 트랙 리스트 호출
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
@@ -111,8 +114,11 @@ public class WorkService {
 
         // 사운드뱅크에 없는 트랙 삭제하기
     }
-
+    @Transactional
     public workResponseDto createWork(Integer userId, Integer studioId, workCreateDto workCreateDto) {
+        System.out.println(workCreateDto.getInstrumentId());
+        System.out.println(workCreateDto.getOrder());
+        System.out.println(workCreateDto.getRecordId());
         // 유저 엔티티 불러오기
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
@@ -123,9 +129,10 @@ public class WorkService {
 
         //악기이넘사용
         Instrument instrument = Instrument.values()[workCreateDto.getInstrumentId()];
-
+        System.out.println(instrument.name());
         // 트랙 이름 자동 생성
-        String trackName = null;
+        String trackName = "Track_" + System.currentTimeMillis();
+        System.out.println(trackName);
         // 어떻게 생성해야할지 모르겠음
 
         // 레코드 엔티티 불러오기
@@ -139,15 +146,13 @@ public class WorkService {
                     0,
                     s3Service.generatePresignedUrl("레코드 파일이름 어떻게 저장할지 정해야함")
             );
-            recordReposiotry.save(record);
-            //저장한 것 다시 반환(id 값 받기위해서)
-           optionalRecord = recordReposiotry.findById(workCreateDto.getRecordId());
-           record = checkElementException(optionalRecord, "Record not found");
+           record = recordReposiotry.save(record);
         }
 
 
         //S3이용해 트랙Id불러오기
-        String filePath = s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
+        String filePath = "fjalkfjlkdfjalfjalf";
+                //s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
         //????
         /// //////////
 
@@ -200,13 +205,13 @@ public class WorkService {
 /// /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 트랙ID에 해당하는 트랙 반환
-    public trackResponseDto getTrack(Integer trackId, Integer id){
+    public trackResponseDto getTrack(Integer userId, Integer trackId){
         trackDto trackDto = getTrackDto(trackId);
         return new trackResponseDto(trackDto);
     }
-
+    @Transactional
     public void updateTrack(Integer studioId,Integer trackId, trackUpdateDto trackUpdateDto){
-        Optional<Track> optionalTrack = trackReposiotry.findById(trackUpdateDto.getTrack().getTrackId());
+        Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
@@ -222,14 +227,14 @@ public class WorkService {
     }
 
     // 레코드 반환
-    public recordResponseDto getRecord(Integer trackId){
-        recordDto dto = getRecordDto(trackId); //레코드 dto호출
+    public recordResponseDto getRecord(Integer recordId){
+        recordDto dto = getRecordDto(recordId); //레코드 dto호출
         return new recordResponseDto(dto);
     }
 
     // 레코드 저장
-    private recordDto getRecordDto(Integer trackId){
-        Optional<Record> optionalRecord = recordReposiotry.findById(trackId);
+    private recordDto getRecordDto(Integer recordId){
+        Optional<Record> optionalRecord = recordReposiotry.findById(recordId);
         Record record = checkElementException(optionalRecord, "Record not found");
         return new recordDto( //dto에 담기
                 record.getId(),
@@ -244,7 +249,8 @@ public class WorkService {
                 track.getId(),
                 track.getInstrument().name(),// 이거 이넘으롱 어떻게 받음 ?
                 track.getFilePath(),
-                track.getName()
+                track.getName(),
+                track.getRecord().getId()
         );
     }
 
@@ -256,14 +262,14 @@ public class WorkService {
 
         if(!StudioTrackList.isEmpty()) {
             for (StudioTrack studioTrack : StudioTrackList) {
-                Optional<Track> optionalTrack = trackReposiotry.findById(studioTrack.getTrack().getId()); /// studioTrack.getTrackId넣기 지금 안되서 못넣음
-                Track track = checkElementException(optionalTrack, "Track not found");
+                Track track = studioTrack.getTrack();
                 instrumentList.add(track.getInstrument().name());//
             }
         }
         return new studioDto(
                 studio.getId(),
                 studio.getUser().getId(),
+                studioId,
                 studio.getName(),
                 instrumentList,
                 null    // 불러오는 방식 모르겠음
@@ -271,16 +277,12 @@ public class WorkService {
     }
 
     public workDto getWorkDto(Integer studioId, Integer trackId){
-        recordDto recordDto = getRecordDto(trackId);//레코드 dto호출
+
         trackDto trackDto = getTrackDto(trackId);// 트랙 dto호출
+        recordDto recordDto = getRecordDto(trackDto.getRecordId());//레코드 dto호출
 
-        Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
-        Studio studio = checkElementException(optionalStudio, "Studio not found");
-
-        Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
-        Track track = checkElementException(optionalTrack, "Track not found");
-
-        Optional<StudioTrack> optionalStudioTrack = studioTrackRepository.findByStudioAndTrack(studio, track);
+        StudioTrackId studioTrackId = new StudioTrackId(studioId, trackId);
+        Optional<StudioTrack> optionalStudioTrack = studioTrackRepository.findById(studioTrackId);
         StudioTrack studioTrack = checkElementException(optionalStudioTrack, "StudioTrack not found");
 
         return new workDto(
@@ -297,7 +299,7 @@ public class WorkService {
             throw new NoSuchElementException(message);
         }
     }
-
+    @Transactional
     public void deleteTrackList(Integer userId ,Integer studioId) {
         // 스튜디오트랙 리스트 가져오기
         Optional<User> optionalUser = userReposiotry.findById(userId);
@@ -309,15 +311,13 @@ public class WorkService {
         // 사운드 뱅크에 없는 트랙 삭제하기
         if (!studioTrackList.isEmpty()) {
             for (StudioTrack studioTrack : studioTrackList) {
-                Optional<Track> optionalTrack = trackReposiotry.findById(studioTrack.getTrack().getId());
-                Track track = checkElementException(optionalTrack, "Track not found");
                 SoundBankId soundBankId = new SoundBankId(
                         user.getId(),
-                        studio.getId()
-                );
+                        studioTrack.getTrack().getId()
+                        );
                 Optional<SoundBank> optionalSoundBank = soundBankReposiotry.findById(soundBankId);
                 if (optionalSoundBank.isEmpty()) {
-                    trackReposiotry.delete(track);
+                    trackReposiotry.deleteById(studioTrack.getTrack().getId());
                 }
             }
         }
