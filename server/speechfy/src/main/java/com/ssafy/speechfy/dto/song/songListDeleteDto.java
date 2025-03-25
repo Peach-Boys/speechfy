@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class songListDeleteDto {
-    private int id;
+    private Integer id;
 }
