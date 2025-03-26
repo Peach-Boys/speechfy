@@ -9,7 +9,7 @@ interface Props {
 
 function WorkroomTabs({ tab, setTab }: Props) {
   return (
-    <ul className='w-full h-fit flex mb-10'>
+    <ul className='sticky top-0 w-full max-w-[500px] h-fit flex mb-10 bg-gray-800'>
       {ROUTE_TABS.map((t) => (
         <li
           key={t.tabSrc}
