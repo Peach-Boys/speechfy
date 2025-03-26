@@ -10,4 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class imageCreateDto {
+    private String title;
+    private String mood;
+    private String genre;
+
 }

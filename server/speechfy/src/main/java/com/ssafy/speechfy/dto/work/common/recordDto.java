@@ -12,5 +12,4 @@ import lombok.Setter;
 public class recordDto {
     private Integer recordId;
     private String recordUrl;
-    private String recordName;
 }

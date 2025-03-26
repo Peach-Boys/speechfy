@@ -14,4 +14,5 @@ public class trackDto {
    private String instrumentName;
    private String trackUrl;
    private String trackName;
+   private Integer recordId;
 }

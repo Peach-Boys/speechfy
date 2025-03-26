@@ -10,4 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class userDeleteDto {
+    private Integer id;
 }

@@ -12,26 +12,31 @@ import org.springframework.web.bind.annotation.*;
 public class userController {
     @PostMapping("/signup")
     public ResponseEntity<?> createUser(@RequestBody userCreateDto userCreateDto) {
+
         return null;
     }
     @PostMapping("/login")
     public ResponseEntity<?> login() {
-        return null;
+        return ResponseEntity.ok(null);
     }
     @PostMapping("/logout")
     public ResponseEntity<?> logout() {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
     @GetMapping
     public ResponseEntity<userResponseDto> getUser() {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
     @PatchMapping
     public ResponseEntity<?> updateUser(@RequestBody userUpdateDto userUpdateDto) {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
     @DeleteMapping
     public ResponseEntity<?> deleteUser() {
-        return null;
+
+        return ResponseEntity.ok(null);
     }
 }

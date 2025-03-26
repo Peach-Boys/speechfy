@@ -10,4 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class imageResponseDto {
+    private Integer id;
+    private String presignedUrl;
+
 }

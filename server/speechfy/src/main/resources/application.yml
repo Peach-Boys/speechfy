@@ -17,3 +17,9 @@ logging:
     #    org.hibernate.type: trace
     org.springframework.security: debug
     com.ssafy.wevi: debug
+aws:
+  s3:
+    bucket-name: your-bucket-name
+  region: ap-northeast-2
+  access-key: YOUR_AWS_ACCESS_KEY
+  secret-key: YOUR_AWS_SECRET_KEY
