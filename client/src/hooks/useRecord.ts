@@ -18,12 +18,13 @@ export function useRecord(): {
   isRecording: boolean;
   startRecording: () => Promise<void>;
   audio: string;
-  stopRecording: () => void;
+  stopRecording: () => Promise<string>;
 } {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [audio, setAudio] = useState<string>('');
   const mediaRecorderRef = useRef<MediaRecorder>(null);
   const audioChunksRef = useRef<Blob[]>([]);
+  const recordingPromiseRef = useRef<(value: string) => void>(() => {});
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
@@ -40,6 +41,7 @@ export function useRecord(): {
         });
         const audioUrl = URL.createObjectURL(audioBlob);
         setAudio(audioUrl);
+        recordingPromiseRef.current?.(audioUrl);
       };
       mediaRecorderRef.current.start();
       setIsRecording(true);
@@ -51,11 +53,15 @@ export function useRecord(): {
       }
     }
   };
-  const stopRecording = () => {
-    if (mediaRecorderRef.current) {
-      mediaRecorderRef.current.stop();
-    }
-    setIsRecording(false);
+  const stopRecording = (): Promise<string> => {
+    return new Promise<string>((resolve) => {
+      recordingPromiseRef.current = resolve;
+      if (mediaRecorderRef.current) {
+        mediaRecorderRef.current.stop();
+      }
+      setIsRecording(false);
+    });
   };
+
   return { isRecording, startRecording, audio, stopRecording };
 }

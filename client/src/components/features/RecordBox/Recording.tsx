@@ -4,21 +4,20 @@ import Metronome from '@/components/features/RecordBox/Metronome';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import useCountDown from '@/hooks/useCountDown';
-import { useRecord } from '@/hooks/useRecord';
 import clsx from 'clsx';
-import React, { SetStateAction } from 'react';
+import React from 'react';
 
 interface Props {
-  setIsCreate: React.Dispatch<SetStateAction<boolean>>;
+  isRecording: boolean;
+  stopRecording: () => Promise<string>;
+  startRecording: () => Promise<void>;
 }
 
-function Recording({ setIsCreate }: Props) {
-  const { isRecording, startRecording, stopRecording } = useRecord();
+function Recording({ isRecording, stopRecording, startRecording }: Props) {
   const countdown = useCountDown(isRecording);
 
-  function handleFinishRecording() {
-    setIsCreate(false);
-    stopRecording();
+  async function handleFinishRecording() {
+    await stopRecording();
   }
 
   return (
