@@ -1,3 +1,4 @@
+import MswInitializer from '@/components/common/MswProvider';
 import { Metadata } from 'next';
 import React from 'react';
 
@@ -10,7 +11,12 @@ export const metadata: Metadata = {
 };
 
 function WorkroomLayout({ children }: Props) {
-  return <div className='w-full h-full'>{children}</div>;
+  return (
+    <>
+      <MswInitializer />
+      <div className='w-full h-full'>{children}</div>
+    </>
+  );
 }
 
 export default WorkroomLayout;
