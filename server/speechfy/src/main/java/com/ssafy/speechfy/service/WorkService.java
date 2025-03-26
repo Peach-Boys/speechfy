@@ -3,7 +3,6 @@ package com.ssafy.speechfy.service;
 import com.ssafy.speechfy.dto.work.common.recordDto;
 import com.ssafy.speechfy.dto.work.common.studioDto;
 import com.ssafy.speechfy.dto.work.common.trackDto;
-import com.ssafy.speechfy.dto.work.common.workDto;
 import com.ssafy.speechfy.dto.work.record.recordResponseDto;
 import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
 import com.ssafy.speechfy.dto.work.studio.studioResponseDto;
@@ -172,18 +171,18 @@ public class WorkService {
         if (optionalRecord.isPresent()) {
             record = optionalRecord.get();
         }
-        else{
+        else{ // 해당 레코드가 없으면 새로운 레코드 만들기
             record = new Record(
                     0,
-                    s3Service.generatePresignedUrl("레코드 파일이름 어떻게 저장할지 정해야함")
+                    "저장할 파일에 대한 S3 경로 알고리즘 만들어야 함"
             );
-           record = recordReposiotry.save(record);
+            record = recordReposiotry.save(record);
         }
 
 
-        //S3이용해 트랙Id불러오기
-        String filePath = "fjalkfjlkdfjalfjalf";
-                //s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
+        //S3파일경로 만들기
+        String filePath = "저장할 파일에 대한 S3 경로 알고리즘 만들어얗ㅁ";
+        //s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
         //????
         /// //////////
 
@@ -229,13 +228,6 @@ public class WorkService {
         return getWorkResponseDto(studio.getId(), track.getId());
     }
 
-/// /////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    // 트랙ID에 해당하는 트랙 반환
-    public trackResponseDto getTrack(Integer userId, Integer trackId){
-        trackDto trackDto = getTrackDto(trackId);
-        return new trackResponseDto(trackDto);
-    }
     @Transactional
     public void updateTrack(Integer studioId,Integer trackId, trackUpdateDto trackUpdateDto){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
@@ -249,15 +241,9 @@ public class WorkService {
         trackReposiotry.save(track);
         studioTrack.setOrder(trackUpdateDto.getOrder());
         studioTrackRepository.save(studioTrack);
-
-
     }
 
-    // 레코드 반환
-    public recordResponseDto getRecord(Integer recordId){
-        recordDto dto = getRecordDto(recordId); //레코드 dto호출
-        return new recordResponseDto(dto);
-    }
+    /// /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 레코드 저장
     private recordDto getRecordDto(Integer recordId){
@@ -266,6 +252,16 @@ public class WorkService {
         return new recordDto( //dto에 담기
                 record.getId(),
                 record.getFilePath()
+        );
+    }
+
+    // 레코드 반환
+    public recordResponseDto getRecordResponseDto(Integer recordId){
+        recordDto recordDto = getRecordDto(recordId); //레코드 dto호출
+        return new recordResponseDto(
+                recordDto.getRecordId(),
+                "presigne 주소 저장해서 반환"
+                //s3Service.generatePresignedUrl("presigne 주소 저장해서 반환")
         );
     }
 
@@ -281,6 +277,18 @@ public class WorkService {
         );
     }
 
+    // 트랙ID에 해당하는 트랙 반환
+    public trackResponseDto getTrackResponseDto(Integer trackId){
+        trackDto trackDto = getTrackDto(trackId);
+        return new trackResponseDto(
+                trackDto.getTrackId(),
+                trackDto.getInstrumentName(),
+                "presigne 주소 저장해서 반환",
+                // s3Service.generatePresignedUrl("presigne 주소 저장해서 반환"),
+                trackDto.getTrackName(),
+                trackDto.getRecordId());
+    }
+
     private studioDto getStudioDto(Integer studioId){
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
@@ -293,6 +301,7 @@ public class WorkService {
                 instrumentList.add(track.getInstrument().name());//
             }
         }
+
         return new studioDto(
                 studio.getId(),
                 studio.getUser().getId(),
@@ -305,18 +314,18 @@ public class WorkService {
 
     public workResponseDto getWorkResponseDto(Integer studioId, Integer trackId){
 
-        trackDto trackDto = getTrackDto(trackId);// 트랙 dto호출
-        recordDto recordDto = getRecordDto(trackDto.getRecordId());//레코드 dto호출
-
         StudioTrackId studioTrackId = new StudioTrackId(studioId, trackId);
         Optional<StudioTrack> optionalStudioTrack = studioTrackRepository.findById(studioTrackId);
         StudioTrack studioTrack = checkElementException(optionalStudioTrack, "StudioTrack not found");
 
+        trackResponseDto trackResponseDto = getTrackResponseDto(trackId);
+        recordResponseDto recordResponseDto = getRecordResponseDto(trackResponseDto.getRecordId());
+
         return new workResponseDto(
                 studioTrack.getOrder(),
-                trackDto,
-                recordDto
-                );
+                trackResponseDto,
+                recordResponseDto
+        );
     }
 
     public static <T> T checkElementException(Optional<T> optional, String message) {

@@ -1,6 +1,5 @@
 package com.ssafy.speechfy.dto.work.work;
 
-import com.ssafy.speechfy.dto.work.common.workDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -74,8 +74,8 @@ public class WorkController {
     }
 
     @GetMapping("/track/{trackId}")
-    public ResponseEntity<trackResponseDto> getTrack(@CookieValue(name = "userId") Integer userId, @PathVariable Integer trackId){
-        trackResponseDto responseDto = workService.getTrack(userId, trackId);
+    public ResponseEntity<trackResponseDto> getTrack(@PathVariable Integer trackId){
+        trackResponseDto responseDto = workService.getTrackResponseDto(trackId);
         return ResponseEntity.ok(responseDto);
     }
     @PatchMapping("/track/{studioId}/{trackId}")
@@ -87,7 +87,7 @@ public class WorkController {
 
     @GetMapping("/record/{recordId}")
     public ResponseEntity<recordResponseDto> getRecord(@PathVariable Integer recordId){
-        recordResponseDto responseDto = workService.getRecord(recordId);
+        recordResponseDto responseDto = workService.getRecordResponseDto(recordId);
        return ResponseEntity.ok(responseDto);
     }
 }

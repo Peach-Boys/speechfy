@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class songListResponseDto {
-    private List<songDto> songList;
+    private List<songResponseDto> songList;
 }
