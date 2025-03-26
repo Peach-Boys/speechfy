@@ -1,4 +1,4 @@
-package com.ssafy.speechfy;
+package com.ssafy.speechfy.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
