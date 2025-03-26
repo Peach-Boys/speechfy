@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang='en'>
       <body className={`antialiased flex justify-center bg-gray-800`}>
         <Header />
-        <div className='relative top-11 w-[500px] h-[calc(100dvh-44px)] bg-gray-800 font-[SEBANG]'>
+        <div className='relative top-15 w-[500px] h-[calc(100dvh-60px)] bg-gray-800 font-[Pretendard]'>
           {children}
         </div>
       </body>
