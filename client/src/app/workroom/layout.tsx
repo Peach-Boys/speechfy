@@ -1,4 +1,4 @@
-import MswInitializer from '@/components/common/MswProvider';
+import MswInitializer from '@/components/common/MswInitializer';
 import { Metadata } from 'next';
 import React from 'react';
 
