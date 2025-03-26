@@ -23,6 +23,7 @@ function RecordBox({ setIsCreate }: Props) {
   }
 
   function handleClose() {
+    setIsCreate(false);
     setLevel(0);
   }
 

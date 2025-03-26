@@ -27,7 +27,7 @@ function useWavePlay(isPlay: boolean): number {
       // 100ms마다 숫자를 업데이트하여 애니메이션 속도를 일정하게 유지
       if (time - lastTimeRef.current >= 100) {
         setLongIdx((prev) => {
-          if (prev === 19) {
+          if (prev === 20) {
             setDirection(-1);
             return 18;
           } else if (prev === 0) {
