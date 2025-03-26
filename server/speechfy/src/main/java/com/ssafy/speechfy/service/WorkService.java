@@ -175,7 +175,7 @@ public class WorkService {
         else{
             record = new Record(
                     0,
-                    s3Service.generatePresignedUrl("레코드 파일이름 어떻게 저장할지 정해야함")
+                    s3Service.generatePresignedUrl("레코드 파일이름 어떻게 저장할지 정해야함").toString()
             );
            record = recordReposiotry.save(record);
         }
