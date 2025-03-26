@@ -15,10 +15,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body className={`antialiased flex justify-center bg-gray-800`}>
+      <body className={`antialiased flex justify-center`}>
         <Header />
-        <div className='relative top-15 w-[500px] h-[calc(100dvh-60px)] bg-gray-800 font-[Pretendard]'>
-          {children}
+        <div className='relative w-[500px] h-[100dvh] overflow-hidden flex flex-col bg-gray-800 font-[Pretendard]'>
+          <div className='h-[60px]' /> {/* Header space */}
+          <div className='flex-1 overflow-y-auto'>{children}</div>
         </div>
       </body>
     </html>

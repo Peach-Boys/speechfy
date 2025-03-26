@@ -15,7 +15,7 @@ function PlayBar({ currentTime, endTime }: Props) {
       </div>
       <div className='relative w-full h-1.5 bg-gray-500 rounded-full overflow-hidden'>
         <div
-          className='absolute top-0 left-0 h-full bg-jihyegra transition-all duration-300'
+          className='absolute top-0 left-0 h-full rounded-full bg-gradient-to-r from-pink-500 to-orange-400 shadow-md'
           style={{ width: `${percent}%` }}
         />
       </div>
