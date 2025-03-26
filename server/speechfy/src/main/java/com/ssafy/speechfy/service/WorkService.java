@@ -1,17 +1,24 @@
 package com.ssafy.speechfy.service;
 
-import com.ssafy.speechfy.dto.work.*;
 import com.ssafy.speechfy.dto.work.common.recordDto;
 import com.ssafy.speechfy.dto.work.common.studioDto;
 import com.ssafy.speechfy.dto.work.common.trackDto;
 import com.ssafy.speechfy.dto.work.common.workDto;
+import com.ssafy.speechfy.dto.work.record.recordResponseDto;
+import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
+import com.ssafy.speechfy.dto.work.studio.studioResponseDto;
+import com.ssafy.speechfy.dto.work.track.trackResponseDto;
+import com.ssafy.speechfy.dto.work.track.trackUpdateDto;
+import com.ssafy.speechfy.dto.work.work.workCreateDto;
+import com.ssafy.speechfy.dto.work.work.workListResponseDto;
+import com.ssafy.speechfy.dto.work.work.workListUpdateDto;
+import com.ssafy.speechfy.dto.work.work.workResponseDto;
 import com.ssafy.speechfy.entity.Record;
 import com.ssafy.speechfy.repository.*;
 import com.ssafy.speechfy.entity.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -70,6 +77,7 @@ public class WorkService {
 
     @Transactional
     public void deleteStudio( Integer userId, Integer studioId){
+
         deleteWorkList(userId,studioId);
         studioReposiotry.deleteById(studioId);
     }
@@ -80,10 +88,10 @@ public class WorkService {
         Studio studio = checkElementException(optionalStudio, "Studio not found");
 
         List<StudioTrack> studioTrackList = studioTrackRepository.findByStudio(studio);
-        List<workDto> trackList = new ArrayList<>();
+        List<workResponseDto> trackList = new ArrayList<>();
         if (!studioTrackList.isEmpty()) {
             for (StudioTrack studioTrack : studioTrackList) {
-                workDto dto = getWorkDto(studioId,studioTrack.getTrack().getId());
+                workResponseDto dto = getWorkResponseDto(studioId,studioTrack.getTrack().getId());
                 trackList.add(dto);
             }
         }
@@ -97,7 +105,7 @@ public class WorkService {
         List<trackUpdateDto> dtoList = workListUpdateDto.getUpdateList();
         if(!dtoList.isEmpty()){
             for (trackUpdateDto trackUpdateDto : dtoList) {
-                int trackId = trackUpdateDto.getTrack().getTrackId();
+                int trackId = trackUpdateDto.getTrackId();
                 updateTrack(studioId,trackId,trackUpdateDto);
             }
         }
@@ -105,15 +113,37 @@ public class WorkService {
 
     }
     @Transactional
-    public void deleteWorkList(Integer userId ,Integer studioId){
+    public void deleteWorkList(Integer userId,Integer studioId){ // 사운드뱅크 삭제 위해 userId필요
         // 스튜디오 트랙 리스트 호출
+
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
-        List<StudioTrack> StudioTrackList = studioTrackRepository.findByStudio(studio);
-        // 스튜디오 트랙 리스트 삭제
-        if (!StudioTrackList.isEmpty()) studioTrackRepository.deleteAll(StudioTrackList);
+        List<StudioTrack> studioTrackList = studioTrackRepository.findByStudio(studio);
+        List<Integer> trackIdList = new ArrayList<>();
 
-        // 사운드뱅크에 없는 트랙 삭제하기
+        if (!studioTrackList.isEmpty()) {
+            for (StudioTrack studioTrack : studioTrackList) {
+                trackIdList.add(studioTrack.getTrack().getId());
+            }
+        }
+
+        // 스튜디오 트랙 리스트 삭제
+        if (!studioTrackList.isEmpty()) studioTrackRepository.deleteAll(studioTrackList);
+
+        // 사운드 뱅크에 없는 트랙 삭제하기
+        if (!trackIdList.isEmpty()) {
+            for (Integer trackId : trackIdList) {
+                SoundBankId soundBankId = new SoundBankId(
+                        userId,
+                        trackId
+                );
+                Optional<SoundBank> optionalSoundBank = soundBankReposiotry.findById(soundBankId);
+                if (optionalSoundBank.isEmpty()) {
+                    trackReposiotry.deleteById(trackId);
+                }
+            }
+        }
+
     }
     @Transactional
     public workResponseDto createWork(Integer userId, Integer studioId, workCreateDto workCreateDto) {
@@ -196,11 +226,7 @@ public class WorkService {
         );
         soundBankReposiotry.save(soundBank);
 
-
-
-        // workResponseDto생성
-        workDto dto = getWorkDto(studio.getId(), track.getId());
-        return new workResponseDto(dto);
+        return getWorkResponseDto(studio.getId(), track.getId());
     }
 
 /// /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -219,7 +245,7 @@ public class WorkService {
         Optional<StudioTrack> optionalStudioTrack = studioTrackRepository.findByStudioAndTrack(studio, track);
         StudioTrack studioTrack = checkElementException(optionalStudioTrack, "StudioTrack not found");
 
-        track.setName(trackUpdateDto.getTrack().getTrackName());
+        track.setName(trackUpdateDto.getTrackName());
         trackReposiotry.save(track);
         studioTrack.setOrder(trackUpdateDto.getOrder());
         studioTrackRepository.save(studioTrack);
@@ -277,7 +303,7 @@ public class WorkService {
         );
     }
 
-    public workDto getWorkDto(Integer studioId, Integer trackId){
+    public workResponseDto getWorkResponseDto(Integer studioId, Integer trackId){
 
         trackDto trackDto = getTrackDto(trackId);// 트랙 dto호출
         recordDto recordDto = getRecordDto(trackDto.getRecordId());//레코드 dto호출
@@ -286,7 +312,7 @@ public class WorkService {
         Optional<StudioTrack> optionalStudioTrack = studioTrackRepository.findById(studioTrackId);
         StudioTrack studioTrack = checkElementException(optionalStudioTrack, "StudioTrack not found");
 
-        return new workDto(
+        return new workResponseDto(
                 studioTrack.getOrder(),
                 trackDto,
                 recordDto
@@ -300,29 +326,7 @@ public class WorkService {
             throw new NoSuchElementException(message);
         }
     }
-    @Transactional
-    public void deleteTrackList(Integer userId ,Integer studioId) {
-        // 스튜디오트랙 리스트 가져오기
-        Optional<User> optionalUser = userReposiotry.findById(userId);
-        User user = checkElementException(optionalUser, "User not found");
-        Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
-        Studio studio = checkElementException(optionalStudio, "Studio not found");
-        List<StudioTrack> studioTrackList = studioTrackRepository.findByStudio(studio);
 
-        // 사운드 뱅크에 없는 트랙 삭제하기
-        if (!studioTrackList.isEmpty()) {
-            for (StudioTrack studioTrack : studioTrackList) {
-                SoundBankId soundBankId = new SoundBankId(
-                        user.getId(),
-                        studioTrack.getTrack().getId()
-                        );
-                Optional<SoundBank> optionalSoundBank = soundBankReposiotry.findById(soundBankId);
-                if (optionalSoundBank.isEmpty()) {
-                    trackReposiotry.deleteById(studioTrack.getTrack().getId());
-                }
-            }
-        }
-    }
 
 
 //    public void deleteSoundBankList(Integer userId) { // 삭제시 트랙도 삭제

@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.work;
+package com.ssafy.speechfy.dto.work.track;
 
 import com.ssafy.speechfy.dto.work.common.trackDto;
 import lombok.AllArgsConstructor;

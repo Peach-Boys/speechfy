@@ -2,7 +2,6 @@ package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.dto.song.imageCreateDto;
 import com.ssafy.speechfy.dto.song.songListResponseDto;
-import com.ssafy.speechfy.dto.song.songListUpdateDto;
 import com.ssafy.speechfy.service.MusicGenService;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.SongService;
@@ -35,10 +34,6 @@ public class SongController {
         return ResponseEntity.ok(null);
     }
 
-    @PatchMapping("/{studioId}")
-    public ResponseEntity<?> updateSongList(@PathVariable Integer studioId, @RequestBody songListUpdateDto updateDto) {
-        return ResponseEntity.ok(null);
-    }
 
     @DeleteMapping("/{studioId}")
     public ResponseEntity<?> deleteSongList(@PathVariable Integer studioId) {

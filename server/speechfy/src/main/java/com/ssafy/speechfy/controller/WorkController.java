@@ -1,7 +1,14 @@
 package com.ssafy.speechfy.controller;
 
-import com.ssafy.speechfy.dto.work.*;
-
+import com.ssafy.speechfy.dto.work.record.recordResponseDto;
+import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
+import com.ssafy.speechfy.dto.work.studio.studioResponseDto;
+import com.ssafy.speechfy.dto.work.track.trackResponseDto;
+import com.ssafy.speechfy.dto.work.track.trackUpdateDto;
+import com.ssafy.speechfy.dto.work.work.workCreateDto;
+import com.ssafy.speechfy.dto.work.work.workListResponseDto;
+import com.ssafy.speechfy.dto.work.work.workListUpdateDto;
+import com.ssafy.speechfy.dto.work.work.workResponseDto;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.WorkService;
 import org.springframework.http.ResponseEntity;
@@ -51,7 +58,7 @@ public class WorkController {
     }
 
     @DeleteMapping("/studio/{studioId}/reset")
-    public ResponseEntity<String> deleteWorkList(@CookieValue(name = "userId") Integer userId, @PathVariable Integer studioId){
+    public ResponseEntity<String> deleteWorkList( @CookieValue(name = "userId") Integer userId, @PathVariable Integer studioId){
         workService.deleteWorkList(userId, studioId);
         return ResponseEntity.ok(null);
     }

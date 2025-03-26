@@ -1,5 +1,6 @@
-package com.ssafy.speechfy.dto.song;
+package com.ssafy.speechfy.dto.work.record;
 
+import com.ssafy.speechfy.dto.work.common.recordDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class songListDeleteDto {
-    private Integer id;
+public class recordResponseDto {
+    private recordDto record;
 }

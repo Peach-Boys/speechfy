@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.work;
+package com.ssafy.speechfy.dto.work.studio;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class workListDeleteDto {
-    private Integer id;
+public class studioCreateDto {
+    private String studioName;
 }
