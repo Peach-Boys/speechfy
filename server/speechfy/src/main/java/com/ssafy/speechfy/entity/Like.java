@@ -3,7 +3,7 @@ package com.ssafy.speechfy.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "like")
+@Table(name = "`like`")
 public class Like extends BaseEntity{
 
     @EmbeddedId

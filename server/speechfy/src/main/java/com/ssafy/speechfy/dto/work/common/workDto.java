@@ -10,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public  class workDto {
-    private Integer workId;
+    private Integer order;
     private trackDto track;
     private recordDto record;
 }

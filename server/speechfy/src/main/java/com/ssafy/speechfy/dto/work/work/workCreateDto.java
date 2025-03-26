@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.song;
+package com.ssafy.speechfy.dto.work.work;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,5 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class songListDeleteDto {
+public class workCreateDto {
+    private Integer instrumentId;
+    private Integer recordId;
+    private Integer order;
 }
