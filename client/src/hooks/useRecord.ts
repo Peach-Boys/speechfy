@@ -25,9 +25,12 @@ export function useRecord(): {
   const mediaRecorderRef = useRef<MediaRecorder>(null);
   const audioChunksRef = useRef<Blob[]>([]);
   const recordingPromiseRef = useRef<(value: string) => void>(() => {});
+  const streamRef = useRef<MediaStream>(null);
+
   const startRecording = async () => {
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
       mediaRecorderRef.current = new MediaRecorder(stream);
       audioChunksRef.current = [];
       mediaRecorderRef.current.ondataavailable = (event: BlobEvent) => {
@@ -56,6 +59,13 @@ export function useRecord(): {
   const stopRecording = (): Promise<string> => {
     return new Promise<string>((resolve) => {
       recordingPromiseRef.current = resolve;
+
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach((track) => {
+          track.stop();
+        });
+      }
+
       if (mediaRecorderRef.current) {
         mediaRecorderRef.current.stop();
       }
