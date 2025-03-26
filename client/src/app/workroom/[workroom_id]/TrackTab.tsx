@@ -7,24 +7,12 @@ import IconReset from '@/components/icons/IconReset';
 import { ITrack } from '@/types/track';
 import { useState } from 'react';
 
-const DUMMYTRACKS: ITrack[] = [
-  {
-    trackId: 1,
-    instrumentName: 'SoundHelix-Song-1',
-    isPlaying: false,
-    trackName: 'SoundHelix-Song-1',
-    trackUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
-  },
-  {
-    trackId: 1,
-    instrumentName: 'SoundHelix-Song-1',
-    isPlaying: false,
-    trackName: 'SoundHelix-Song-1',
-    trackUrl: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3',
-  },
-];
-function TrackTab() {
-  const [tracks, setTracks] = useState<ITrack[]>(DUMMYTRACKS);
+interface Props {
+  tracks: ITrack[];
+  setTracks: React.Dispatch<React.SetStateAction<ITrack[]>>;
+}
+
+function TrackTab({ tracks, setTracks }: Props) {
   const [isAllPlay, setIsAllPlay] = useState<boolean>(false);
   function handlePlayAll() {
     setIsAllPlay(true);
@@ -52,8 +40,7 @@ function TrackTab() {
         {tracks.map((track) => (
           <Track key={track.trackId} track={track} isAllPlay={isAllPlay} />
         ))}
-        <CreateRecord setTracks={setTracks} tracks={tracks} />{' '}
-        {/* 임시로 빈 배열 입력 */}
+        <CreateRecord setTracks={setTracks} tracks={tracks} />
       </div>
     </div>
   );
