@@ -8,17 +8,30 @@ import WavePlay from '@/components/features/Track/WavePlay';
 import IconDoubleCircle from '@/components/icons/IconDoubleCircle';
 import IconTripleDots from '@/components/icons/IconTripleDots';
 import useOutSideClick from '@/hooks/useOutSideClick';
-import { useRef, useState } from 'react';
+import { useRef, useState, useEffect } from 'react';
+import { ITrack } from '@/types/track';
 
-function Track() {
+interface Props {
+  track: ITrack;
+}
+
+function Track({ track }: Props) {
   const [isPlay, setIsPlay] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isSelInstOpen, setIsSelInstOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectInstRef = useRef<HTMLDivElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   function handlePlayTrack() {
-    setIsPlay(!isPlay);
+    if (!audioRef.current) return;
+    if (!isPlay) {
+      audioRef.current.play();
+      setIsPlay(true);
+    } else {
+      audioRef.current.pause();
+      setIsPlay(false);
+    }
   }
 
   function handleOpenMenu() {
@@ -32,6 +45,23 @@ function Track() {
   }
 
   useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
+
+  // 재생시간 확인. 차후 재생 바 구현 여부에 따라 사용
+  useEffect(() => {
+    const audioEl = audioRef.current;
+    if (!audioEl) return;
+
+    const handleTimeUpdate = () => {
+      console.log('현재 재생 시간:', audioEl.currentTime);
+      console.log('전체 재생 시간:', audioEl.duration);
+    };
+
+    audioEl.addEventListener('timeupdate', handleTimeUpdate);
+
+    return () => {
+      audioEl.removeEventListener('timeupdate', handleTimeUpdate);
+    };
+  }, []);
 
   return (
     <Box borderStyle='solid'>
@@ -69,11 +99,13 @@ function Track() {
             onClick={handlePlayTrack}
             buttonStyle='bg-jihyegra text-white'
           >
-            트랙 재생
+            {!isPlay ? '재생' : '일시정지'}
           </Button>
         </div>
+
         <WavePlay isPlay={isPlay} />
       </div>
+      <audio ref={audioRef} src={track.trackUrl} />
     </Box>
   );
 }

@@ -9,3 +9,7 @@ export interface BaseRecord {
   recordId: number;
   recordUrl: string;
 }
+
+export interface ITrack extends BaseTrack {
+  isPlaying: boolean;
+}
