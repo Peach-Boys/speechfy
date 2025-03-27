@@ -6,7 +6,7 @@ import TrackTab from '@/app/workroom/[workroom_id]/TrackTab';
 import WorkroomTabs from '@/app/workroom/[workroom_id]/WorkroomTabs';
 import { useGetTracks } from '@/service/queries/useGetTracks';
 import { TrackListItem } from '@/service/types/Workspace';
-import { ITrack } from '@/types/track';
+import { useWorkRoomStore } from '@/stores/workroomStore';
 import { useEffect, useState } from 'react';
 
 interface Props {
@@ -16,7 +16,8 @@ interface Props {
 function ClientWorkroom({ id }: Props) {
   const [tab, setTab] = useState<string>('work');
   const [select, setSelect] = useState<(number | null)[]>([null, null]);
-  const [tracks, setTracks] = useState<ITrack[]>([]);
+  // const [tracks, setTracks] = useState<ITrack[]>([]);
+  const { setTracks } = useWorkRoomStore();
   const { data, isLoading, isError } = useGetTracks(id);
 
   useEffect(() => {
@@ -27,6 +28,7 @@ function ClientWorkroom({ id }: Props) {
 
   useEffect(() => {
     if (data && !isLoading) {
+      console.log(data);
       setTracks(
         data.trackList.map((trackData: TrackListItem) => ({
           trackId: trackData.track.trackId,
@@ -34,6 +36,7 @@ function ClientWorkroom({ id }: Props) {
           trackUrl: trackData.track.trackUrl,
           trackName: trackData.track.trackName,
           isPlaying: false,
+          order: trackData.order,
         }))
       );
     }

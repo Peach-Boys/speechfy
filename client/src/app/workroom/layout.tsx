@@ -13,7 +13,6 @@ export const metadata: Metadata = {
 function WorkroomLayout({ children }: Props) {
   return (
     <>
-      <MswInitializer />
       <div className='w-full h-full'>{children}</div>
     </>
   );

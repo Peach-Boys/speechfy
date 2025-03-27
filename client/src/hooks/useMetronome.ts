@@ -16,7 +16,6 @@ export function useMetronome(
       onFinish();
       return;
     }
-
     playBeep(metro === 0 ? 1000 : 800, 100);
     const time = 60000 / bpm;
     const timeoutId = setTimeout(() => {

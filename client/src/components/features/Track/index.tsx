@@ -10,6 +10,7 @@ import IconTripleDots from '@/components/icons/IconTripleDots';
 import useOutSideClick from '@/hooks/useOutSideClick';
 import { useRef, useState, useEffect } from 'react';
 import { ITrack } from '@/types/track';
+import PlayBar from '@/components/common/PlayBar';
 
 interface Props {
   track: ITrack;
@@ -23,6 +24,10 @@ function Track({ track, isAllPlay }: Props) {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectInstRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [endTime, setEndTime] = useState<number>(0);
+  useOutSideClick(menuRef, () => setIsMenuOpen(false));
+  useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
 
   function handlePlayTrack() {
     if (!audioRef.current) return;
@@ -39,13 +44,9 @@ function Track({ track, isAllPlay }: Props) {
     setIsMenuOpen((prev) => !prev);
   }
 
-  useOutSideClick(menuRef, () => setIsMenuOpen(false));
-
   function handleOpenSelInst() {
     setIsSelInstOpen((prev) => !prev);
   }
-
-  useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
 
   // 재생시간 확인. 차후 재생 바 구현 여부에 따라 사용
   useEffect(() => {
@@ -53,16 +54,18 @@ function Track({ track, isAllPlay }: Props) {
     if (!audioEl) return;
 
     const handleTimeUpdate = () => {
-      console.log('현재 재생 시간:', audioEl.currentTime);
-      console.log('전체 재생 시간:', audioEl.duration);
+      console.log(audioEl.duration, track);
+      setCurrentTime(audioEl.currentTime);
+      setEndTime(audioEl.duration);
     };
-
+    audioEl.addEventListener('loadedmetadata', handleTimeUpdate);
     audioEl.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
       audioEl.removeEventListener('timeupdate', handleTimeUpdate);
     };
   }, []);
+
   useEffect(() => {
     if (isAllPlay) {
       audioRef.current?.play();
@@ -72,13 +75,19 @@ function Track({ track, isAllPlay }: Props) {
       setIsPlay(false);
     }
   }, [isAllPlay]);
+
+  useEffect(() => {
+    if (currentTime === endTime) {
+      setIsPlay(false);
+    }
+  }, [currentTime, endTime]);
   return (
     <Box borderStyle='solid'>
       <div className='w-full flex flex-col gap-5'>
         <div className='w-full flex justify-between items-center'>
           <div className='flex items-center gap-2'>
             <IconDoubleCircle color='#ffffff' />
-            <span>악기 이름</span>
+            <span>{track.instrumentName}</span>
           </div>
           <div
             className='relative w-auto py-2 cursor-pointer'
@@ -87,7 +96,7 @@ function Track({ track, isAllPlay }: Props) {
             <IconTripleDots color='#ffffff' />
             {isMenuOpen && (
               <div ref={menuRef} className='absolute z-10 top-0 right-0'>
-                <TrackMenu />
+                <TrackMenu trackId={track.trackId} order={track.order} />
               </div>
             )}
           </div>
@@ -112,7 +121,8 @@ function Track({ track, isAllPlay }: Props) {
           </Button>
         </div>
 
-        <WavePlay isPlay={isPlay} />
+        {/* <WavePlay isPlay={isPlay} /> */}
+        <PlayBar currentTime={currentTime} endTime={endTime} />
       </div>
       <audio ref={audioRef} src={track.trackUrl} />
     </Box>
