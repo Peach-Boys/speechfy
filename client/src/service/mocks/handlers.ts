@@ -10,4 +10,9 @@ export const handlers = [
       status: 204,
     });
   }),
+  http.delete(`${BASEURL}/work/track/:id`, () => {
+    return new Response(null, {
+      status: 204,
+    });
+  }),
 ];

@@ -10,7 +10,7 @@ export const getTracks = async (workroomId: string): Promise<StudioData> => {
   }
 };
 
-export const deleteTrack = async (trackId: string): Promise<void> => {
+export const deleteTrack = async (trackId: number): Promise<void> => {
   try {
     await client.delete(`/work/track/${trackId}`);
   } catch (err: unknown) {
@@ -35,7 +35,7 @@ export const updateTrack = async (
   }
 };
 
-export const deleteAllTrack = async (workId: number): Promise<void> => {
+export const deleteAllTrack = async (workId: string): Promise<void> => {
   try {
     await client.delete(`/work/studio/${workId}`);
   } catch (err: unknown) {

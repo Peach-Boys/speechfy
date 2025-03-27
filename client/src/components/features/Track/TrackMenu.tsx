@@ -1,11 +1,16 @@
 'use client';
 
-function TrackMenu() {
+import { useDeleteTrack } from '@/service/queries/useDeleteTrack';
+interface Props {
+  trackId: number;
+}
+function TrackMenu({ trackId }: Props) {
+  const { mutate: deleteTrack } = useDeleteTrack(trackId);
   function handleCopy() {
     console.log('카피');
   }
   function handleDelete() {
-    console.log('삭제');
+    deleteTrack();
   }
 
   return (

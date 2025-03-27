@@ -87,7 +87,7 @@ function Track({ track, isAllPlay }: Props) {
         <div className='w-full flex justify-between items-center'>
           <div className='flex items-center gap-2'>
             <IconDoubleCircle color='#ffffff' />
-            <span>악기 이름</span>
+            <span>{track.instrumentName}</span>
           </div>
           <div
             className='relative w-auto py-2 cursor-pointer'
@@ -96,7 +96,7 @@ function Track({ track, isAllPlay }: Props) {
             <IconTripleDots color='#ffffff' />
             {isMenuOpen && (
               <div ref={menuRef} className='absolute z-10 top-0 right-0'>
-                <TrackMenu />
+                <TrackMenu trackId={track.trackId} />
               </div>
             )}
           </div>
