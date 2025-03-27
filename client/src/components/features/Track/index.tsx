@@ -10,6 +10,7 @@ import IconTripleDots from '@/components/icons/IconTripleDots';
 import useOutSideClick from '@/hooks/useOutSideClick';
 import { useRef, useState, useEffect } from 'react';
 import { ITrack } from '@/types/track';
+import PlayBar from '@/components/common/PlayBar';
 
 interface Props {
   track: ITrack;
@@ -23,6 +24,8 @@ function Track({ track, isAllPlay }: Props) {
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectInstRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [currentTime, setCurrentTime] = useState<number>(0);
+  const [endTime, setEndTime] = useState<number>(0);
 
   function handlePlayTrack() {
     if (!audioRef.current) return;
@@ -53,10 +56,10 @@ function Track({ track, isAllPlay }: Props) {
     if (!audioEl) return;
 
     const handleTimeUpdate = () => {
-      console.log('현재 재생 시간:', audioEl.currentTime);
-      console.log('전체 재생 시간:', audioEl.duration);
+      setCurrentTime(audioEl.currentTime);
+      setEndTime(audioEl.duration);
     };
-
+    audioEl.addEventListener('loadedmetadata', handleTimeUpdate);
     audioEl.addEventListener('timeupdate', handleTimeUpdate);
 
     return () => {
@@ -113,6 +116,7 @@ function Track({ track, isAllPlay }: Props) {
         </div>
 
         <WavePlay isPlay={isPlay} />
+        <PlayBar currentTime={currentTime} endTime={endTime} />
       </div>
       <audio ref={audioRef} src={track.trackUrl} />
     </Box>
