@@ -1,57 +1,37 @@
 package com.ssafy.speechfy.service;
 
+import com.amazonaws.HttpMethod;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.GeneratePresignedUrlRequest;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.auth.credentials.AwsBasicCredentials;
-import software.amazon.awssdk.auth.credentials.StaticCredentialsProvider;
-import software.amazon.awssdk.regions.Region;
-import software.amazon.awssdk.services.s3.model.PutObjectRequest;
-import software.amazon.awssdk.services.s3.presigner.S3Presigner;
-import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
-import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
-import java.time.Duration;
-
+import java.net.URL;
+import java.util.Date;
 
 @Service
 public class S3Service {
 
-    private final S3Presigner presigner;
-    private final String bucketName;
+    @Autowired
+    private AmazonS3 amazonS3Client;
 
-    public S3Service(
-            @Value("${aws.s3.bucket-name}") String bucketName,  // 임의작성, 경로 수정 필요
-            @Value("${aws.region}") String region,              // 임의작성, 경로 수정 필요
-            @Value("${aws.access-key}") String accessKey,       // 임의작성, 경로 수정 필요
-            @Value("${aws.secret-key}") String secretKey        // 임의작성, 경로 수정 필요
-    ) {
-        this.bucketName = bucketName;
+    @Value("${aws.s3.bucket-name}")
+    private String bucketName;
 
-        AwsBasicCredentials awsCreds = AwsBasicCredentials.create(accessKey, secretKey);
+    private static final long EXPIRATION_TIME_MILLIS = 10 * 60 * 1000;
 
-        this.presigner = S3Presigner.builder()
-                .region(Region.of(region))
-                .credentialsProvider(StaticCredentialsProvider.create(awsCreds))
-                .build();
+    public URL generatePresignedUrl(String fileName) {
+        // URL 만료 시간 설정 (10분으로 설정)
+        Date expiration = new Date(System.currentTimeMillis() + EXPIRATION_TIME_MILLIS);
+
+        // Presigned URL 생성 요청
+        GeneratePresignedUrlRequest generatePresignedUrlRequest =
+                new GeneratePresignedUrlRequest(bucketName, fileName)
+                        .withMethod(HttpMethod.PUT) // PUT 메서드로 설정 (파일 업로드)
+                        .withExpiration(expiration);
+
+        // Presigned URL 반환
+        return amazonS3Client.generatePresignedUrl(generatePresignedUrlRequest);
     }
-
-    public String generatePresignedUrl(String fileName) {
-        String objectKey = "uploads/" + fileName; // S3 내 저장될 경로 // 임의작성, 경로 수정 필요
-
-        PutObjectRequest objectRequest = PutObjectRequest.builder()
-                .bucket(bucketName)
-                .key(objectKey)
-                .build();
-
-        // 프리사인드 URL 생성
-        PutObjectPresignRequest presignRequest = PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(10)) // 10분간 유효
-                .putObjectRequest(objectRequest)
-                .build();
-
-        PresignedPutObjectRequest presignedRequest = presigner.presignPutObject(presignRequest);
-
-        return presignedRequest.url().toString(); // 생성된 URL 반환
-    }
-
 }
