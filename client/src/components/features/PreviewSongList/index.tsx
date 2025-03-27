@@ -1,14 +1,30 @@
+'use client';
+
+import Spinner from '@/components/common/Spinner';
 import PreviewSongItem from '@/components/features/PreviewSongList/PreviewSongItem';
-import { IAISong } from '@/types/song';
-import React from 'react';
+import { useGetPreviewSongList } from '@/service/queries/useGetPreviewSongList';
+import { IPreviewSong } from '@/types/song';
+import { useParams } from 'next/navigation';
+import React, { useEffect, useState } from 'react';
 
 interface Props {
-  songs: IAISong[];
   selectSong: number;
   setSelectSong: React.Dispatch<React.SetStateAction<number>>;
 }
 
-function PreviewSongList({ songs, selectSong, setSelectSong }: Props) {
+function PreviewSongList({ selectSong, setSelectSong }: Props) {
+  const { workroom_id } = useParams();
+  const [previewSongs, setPreviewSongs] = useState<IPreviewSong[]>();
+  const { data, isLoading } = useGetPreviewSongList(workroom_id as string);
+
+  useEffect(() => {
+    if (data) {
+      setPreviewSongs(data);
+    }
+  }, [data]);
+
+  if (isLoading) return <Spinner />;
+
   return (
     <div className='w-full h-full flex flex-col gap-2'>
       <div className='text-xl px-1'>미리 듣기</div>
@@ -17,16 +33,24 @@ function PreviewSongList({ songs, selectSong, setSelectSong }: Props) {
       </div>
 
       <div className='w-full max-h-[300px] overflow-y-auto flex flex-col gap-2 scrollbar-thin scrollbar-thumb-gray-500'>
-        {songs.map((song) => (
-          <PreviewSongItem
-            key={song.id}
-            song={song}
-            selected={song.id === selectSong}
-            onSelect={() =>
-              setSelectSong((prev: number) => (prev === song.id ? -1 : song.id))
-            }
-          />
-        ))}
+        {previewSongs ? (
+          previewSongs.map((previewSong) => (
+            <PreviewSongItem
+              key={previewSong.songId}
+              song={previewSong}
+              selected={previewSong.songId === selectSong}
+              onSelect={() =>
+                setSelectSong((prev: number) =>
+                  prev === previewSong.songId ? -1 : previewSong.songId
+                )
+              }
+            />
+          ))
+        ) : (
+          <div className='w-full mt-5 flex justify-center items-center '>
+            AI 추천 곡을 넣어보세요...!
+          </div>
+        )}
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { DUMMY_AI_SONGS } from '@/service/mocks/dummies/SongList';
 import { http, HttpResponse } from 'msw';
 import { DUMMYSTUDIO } from './dummies/TrackList';
 const BASEURL = process.env.NEXT_PUBLIC_API_BASE;
@@ -16,6 +17,15 @@ export const handlers = [
     });
   }),
   http.put(`${BASEURL}/work/studio/:id`, () => {
+    return new Response(null, {
+      status: 204,
+    });
+  }),
+  http.get(`${BASEURL}/song/:workroom_id`, () => {
+    return HttpResponse.json(DUMMY_AI_SONGS);
+  }),
+
+  http.post(`${BASEURL}/song/:workroom_id`, async () => {
     return new Response(null, {
       status: 204,
     });

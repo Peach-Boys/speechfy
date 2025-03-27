@@ -5,12 +5,12 @@ import Tag from '@/components/common/Tag';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
-import { IAISong } from '@/types/song';
+import { IPreviewSong } from '@/types/song';
 import clsx from 'clsx';
 import { useState } from 'react';
 
 interface Props {
-  song: IAISong;
+  song: IPreviewSong;
   selected: boolean;
   onSelect: () => void;
 }
@@ -50,9 +50,11 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
       </div>
       <div className='w-full flex flex-col gap-1'>
         <div className='flex flex-wrap gap-1'>
-          {song.tags.map((tag) => (
-            <Tag key={tag.id} label={tag.label} isSelect />
+          {song.instruments.map((instrument) => (
+            <Tag key={instrument.id} label={instrument.label} isSelect />
           ))}
+          <Tag label={song.gerne} isSelect />
+          <Tag label={song.mood} isSelect />
         </div>
         <PlayBar currentTime={10} endTime={120} />
       </div>

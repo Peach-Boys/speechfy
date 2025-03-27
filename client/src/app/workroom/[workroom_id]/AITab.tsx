@@ -2,7 +2,9 @@
 
 import PreviewSongList from '@/components/features/PreviewSongList';
 import TagField from '@/components/features/TagField';
-import { IAISong } from '@/types/song';
+import { DUMMY_ADD_SONG } from '@/service/mocks/dummies/AddSong';
+import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
+import { useParams } from 'next/navigation';
 import React, { useState } from 'react';
 
 interface Props {
@@ -10,53 +12,15 @@ interface Props {
   setSelect: React.Dispatch<React.SetStateAction<(number | null)[]>>;
 }
 
-const temp: IAISong[] = [
-  {
-    id: 0,
-    tags: [
-      { id: 0, label: '기타' },
-      { id: 1, label: '피아노' },
-      { id: 2, label: '장르1' },
-      { id: 3, label: '분위기1' },
-    ],
-    url: 'https://www.youtube.com/watch?v=K4DyBUG242c',
-  },
-  {
-    id: 1,
-    tags: [
-      { id: 0, label: '기타' },
-      { id: 1, label: '피아노' },
-      { id: 6, label: '피아노' },
-      { id: 7, label: '피아노' },
-      { id: 8, label: '장르1' },
-      { id: 9, label: '분위기1' },
-    ],
-    url: 'https://www.youtube.com/watch?v=K4DyBUG242c',
-  },
-  {
-    id: 2,
-    tags: [
-      { id: 0, label: '기타' },
-      { id: 1, label: '피아노' },
-      { id: 2, label: '장르1' },
-      { id: 3, label: '분위기1' },
-    ],
-    url: 'https://www.youtube.com/watch?v=K4DyBUG242c',
-  },
-  {
-    id: 3,
-    tags: [
-      { id: 0, label: '기타' },
-      { id: 1, label: '피아노' },
-      { id: 2, label: '장르1' },
-      { id: 3, label: '분위기1' },
-    ],
-    url: 'https://www.youtube.com/watch?v=K4DyBUG242c',
-  },
-];
-
 function AITab({ select, setSelect }: Props) {
+  const { workroomId } = useParams();
   const [selectSong, setSelectSong] = useState<number>(-1);
+  const postMutation = usePostPreviewSong(workroomId as string, DUMMY_ADD_SONG);
+
+  async function handleCreateAISong() {
+    postMutation.mutate();
+  }
+
   return (
     <div className='w-full h-full min-h-4/5 max-h-5/6 p-5 flex flex-col items-center gap-3'>
       <div className='text-sm h-fit'>
@@ -67,15 +31,14 @@ function AITab({ select, setSelect }: Props) {
       </div>
       <TagField select={select} setSelect={setSelect} />
       <div className='w-full h-fit'>
-        <button className='w-full h-fit py-3 mb-5 rounded-[10px] bg-gray-600 cursor-pointer'>
+        <button
+          className='w-full h-fit py-3 mb-5 rounded-[10px] bg-gray-600 cursor-pointer'
+          onClick={handleCreateAISong}
+        >
           AI 추천 받기 (임시 버튼)
         </button>
       </div>
-      <PreviewSongList
-        songs={temp}
-        selectSong={selectSong}
-        setSelectSong={setSelectSong}
-      />
+      <PreviewSongList selectSong={selectSong} setSelectSong={setSelectSong} />
     </div>
   );
 }

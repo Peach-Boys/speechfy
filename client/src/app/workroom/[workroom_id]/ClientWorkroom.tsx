@@ -44,11 +44,11 @@ function ClientWorkroom({ id }: Props) {
 
   return (
     <div className='w-full h-full flex flex-col'>
-      <WorkroomTabs tab={tab} setTab={setTab} tracks={tracks} />
+      <WorkroomTabs tab={tab} setTab={setTab} />
       <div className='w-full flex justify-center text-2xl h-fit'>
         당근할아버지 프로젝트 {id}
       </div>
-      {tab === 'work' && <TrackTab tracks={tracks} setTracks={setTracks} />}
+      {tab === 'work' && <TrackTab />}
       {tab === 'gerne' && <AITab select={select} setSelect={setSelect} />}
       {tab === 'complete' && <CompleteTab />}
     </div>
