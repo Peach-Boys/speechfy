@@ -36,6 +36,7 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
       isPlaying: false,
       trackName: 'SoundHelix-Song-1',
       trackUrl: audio,
+      order: 999,
     });
   }
   useEffect(() => {

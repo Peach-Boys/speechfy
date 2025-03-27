@@ -8,6 +8,7 @@ import { useDeleteAllTrack } from '@/service/queries/useDeleteAllTrack';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+import DrumBeatGenerator from './DrumBeatGenerator';
 
 function TrackTab() {
   const [isAllPlay, setIsAllPlay] = useState<boolean>(false);
@@ -41,6 +42,7 @@ function TrackTab() {
           <Track key={track.trackId} track={track} isAllPlay={isAllPlay} />
         ))}
         <CreateRecord />
+        <DrumBeatGenerator />
       </div>
     </div>
   );
