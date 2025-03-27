@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.work.common;
+package com.ssafy.speechfy.dto.work.track;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,7 +12,8 @@ import lombok.Setter;
 public class trackDto {
    private Integer trackId;
    private String instrumentName;
-   private String trackUrl;
+   private String trackPresignedUrl;
    private String trackName;
    private Integer recordId;
+   private Integer order;
 }
