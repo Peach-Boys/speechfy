@@ -1,6 +1,7 @@
 'use client';
 
 import AITab from '@/app/workroom/[workroom_id]/AITab';
+import CompleteTab from '@/app/workroom/[workroom_id]/CompleteTab';
 import TrackTab from '@/app/workroom/[workroom_id]/TrackTab';
 import WorkroomTabs from '@/app/workroom/[workroom_id]/WorkroomTabs';
 import { useGetTracks } from '@/service/queries/useGetTracks';
@@ -17,6 +18,7 @@ function ClientWorkroom({ id }: Props) {
   const [select, setSelect] = useState<(number | null)[]>([null, null]);
   const [tracks, setTracks] = useState<ITrack[]>([]);
   const { data, isLoading, isError } = useGetTracks(id);
+
   useEffect(() => {
     if (isError) {
       alert('에러가 발생했습니다.');
@@ -36,6 +38,7 @@ function ClientWorkroom({ id }: Props) {
       );
     }
   }, [data, isLoading]);
+
   return (
     <div className='w-full h-full flex flex-col'>
       <WorkroomTabs tab={tab} setTab={setTab} />
@@ -43,7 +46,8 @@ function ClientWorkroom({ id }: Props) {
         당근할아버지 프로젝트 {id}
       </div>
       {tab === 'work' && <TrackTab tracks={tracks} setTracks={setTracks} />}
-      {tab === 'ai' && <AITab select={select} setSelect={setSelect} />}
+      {tab === 'gerne' && <AITab select={select} setSelect={setSelect} />}
+      {tab === 'complete' && <CompleteTab />}
     </div>
   );
 }

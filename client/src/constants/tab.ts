@@ -1,5 +1,5 @@
 export const ROUTE_TABS = [
   { tabSrc: 'work', tabName: '작업' },
-  { tabSrc: 'ai', tabName: 'AI' },
+  { tabSrc: 'gerne', tabName: '장르' },
   { tabSrc: 'complete', tabName: '완성' },
 ];
