@@ -12,4 +12,5 @@ export interface BaseRecord {
 
 export interface ITrack extends BaseTrack {
   isPlaying: boolean;
+  order: number;
 }

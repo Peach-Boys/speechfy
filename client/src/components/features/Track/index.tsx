@@ -96,7 +96,7 @@ function Track({ track, isAllPlay }: Props) {
             <IconTripleDots color='#ffffff' />
             {isMenuOpen && (
               <div ref={menuRef} className='absolute z-10 top-0 right-0'>
-                <TrackMenu trackId={track.trackId} />
+                <TrackMenu trackId={track.trackId} order={track.order} />
               </div>
             )}
           </div>

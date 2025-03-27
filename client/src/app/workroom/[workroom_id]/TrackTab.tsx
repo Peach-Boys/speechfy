@@ -5,18 +5,13 @@ import Track from '@/components/features/Track';
 import IconAllPlay from '@/components/icons/IconAllPlay';
 import IconReset from '@/components/icons/IconReset';
 import { useDeleteAllTrack } from '@/service/queries/useDeleteAllTrack';
-import { ITrack } from '@/types/track';
+import { useWorkRoomStore } from '@/stores/workroomStore';
 import { useParams } from 'next/navigation';
-import { useRouter } from 'next/router';
 import { useState } from 'react';
 
-interface Props {
-  tracks: ITrack[];
-  setTracks: React.Dispatch<React.SetStateAction<ITrack[]>>;
-}
-
-function TrackTab({ tracks, setTracks }: Props) {
+function TrackTab() {
   const [isAllPlay, setIsAllPlay] = useState<boolean>(false);
+  const { tracks } = useWorkRoomStore();
   const { workroom_id } = useParams();
   const { mutate } = useDeleteAllTrack(workroom_id as string);
   function handlePlayAll() {
@@ -45,7 +40,7 @@ function TrackTab({ tracks, setTracks }: Props) {
         {tracks.map((track) => (
           <Track key={track.trackId} track={track} isAllPlay={isAllPlay} />
         ))}
-        <CreateRecord setTracks={setTracks} tracks={tracks} />
+        <CreateRecord />
       </div>
     </div>
   );

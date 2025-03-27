@@ -15,4 +15,9 @@ export const handlers = [
       status: 204,
     });
   }),
+  http.put(`${BASEURL}/work/studio/:id`, () => {
+    return new Response(null, {
+      status: 204,
+    });
+  }),
 ];

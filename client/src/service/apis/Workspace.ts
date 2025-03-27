@@ -1,5 +1,6 @@
 import { client } from '@/service/clients';
 import { StudioData } from '@/service/types/Workspace';
+import { ITrack } from '@/types/track';
 
 export const getTracks = async (workroomId: string): Promise<StudioData> => {
   try {
@@ -19,16 +20,16 @@ export const deleteTrack = async (trackId: number): Promise<void> => {
 };
 
 export const updateTrack = async (
-  workId: number,
-  track: number,
-  order: number,
-  trackName: string
+  workId: string,
+  tracks: {
+    track: number;
+    order: number;
+    trackName: string;
+  }[]
 ): Promise<void> => {
   try {
     await client.put(`/work/studio/${workId}`, {
-      track: track,
-      order: order,
-      trackName: trackName,
+      tracks,
     });
   } catch (err: unknown) {
     throw new Error((err as Error).message);

@@ -1,13 +1,24 @@
 'use client';
 
+import { useCopyTrack } from '@/service/queries/useCopyTrack';
 import { useDeleteTrack } from '@/service/queries/useDeleteTrack';
+import { useWorkRoomStore } from '@/stores/workroomStore';
+import { useParams } from 'next/navigation';
 interface Props {
   trackId: number;
+  order: number;
 }
-function TrackMenu({ trackId }: Props) {
+function TrackMenu({ trackId, order }: Props) {
+  const { workroom_id } = useParams();
+  const { tracks } = useWorkRoomStore();
   const { mutate: deleteTrack } = useDeleteTrack(trackId);
+  const { mutate: copyTrack } = useCopyTrack(
+    workroom_id as string,
+    tracks,
+    order
+  );
   function handleCopy() {
-    console.log('카피');
+    copyTrack();
   }
   function handleDelete() {
     deleteTrack();
