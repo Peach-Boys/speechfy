@@ -56,6 +56,7 @@ function Track({ track, isAllPlay }: Props) {
     if (!audioEl) return;
 
     const handleTimeUpdate = () => {
+      console.log(audioEl.duration, track);
       setCurrentTime(audioEl.currentTime);
       setEndTime(audioEl.duration);
     };
@@ -75,6 +76,11 @@ function Track({ track, isAllPlay }: Props) {
       setIsPlay(false);
     }
   }, [isAllPlay]);
+  useEffect(() => {
+    if (currentTime === endTime) {
+      setIsPlay(false);
+    }
+  }, [currentTime, endTime]);
   return (
     <Box borderStyle='solid'>
       <div className='w-full flex flex-col gap-5'>
@@ -115,7 +121,7 @@ function Track({ track, isAllPlay }: Props) {
           </Button>
         </div>
 
-        <WavePlay isPlay={isPlay} />
+        {/* <WavePlay isPlay={isPlay} /> */}
         <PlayBar currentTime={currentTime} endTime={endTime} />
       </div>
       <audio ref={audioRef} src={track.trackUrl} />
