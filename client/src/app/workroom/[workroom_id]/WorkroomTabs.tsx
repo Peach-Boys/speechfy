@@ -1,19 +1,28 @@
 import { ROUTE_TABS } from '@/constants/tab';
+import { ITrack } from '@/types/track';
 import clsx from 'clsx';
 import React from 'react';
 
 interface Props {
   tab: string;
   setTab: React.Dispatch<React.SetStateAction<string>>;
+  tracks: ITrack[];
 }
 
-function WorkroomTabs({ tab, setTab }: Props) {
+function WorkroomTabs({ tab, setTab, tracks }: Props) {
+  function handleClickTab(tabSrc: string) {
+    if (tracks.length === 0) {
+      alert('트랙을 먼저 추가해주세요!');
+      return;
+    }
+    setTab(tabSrc);
+  }
   return (
     <ul className='sticky top-0 w-full max-w-[500px] h-fit flex mb-10 bg-gray-800'>
       {ROUTE_TABS.map((t) => (
         <li
           key={t.tabSrc}
-          onClick={() => setTab(t.tabSrc)}
+          onClick={() => handleClickTab(t.tabSrc)}
           className={clsx(
             'relative w-full py-2 flex justify-center cursor-pointer text-sm font-medium text-gray-400 transition-colors duration-300 ease-in-out',
             t.tabSrc === tab && 'text-white'

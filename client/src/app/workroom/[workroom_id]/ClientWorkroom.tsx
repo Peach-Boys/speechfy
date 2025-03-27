@@ -41,7 +41,7 @@ function ClientWorkroom({ id }: Props) {
 
   return (
     <div className='w-full h-full flex flex-col'>
-      <WorkroomTabs tab={tab} setTab={setTab} />
+      <WorkroomTabs tab={tab} setTab={setTab} tracks={tracks} />
       <div className='w-full flex justify-center text-2xl h-fit'>
         당근할아버지 프로젝트 {id}
       </div>
