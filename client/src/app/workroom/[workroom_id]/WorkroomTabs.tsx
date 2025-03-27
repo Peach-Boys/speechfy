@@ -1,15 +1,15 @@
 import { ROUTE_TABS } from '@/constants/tab';
-import { ITrack } from '@/types/track';
+import { useWorkRoomStore } from '@/stores/workroomStore';
 import clsx from 'clsx';
 import React from 'react';
 
 interface Props {
   tab: string;
   setTab: React.Dispatch<React.SetStateAction<string>>;
-  tracks: ITrack[];
 }
 
-function WorkroomTabs({ tab, setTab, tracks }: Props) {
+function WorkroomTabs({ tab, setTab }: Props) {
+  const { tracks } = useWorkRoomStore();
   function handleClickTab(tabSrc: string) {
     if (tracks.length === 0) {
       alert('트랙을 먼저 추가해주세요!');
