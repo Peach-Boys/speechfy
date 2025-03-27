@@ -6,7 +6,7 @@ import WorkroomTabs from '@/app/workroom/[workroom_id]/WorkroomTabs';
 import { useGetTracks } from '@/service/queries/useGetTracks';
 import { TrackListItem } from '@/service/types/Workspace';
 import { ITrack } from '@/types/track';
-import { use, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Props {
   id: string;
