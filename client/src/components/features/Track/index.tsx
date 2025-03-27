@@ -26,6 +26,8 @@ function Track({ track, isAllPlay }: Props) {
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [endTime, setEndTime] = useState<number>(0);
+  useOutSideClick(menuRef, () => setIsMenuOpen(false));
+  useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
 
   function handlePlayTrack() {
     if (!audioRef.current) return;
@@ -42,13 +44,9 @@ function Track({ track, isAllPlay }: Props) {
     setIsMenuOpen((prev) => !prev);
   }
 
-  useOutSideClick(menuRef, () => setIsMenuOpen(false));
-
   function handleOpenSelInst() {
     setIsSelInstOpen((prev) => !prev);
   }
-
-  useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
 
   // 재생시간 확인. 차후 재생 바 구현 여부에 따라 사용
   useEffect(() => {
@@ -67,6 +65,7 @@ function Track({ track, isAllPlay }: Props) {
       audioEl.removeEventListener('timeupdate', handleTimeUpdate);
     };
   }, []);
+
   useEffect(() => {
     if (isAllPlay) {
       audioRef.current?.play();
@@ -76,6 +75,7 @@ function Track({ track, isAllPlay }: Props) {
       setIsPlay(false);
     }
   }, [isAllPlay]);
+
   useEffect(() => {
     if (currentTime === endTime) {
       setIsPlay(false);
