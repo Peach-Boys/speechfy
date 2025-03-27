@@ -1,11 +1,11 @@
 package com.ssafy.speechfy.service;
 
 import com.ssafy.speechfy.dto.work.common.recordDto;
-import com.ssafy.speechfy.dto.work.common.studioDto;
+import com.ssafy.speechfy.dto.work.studio.studioSimpleDto;
 import com.ssafy.speechfy.dto.work.common.trackDto;
 import com.ssafy.speechfy.dto.work.record.recordResponseDto;
 import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
-import com.ssafy.speechfy.dto.work.studio.studioResponseDto;
+import com.ssafy.speechfy.dto.work.studio.studioListResponseDto;
 import com.ssafy.speechfy.dto.work.track.trackResponseDto;
 import com.ssafy.speechfy.dto.work.track.trackUpdateDto;
 import com.ssafy.speechfy.dto.work.work.workCreateDto;
@@ -47,19 +47,19 @@ public class WorkService {
         this.s3Service = s3Service;
     }
 
-    public studioResponseDto getStudioList(Integer userId) {
+    public studioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
 
         List<Studio> studioList = studioReposiotry.findByUser(user);
-        List<studioDto> studioDtoList = new ArrayList<>();
+        List<studioSimpleDto> studioSimpleDtoList = new ArrayList<>();
         if (!studioList.isEmpty()) {
             for (Studio studio : studioList) {
-                studioDto dto = getStudioDto(studio.getId());
-                studioDtoList.add(dto);
+                studioSimpleDto dto = getStudioDto(studio.getId());
+                studioSimpleDtoList.add(dto);
             }
         }
-        return new studioResponseDto(studioDtoList);
+        return new studioListResponseDto(studioSimpleDtoList);
     }
     @Transactional
     public void createStudio(Integer userId, studioCreateDto studioCreateDto){
@@ -170,8 +170,7 @@ public class WorkService {
         Record record;
         if (optionalRecord.isPresent()) {
             record = optionalRecord.get();
-        }
-        else{ // 해당 레코드가 없으면 새로운 레코드 만들기
+        } else { // 해당 레코드가 없으면 새로운 레코드 만들기
             record = new Record(
                     0,
                     "저장할 파일에 대한 S3 경로 알고리즘 만들어야 함"
@@ -225,9 +224,15 @@ public class WorkService {
         );
         soundBankReposiotry.save(soundBank);
 
-        return getWorkResponseDto(studio.getId(), track.getId());
-    }
+        workResponseDto workResponseDto = getWorkResponseDto(studio.getId(), track.getId());
 
+        if(workCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
+            workResponseDto.getRecord().setRecordPresignedUrl(null);
+            System.out.println(workResponseDto.getRecord().getRecordId());
+        }
+
+        return workResponseDto;
+    }
     @Transactional
     public void updateTrack(Integer studioId,Integer trackId, trackUpdateDto trackUpdateDto){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
@@ -289,7 +294,7 @@ public class WorkService {
                 trackDto.getRecordId());
     }
 
-    private studioDto getStudioDto(Integer studioId){
+    private studioSimpleDto getStudioDto(Integer studioId){
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         List<StudioTrack> StudioTrackList = studioTrackRepository.findByStudio(studio);
@@ -302,10 +307,9 @@ public class WorkService {
             }
         }
 
-        return new studioDto(
+        return new studioSimpleDto(
                 studio.getId(),
                 studio.getUser().getId(),
-                studioId,
                 studio.getName(),
                 instrumentList,
                 null    // 불러오는 방식 모르겠음

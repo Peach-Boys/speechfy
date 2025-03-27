@@ -2,6 +2,7 @@ package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.dto.work.record.recordResponseDto;
 import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
+import com.ssafy.speechfy.dto.work.studio.studioListResponseDto;
 import com.ssafy.speechfy.dto.work.studio.studioResponseDto;
 import com.ssafy.speechfy.dto.work.track.trackResponseDto;
 import com.ssafy.speechfy.dto.work.track.trackUpdateDto;
@@ -9,26 +10,32 @@ import com.ssafy.speechfy.dto.work.work.workCreateDto;
 import com.ssafy.speechfy.dto.work.work.workListResponseDto;
 import com.ssafy.speechfy.dto.work.work.workListUpdateDto;
 import com.ssafy.speechfy.dto.work.work.workResponseDto;
+import com.ssafy.speechfy.entity.Studio;
+import com.ssafy.speechfy.repository.StudioRepository;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.WorkService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 
 @RestController
 @RequestMapping("/api/work")
 public class WorkController {
     private final WorkService workService;
+    private final StudioRepository studioRepository;
     private final S3Service s3Service;
 
-    public WorkController(WorkService workService, S3Service s3Service) {
+    public WorkController(WorkService workService, StudioRepository studioRepository, S3Service s3Service) {
         this.workService = workService;
+        this.studioRepository = studioRepository;
         this.s3Service = s3Service;
     }
 
     @GetMapping("/studio")
-    public ResponseEntity<studioResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
-        studioResponseDto responseDto = workService.getStudioList(userId);
+    public ResponseEntity<studioListResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
+        studioListResponseDto responseDto = workService.getStudioList(userId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -45,9 +52,15 @@ public class WorkController {
     }
 
     @GetMapping("/studio/{studioId}")
-    public ResponseEntity<workListResponseDto> getWorkList(@PathVariable Integer studioId){
-        workListResponseDto responseDto = workService.getWorkList(studioId);
-        return ResponseEntity.ok(responseDto);
+    public ResponseEntity<studioResponseDto> getWorkList(@PathVariable Integer studioId){
+        workListResponseDto workListResponseDto = workService.getWorkList(studioId);
+        Optional<Studio> optionalStudio = studioRepository.findById(studioId);
+        Studio studio = workService.checkElementException(optionalStudio, "Studio not found");
+        return ResponseEntity.ok(new studioResponseDto(
+                studioId,
+                studio.getName(),
+                workListResponseDto
+        ));
     }
 
     @PatchMapping("/studio/{studioId}")
@@ -70,7 +83,8 @@ public class WorkController {
             @RequestBody workCreateDto workCreateDto ){
 
         workResponseDto responseDto = workService.createWork(userId,studioId, workCreateDto);
-       return ResponseEntity.ok(null);
+
+        return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/track/{trackId}")

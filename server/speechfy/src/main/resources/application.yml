@@ -1,9 +1,10 @@
 spring:
   datasource:
-    url: ${SPRING_DATASOURCE_URL}
-    username: ${SPRING_DATASOURCE_USERNAME}
-    password: ${SPRING_DATASOURCE_PASSWORD}
-    driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
+      url: jdbc:mysql://localhost:3306/speechfy
+      username: root
+      password: 1234
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: update
@@ -20,7 +21,7 @@ logging:
 
 aws:
   s3:
-    bucket-name: ${AWS_S3_BUCKET_NAME}
-  region: ${AWS_REGION}
-  access-key: ${AWS_ACCESS_KEY}
-  secret-key: ${AWS_SECRET_KEY}
+    bucket-name: your-bucket-name
+  region: ap-northeast-2
+  access-key: YOUR_AWS_ACCESS_KEY
+  secret-key: YOUR_AWS_SECRET_KEY

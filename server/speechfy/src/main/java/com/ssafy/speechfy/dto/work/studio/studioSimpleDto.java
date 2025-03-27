@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.work.common;
+package com.ssafy.speechfy.dto.work.studio;
 
 
 import lombok.AllArgsConstructor;
@@ -11,11 +11,10 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class studioDto {
-    private Integer workId;
-    private Integer userId;
+public class studioSimpleDto {
     private Integer studioId;
-    private String name;
+    private Integer userId;
+    private String studioName;
     private List<String> trackInfo;
     private String modifiedAt;
 }
