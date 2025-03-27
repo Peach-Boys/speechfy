@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.work.work;
+package com.ssafy.speechfy.dto.work.track;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,7 +11,8 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class workListResponseDto {
+public class trackListResponseDto {
+    private Integer studioId;
     private String studioName;
-    private List<workResponseDto> trackList;
+    private List<trackResponseDto> trackList;
 }

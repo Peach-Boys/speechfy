@@ -1,6 +1,6 @@
 package com.ssafy.speechfy.dto.work.studio;
 
-import com.ssafy.speechfy.dto.work.work.workListResponseDto;
+import com.ssafy.speechfy.dto.work.track.trackListResponseDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +11,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class studioResponseDto {
-    Integer studioId;
-    String studioName;
-    workListResponseDto workListResponse;
+    trackListResponseDto trackListResponse;
 }

@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.work.common;
+package com.ssafy.speechfy.dto.work.track;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class recordDto {
     private Integer recordId;
-    private String recordUrl;
+    private String recordPresignedUrl;
 }
