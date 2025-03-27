@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class studioDeleteDto {
-    private Integer id;
+public class StudioCreateDto {
+    private String studioName;
 }
