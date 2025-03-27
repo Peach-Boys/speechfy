@@ -13,9 +13,10 @@ import { ITrack } from '@/types/track';
 
 interface Props {
   track: ITrack;
+  isAllPlay: boolean;
 }
 
-function Track({ track }: Props) {
+function Track({ track, isAllPlay }: Props) {
   const [isPlay, setIsPlay] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isSelInstOpen, setIsSelInstOpen] = useState<boolean>(false);
@@ -62,7 +63,15 @@ function Track({ track }: Props) {
       audioEl.removeEventListener('timeupdate', handleTimeUpdate);
     };
   }, []);
-
+  useEffect(() => {
+    if (isAllPlay) {
+      audioRef.current?.play();
+      setIsPlay(true);
+    } else {
+      audioRef.current?.pause();
+      setIsPlay(false);
+    }
+  }, [isAllPlay]);
   return (
     <Box borderStyle='solid'>
       <div className='w-full flex flex-col gap-5'>
