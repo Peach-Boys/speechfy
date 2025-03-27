@@ -1,12 +1,14 @@
 package com.ssafy.speechfy.service;
 
+import com.ssafy.speechfy.dto.work.studio.StudioResponseDto;
 import com.ssafy.speechfy.dto.work.track.*;
-import com.ssafy.speechfy.dto.work.studio.studioSimpleDto;
-import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
-import com.ssafy.speechfy.dto.work.studio.studioListResponseDto;
+import com.ssafy.speechfy.dto.work.studio.StudioSimpleDto;
+import com.ssafy.speechfy.dto.work.studio.StudioCreateDto;
+import com.ssafy.speechfy.dto.work.studio.StudioListResponseDto;
 import com.ssafy.speechfy.entity.Record;
 import com.ssafy.speechfy.repository.*;
 import com.ssafy.speechfy.entity.*;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +17,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class WorkService {
 
@@ -25,34 +28,26 @@ public class WorkService {
     private final S3Service s3Service;
 
 
-    public WorkService(RecordReposiotry recordReposiotry, TrackRepository trackReposiotry, StudioRepository studioReposiotry,  UserRepository userReposiotry,  S3Service s3Service) {
-        this.recordReposiotry = recordReposiotry;
-        this.trackReposiotry = trackReposiotry;
-        this.studioReposiotry = studioReposiotry;
-        this.userReposiotry = userReposiotry;
-        this.s3Service = s3Service;
-    }
-
     //리팩토링 클리어
-    public studioListResponseDto getStudioList(Integer userId) {
+    public StudioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
 
         List<Studio> studioList = studioReposiotry.findByUser(user);
-        List<studioSimpleDto> studioSimpleDtoList = new ArrayList<>();
+        List<StudioSimpleDto> studioSimpleDtoList = new ArrayList<>();
         if (!studioList.isEmpty()) {
             for (Studio studio : studioList) {
-                studioSimpleDto dto = getStudioDto(studio.getId());
+                StudioSimpleDto dto = getStudioSimpleDto(studio.getId());
                 studioSimpleDtoList.add(dto);
             }
         }
 
-        return new studioListResponseDto(studioSimpleDtoList);
+        return new StudioListResponseDto(studioSimpleDtoList);
     }
 
 
     @Transactional
-    public void createStudio(Integer userId, studioCreateDto studioCreateDto){
+    public StudioResponseDto createStudio(Integer userId, StudioCreateDto studioCreateDto){
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
 
@@ -61,7 +56,8 @@ public class WorkService {
                 user,
                 studioCreateDto.getStudioName()
         );
-        studioReposiotry.save(studio);
+        studio = studioReposiotry.save(studio);
+        return new StudioResponseDto(getStudio(studio.getId()));
     }
 
     @Transactional
@@ -71,29 +67,29 @@ public class WorkService {
     }
 
 
-    public trackListResponseDto getTrackList(Integer studioId) {
+    public TrackListResponseDto getStudio(Integer studioId) {
         // 1. studioId를 통해 해당하는 트랙을 찾는다. -> 스튜디오트랙테이블이용
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
 
         List<Track> trackList = trackReposiotry.findByStudio(studio);
-        List<trackResponseDto> trackResponseDtoList = new ArrayList<>();
+        List<TrackResponseDto> trackResponseDtoList = new ArrayList<>();
         if (!trackList.isEmpty()) {
             for (Track track : trackList) {
-                trackResponseDto dto = getTrackResponseDto(track.getId());
+                TrackResponseDto dto = getTrackResponseDto(track.getId());
                 trackResponseDtoList.add(dto);
             }
         }
 
-        return new trackListResponseDto(studio.getId(), studio.getName(), trackResponseDtoList);
+        return new TrackListResponseDto(studio.getId(), studio.getName(), trackResponseDtoList);
     }
 
     @Transactional
-    public void updateWorkList(Integer studioId, trackListUpdateDto workListUpdateDto){
+    public void updateTrackList(Integer studioId, TrackListUpdateDto trackListUpdateDto){
         // 트랙 내용 변경
-        List<trackUpdateDto> dtoList = workListUpdateDto.getUpdateList();
+        List<TrackUpdateDto> dtoList = trackListUpdateDto.getUpdateList();
         if(!dtoList.isEmpty()){
-            for (trackUpdateDto trackUpdateDto : dtoList) {
+            for (TrackUpdateDto trackUpdateDto : dtoList) {
                 int trackId = trackUpdateDto.getTrackId();
                 updateTrack(studioId,trackId,trackUpdateDto);
             }
@@ -130,7 +126,7 @@ public class WorkService {
     }
 
     @Transactional
-    public trackResponseDto createTrack(Integer userId, Integer studioId, trackCreateDto workCreateDto) {
+    public TrackResponseDto createTrack(Integer userId, Integer studioId, TrackCreateDto trackCreateDto) {
         // 유저 엔티티 불러오기
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
@@ -138,13 +134,13 @@ public class WorkService {
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         //악기이넘사용
-        Instrument instrument = Instrument.values()[workCreateDto.getInstrumentId()];
+        Instrument instrument = Instrument.values()[trackCreateDto.getInstrumentId()];
         System.out.println(instrument.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
         String trackName = "Track_" + System.currentTimeMillis();
         System.out.println(trackName);
         // 레코드 엔티티 불러오기
-        Optional<Record> optionalRecord = recordReposiotry.findById(workCreateDto.getRecordId());
+        Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record;
         if (optionalRecord.isPresent()) {
             record = optionalRecord.get();
@@ -170,13 +166,13 @@ public class WorkService {
                 studio,
                 trackName,   // dto에서 네임을 안받은듯, 먼저 백에서 네임 자동생성 방식인ㄷ ㅡㅅ
                 filePath,
-                workCreateDto.getOrder()
+                trackCreateDto.getOrder()
         );
         trackReposiotry.save(track);
 
-        trackResponseDto trackResponseDto = getTrackResponseDto(track.getId());
+        TrackResponseDto trackResponseDto = getTrackResponseDto(track.getId());
 
-        if(workCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
+        if(trackCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
             trackResponseDto.getRecordDto().setRecordPresignedUrl(null);
             System.out.println(trackResponseDto.getRecordDto().getRecordId());
         }
@@ -185,7 +181,7 @@ public class WorkService {
     }
 
     @Transactional
-    public void updateTrack(Integer studioId,Integer trackId, trackUpdateDto trackUpdateDto){
+    public void updateTrack(Integer studioId,Integer trackId, TrackUpdateDto trackUpdateDto){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
@@ -199,22 +195,22 @@ public class WorkService {
     /// /////////////////////////////////////////////////////////////////////////////////////////////////////
 
     // 레코드 저장
-    public recordDto getRecordDto(Integer recordId){
+    public RecordDto getRecordDto(Integer recordId){
         Optional<Record> optionalRecord = recordReposiotry.findById(recordId);
         Record record = checkElementException(optionalRecord, "Record not found");
 
-        return new recordDto( //dto에 담기
+        return new RecordDto( //dto에 담기
                 record.getId(),
                 "presigne 주소 저장해서 반환"
                 //s3Service.generatePresignedUrl("presigne 주소 저장해서 반환")
         );
     }
 
-    public trackDto getTrackDto(Integer trackId){
+    public TrackDto getTrackDto(Integer trackId){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
 
-        return new trackDto( //dto에 담기
+        return new TrackDto( //dto에 담기
                 track.getId(),
                 track.getInstrument().name(),// 이거 이넘으롱 어떻게 받음 ?
                 "presigne 주소 저장해서 반환",
@@ -226,18 +222,18 @@ public class WorkService {
     }
 
     // 트랙ID에 해당하는 트랙 반환
-    public trackResponseDto getTrackResponseDto(Integer trackId){
-        trackDto trackDto = getTrackDto(trackId);
-        recordDto recordDto = getRecordDto(trackDto.getRecordId());
+    public TrackResponseDto getTrackResponseDto(Integer trackId){
+        TrackDto trackDto = getTrackDto(trackId);
+        RecordDto recordDto = getRecordDto(trackDto.getRecordId());
 
-        return new trackResponseDto(
+        return new TrackResponseDto(
                 trackDto,
                 recordDto
         );
     }
 
     //리팩토링 클리어
-    public studioSimpleDto getStudioDto(Integer studioId){
+    public StudioSimpleDto getStudioSimpleDto(Integer studioId){
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         List<Track> trackList = trackReposiotry.findByStudio(studio);
@@ -249,7 +245,7 @@ public class WorkService {
             }
         }
 
-        return new studioSimpleDto(
+        return new StudioSimpleDto(
                 studio.getId(),
                 studio.getUser().getId(),
                 studio.getName(),

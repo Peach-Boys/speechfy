@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class recordDto {
+public class RecordDto {
     private Integer recordId;
     private String recordPresignedUrl;
 }
