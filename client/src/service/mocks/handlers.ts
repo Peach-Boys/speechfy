@@ -1,8 +1,13 @@
 import { http, HttpResponse } from 'msw';
 import { DUMMYSTUDIO } from './dummies/TrackList';
-const BASEURL = process.env.Next_PUBLIC_API_BASE_URL;
+const BASEURL = process.env.NEXT_PUBLIC_API_BASE;
 export const handlers = [
-  http.get(`http://testapi:3000/api/work/studio/1`, () => {
+  http.get(`${BASEURL}/work/studio/1`, () => {
     return HttpResponse.json(DUMMYSTUDIO);
+  }),
+  http.delete(`${BASEURL}/work/studio/1`, () => {
+    return new Response(null, {
+      status: 204,
+    });
   }),
 ];

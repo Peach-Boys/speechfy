@@ -4,7 +4,10 @@ import CreateRecord from '@/components/features/CreateRecord';
 import Track from '@/components/features/Track';
 import IconAllPlay from '@/components/icons/IconAllPlay';
 import IconReset from '@/components/icons/IconReset';
+import { useDeleteAllTrack } from '@/service/queries/useDeleteAllTrack';
 import { ITrack } from '@/types/track';
+import { useParams } from 'next/navigation';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 interface Props {
@@ -14,6 +17,8 @@ interface Props {
 
 function TrackTab({ tracks, setTracks }: Props) {
   const [isAllPlay, setIsAllPlay] = useState<boolean>(false);
+  const { workroom_id } = useParams();
+  const { mutate } = useDeleteAllTrack(workroom_id as string);
   function handlePlayAll() {
     setIsAllPlay(true);
   }
@@ -23,7 +28,7 @@ function TrackTab({ tracks, setTracks }: Props) {
   return (
     <div className='w-full h-full min-h-4/5 max-h-5/6 p-5 flex flex-col items-center gap-3'>
       <div className='w-full h-fit flex justify-between'>
-        <button className='flex items-center gap-1'>
+        <button className='flex items-center gap-1' onClick={() => mutate()}>
           <IconReset />
           <span>초기화</span>
         </button>

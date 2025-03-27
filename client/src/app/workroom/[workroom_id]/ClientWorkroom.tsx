@@ -25,6 +25,7 @@ function ClientWorkroom({ id }: Props) {
 
   useEffect(() => {
     if (data && !isLoading) {
+      console.log(data);
       setTracks(
         data.trackList.map((trackData: TrackListItem) => ({
           trackId: trackData.track.trackId,

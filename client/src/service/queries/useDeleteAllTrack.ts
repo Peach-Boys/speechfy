@@ -1,10 +1,10 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { deleteAllTrack } from '../apis/Workspace';
 
-export const useDeleteAllTrack = (workId: number) => {
+export const useDeleteAllTrack = (workId: string) => {
   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: () => deleteAllTrack(workId),
+    mutationFn: () => deleteAllTrack(Number(workId)),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['tracks'] });
     },
