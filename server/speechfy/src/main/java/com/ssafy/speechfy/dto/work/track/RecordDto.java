@@ -9,9 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class trackUpdateDto {
-    private Integer trackId;
-    private Integer order;
-    private String trackName;
-
+public class RecordDto {
+    private Integer recordId;
+    private String recordPresignedUrl;
 }
