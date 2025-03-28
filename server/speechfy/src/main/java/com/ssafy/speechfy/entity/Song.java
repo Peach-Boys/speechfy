@@ -1,12 +1,12 @@
 package com.ssafy.speechfy.entity;
 
+import com.ssafy.speechfy.enums.GenreType;
+import com.ssafy.speechfy.enums.MoodType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.List;
 
 @Entity
 @Setter @Getter
@@ -24,13 +24,15 @@ public class Song extends BaseEntity {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "genre_id")
-    private Genre genre;
-
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "studio_id")
     private Studio studio;
+
+    @Enumerated(EnumType.STRING)
+    private MoodType moodType;
+
+    @Enumerated(EnumType.STRING)
+    private GenreType genreType;
 
     @Column(name = "view_count")
     private int viewCount;
@@ -46,8 +48,4 @@ public class Song extends BaseEntity {
 
     @Column(name = "file_path")
     private String filePath;
-
-    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY)
-    private List<SongMood> songMoods;
-
 }
