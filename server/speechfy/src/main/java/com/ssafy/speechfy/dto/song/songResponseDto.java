@@ -19,6 +19,6 @@ public class songResponseDto {
     private Integer likes;
     private String imagePresignedUrl;
     private String genre;
-    private List<String> mood;
+    private String mood;
 
 }
