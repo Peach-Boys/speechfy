@@ -15,7 +15,8 @@ interface Props {
 
 function ClientWorkroom({ id }: Props) {
   const [tab, setTab] = useState<string>('work');
-  const [select, setSelect] = useState<(number | null)[]>([null, null]);
+  const [selectTag, setSelectTag] = useState<(number | null)[]>([null, null]);
+  const [selectSong, setSelectSong] = useState<number>(-1);
   // const [tracks, setTracks] = useState<ITrack[]>([]);
   const { setTracks } = useWorkRoomStore();
   const { data, isLoading, isError } = useGetTracks(id);
@@ -48,9 +49,17 @@ function ClientWorkroom({ id }: Props) {
       <div className='w-full flex justify-center text-2xl h-fit'>
         당근할아버지 프로젝트 {id}
       </div>
-      {tab === 'work' && <TrackTab />}
-      {tab === 'gerne' && <AITab select={select} setSelect={setSelect} />}
-      {tab === 'complete' && <CompleteTab />}
+      <div className='relative w-full h-full'>
+        <div className={tab === 'work' ? 'block' : 'hidden'}>
+          <TrackTab />
+        </div>
+        <div className={tab === 'gerne' ? 'block' : 'hidden'}>
+          <AITab selectTag={selectTag} setSelectTag={setSelectTag} />
+        </div>
+        <div className={tab === 'complete' ? 'block' : 'hidden'}>
+          <CompleteTab />
+        </div>
+      </div>
     </div>
   );
 }

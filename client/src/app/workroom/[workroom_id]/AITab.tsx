@@ -5,16 +5,15 @@ import TagField from '@/components/features/TagField';
 import { DUMMY_ADD_SONG } from '@/service/mocks/dummies/AddSong';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
 import { useParams } from 'next/navigation';
-import React, { useState } from 'react';
+import React from 'react';
 
 interface Props {
-  select: (number | null)[];
-  setSelect: React.Dispatch<React.SetStateAction<(number | null)[]>>;
+  selectTag: (number | null)[];
+  setSelectTag: React.Dispatch<React.SetStateAction<(number | null)[]>>;
 }
 
-function AITab({ select, setSelect }: Props) {
+function AITab({ selectTag, setSelectTag }: Props) {
   const { workroom_id } = useParams();
-  const [selectSong, setSelectSong] = useState<number>(-1);
 
   const postMutation = usePostPreviewSong(
     workroom_id as string,
@@ -33,7 +32,7 @@ function AITab({ select, setSelect }: Props) {
         <span className='bg-jihyegra rounded-full py-1 px-2'>분위기</span>를
         선택해주세요.
       </div>
-      <TagField select={select} setSelect={setSelect} />
+      <TagField select={selectTag} setSelect={setSelectTag} />
       <div className='w-full h-fit'>
         <button
           className='w-full h-fit py-3 mb-5 rounded-[10px] bg-gray-600 cursor-pointer'
@@ -42,7 +41,7 @@ function AITab({ select, setSelect }: Props) {
           AI 추천 받기 (임시 버튼)
         </button>
       </div>
-      <PreviewSongList selectSong={selectSong} setSelectSong={setSelectSong} />
+      <PreviewSongList />
     </div>
   );
 }

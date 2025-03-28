@@ -3,17 +3,14 @@
 import Spinner from '@/components/common/Spinner';
 import PreviewSongItem from '@/components/features/PreviewSongList/PreviewSongItem';
 import { useGetPreviewSongList } from '@/service/queries/useGetPreviewSongList';
+import { useSelectSongStore } from '@/stores/selectSongStore';
 import { IPreviewSong } from '@/types/song';
 import { useParams } from 'next/navigation';
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
-interface Props {
-  selectSong: number;
-  setSelectSong: React.Dispatch<React.SetStateAction<number>>;
-}
-
-function PreviewSongList({ selectSong, setSelectSong }: Props) {
+function PreviewSongList() {
   const { workroom_id } = useParams();
+  const { selectSong, setSelectSong } = useSelectSongStore();
   const [previewSongs, setPreviewSongs] = useState<IPreviewSong[]>();
   const { data, isLoading } = useGetPreviewSongList(workroom_id as string);
 
@@ -38,12 +35,8 @@ function PreviewSongList({ selectSong, setSelectSong }: Props) {
             <PreviewSongItem
               key={previewSong.songId}
               song={previewSong}
-              selected={previewSong.songId === selectSong}
-              onSelect={() =>
-                setSelectSong((prev: number) =>
-                  prev === previewSong.songId ? -1 : previewSong.songId
-                )
-              }
+              selected={previewSong.songId === selectSong?.songId}
+              onSelect={() => setSelectSong(previewSong)}
             />
           ))
         ) : (
