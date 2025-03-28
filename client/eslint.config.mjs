@@ -6,7 +6,7 @@ import airbnb from 'eslint-config-airbnb';
 import configPrettier from 'eslint-config-prettier';
 import pluginPrettier from 'eslint-plugin-prettier';
 import pluginReact from 'eslint-plugin-react';
-import globals from 'globals';
+import globals, { node } from 'globals';
 
 const baseConfig = {
   languageOptions: {
@@ -49,6 +49,10 @@ export default [
   {
     ...baseConfig,
     files: ['**/*.{js,mjs,cjs,ts,tsx,jsx}'],
+    env: {
+      browser: true,
+      node: true,
+    },
   },
   prettierAndReactConfig,
 ];
