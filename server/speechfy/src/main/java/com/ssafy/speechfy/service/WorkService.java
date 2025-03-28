@@ -29,24 +29,32 @@ public class WorkService {
     private final S3Service s3Service;
 
 
-    //리팩토링 클리어
+    /*
+        Controller: getStudioList
+        StudioSimpleDto 반환 = 작업실 내 트랙리스트 내용 간략 포함된 Dto
+        StudioListResponseDto = StudioSimpleDto에 대한 리스트 반환
+     */
     public StudioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
-
         List<Studio> studioList = studioReposiotry.findByUser(user);
         List<StudioSimpleDto> studioSimpleDtoList = new ArrayList<>();
         if (!studioList.isEmpty()) {
             for (Studio studio : studioList) {
-                StudioSimpleDto dto = getStudioSimpleDto(studio.getId());
+                StudioSimpleDto dto = getStudioSimpleDto(studio.getId());  // simpleDto를 얻는 함수 이용
                 studioSimpleDtoList.add(dto);
             }
         }
-
         return new StudioListResponseDto(studioSimpleDtoList);
     }
 
 
+    /*
+        기능 : 작업실 생성 기능
+        Controller : createStudio
+        반환값 : StudioResponseDto -> 작업실에 대한 정보 반환 이때 getStudio는 작업실의 트랙 반환을 위한 것
+        추후 StudioResponseDto에 완성곡리스트도 달아놓눈 기능 개선 필요
+     */
     @Transactional
     public StudioResponseDto createStudio(Integer userId, StudioCreateDto studioCreateDto){
         Optional<User> optionalUser = userReposiotry.findById(userId);
@@ -135,8 +143,8 @@ public class WorkService {
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         //악기이넘사용
-        Instrument instrument = Instrument.values()[trackCreateDto.getInstrumentId()];
-        System.out.println(instrument.name());
+        InstrumentType instrumentType = InstrumentType.values()[trackCreateDto.getInstrumentId()];
+        System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
         String trackName = "Track_" + System.currentTimeMillis();
         System.out.println(trackName);
@@ -213,7 +221,7 @@ public class WorkService {
 
         return new TrackDto( //dto에 담기
                 track.getId(),
-                track.getInstrument().name(),// 이거 이넘으롱 어떻게 받음 ?
+                track.getInstrumentType().name(),// 이거 이넘으롱 어떻게 받음 ?
                 "presigne 주소 저장해서 반환",
                 // s3Service.generatePresignedUrl("presigne 주소 저장해서 반환"),
                 track.getName(),
@@ -233,16 +241,19 @@ public class WorkService {
         );
     }
 
-    //리팩토링 클리어
+    /*
+        StudioSimpleDto를 반환
+        getStudioList에서 사용하는 함수
+     */
     public StudioSimpleDto getStudioSimpleDto(Integer studioId){
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         List<Track> trackList = trackReposiotry.findByStudio(studio);
-        List<String> instrumentList = new ArrayList<String>();
+        List<String> instrumentList = new ArrayList<>();
 
         if(!trackList.isEmpty()) {
             for (Track track : trackList) {
-                instrumentList.add(track.getInstrument().name());//
+                instrumentList.add(track.getInstrumentType().name());//
             }
         }
 
