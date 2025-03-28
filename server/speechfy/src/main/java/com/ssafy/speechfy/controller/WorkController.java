@@ -1,39 +1,33 @@
 package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.dto.work.track.*;
-import com.ssafy.speechfy.dto.work.studio.studioCreateDto;
-import com.ssafy.speechfy.dto.work.studio.studioListResponseDto;
-import com.ssafy.speechfy.dto.work.studio.studioResponseDto;
-import com.ssafy.speechfy.repository.StudioRepository;
+import com.ssafy.speechfy.dto.work.studio.StudioCreateDto;
+import com.ssafy.speechfy.dto.work.studio.StudioListResponseDto;
+import com.ssafy.speechfy.dto.work.studio.StudioResponseDto;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.WorkService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/work")
 public class WorkController {
     private final WorkService workService;
-    private final StudioRepository studioRepository;
     private final S3Service s3Service;
 
-    public WorkController(WorkService workService, StudioRepository studioRepository, S3Service s3Service) {
-        this.workService = workService;
-        this.studioRepository = studioRepository;
-        this.s3Service = s3Service;
-    }
 
     @GetMapping("/studio")
-    public ResponseEntity<studioListResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
-        studioListResponseDto responseDto = workService.getStudioList(userId);
+    public ResponseEntity<StudioListResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
+        StudioListResponseDto responseDto = workService.getStudioList(userId);
         return ResponseEntity.ok(responseDto);
     }
 
     @PostMapping("/studio")
-    public ResponseEntity<String> createStudio(@CookieValue(name = "userId") Integer userId, @RequestBody studioCreateDto studioCreateDto) {
-        workService.createStudio(userId, studioCreateDto);
-        return ResponseEntity.created(null).body("Studio created"); // 이거 어캐함 ?
+    public ResponseEntity<StudioResponseDto> createStudio(@CookieValue(name = "userId") Integer userId, @RequestBody StudioCreateDto studioCreateDto) {
+        StudioResponseDto responseDto = workService.createStudio(userId, studioCreateDto);
+        return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/studio/{studioId}")
@@ -43,16 +37,16 @@ public class WorkController {
     }
 
     @GetMapping("/studio/{studioId}")
-    public ResponseEntity<studioResponseDto> getTrackList(@PathVariable Integer studioId){
-        trackListResponseDto trackListResponseDto = workService.getTrackList(studioId);
+    public ResponseEntity<StudioResponseDto> getStudio(@PathVariable Integer studioId){
+        TrackListResponseDto trackListResponseDto = workService.getStudio(studioId);
 
-        return ResponseEntity.ok(new studioResponseDto(trackListResponseDto));
+        return ResponseEntity.ok(new StudioResponseDto(trackListResponseDto));
     }
 
     @PutMapping("/studio/{studioId}")
     public ResponseEntity<String> updateTrackList(
-            @PathVariable Integer studioId ,@RequestBody trackListUpdateDto trackListUpdateDto){
-        workService.updateWorkList(studioId,trackListUpdateDto);
+            @PathVariable Integer studioId ,@RequestBody TrackListUpdateDto trackListUpdateDto){
+        workService.updateTrackList(studioId,trackListUpdateDto);
         return ResponseEntity.ok(null);
     }
 
@@ -63,19 +57,19 @@ public class WorkController {
     }
 
     @PostMapping("/track/{studioId}")
-    public ResponseEntity<trackResponseDto> createTrack(
+    public ResponseEntity<TrackResponseDto> createTrack(
             @CookieValue(name = "userId") Integer userId,
             @PathVariable Integer studioId,
-            @RequestBody trackCreateDto workCreateDto ){
+            @RequestBody TrackCreateDto workCreateDto ){
 
-        trackResponseDto responseDto = workService.createTrack(userId,studioId, workCreateDto);
+        TrackResponseDto responseDto = workService.createTrack(userId,studioId, workCreateDto);
 
         return ResponseEntity.ok(responseDto);
     }
 
     @GetMapping("/track/{trackId}")
-    public ResponseEntity<trackResponseDto> getTrack(@PathVariable Integer trackId){
-        trackResponseDto responseDto = workService.getTrackResponseDto(trackId);
+    public ResponseEntity<TrackResponseDto> getTrack(@PathVariable Integer trackId){
+        TrackResponseDto responseDto = workService.getTrackResponseDto(trackId);
         return ResponseEntity.ok(responseDto);
     }
 
@@ -87,14 +81,14 @@ public class WorkController {
 
     @PutMapping("/track/{studioId}/{trackId}")
     public ResponseEntity<String> updateTrack(
-            @PathVariable Integer studioId,@PathVariable Integer trackId,@RequestBody trackUpdateDto trackUpdateDto ){
+            @PathVariable Integer studioId,@PathVariable Integer trackId,@RequestBody TrackUpdateDto trackUpdateDto ){
         workService.updateTrack(trackId,studioId, trackUpdateDto);
         return ResponseEntity.ok(null);
     }
 
     @GetMapping("/record/{recordId}")
-    public ResponseEntity<recordDto> getRecord(@PathVariable Integer recordId){
-        recordDto responseDto = workService.getRecordDto(recordId);
+    public ResponseEntity<RecordDto> getRecord(@PathVariable Integer recordId){
+        RecordDto responseDto = workService.getRecordDto(recordId);
        return ResponseEntity.ok(responseDto);
     }
 }

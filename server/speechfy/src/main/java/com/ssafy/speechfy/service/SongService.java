@@ -1,39 +1,65 @@
 package com.ssafy.speechfy.service;
 
-import com.ssafy.speechfy.dto.song.songDto;
+import com.ssafy.speechfy.dto.song.songResponseDto;
 import com.ssafy.speechfy.entity.Song;
+import com.ssafy.speechfy.entity.User;
 import com.ssafy.speechfy.repository.SongRepository;
+import com.ssafy.speechfy.repository.UserRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.ssafy.speechfy.dto.song.songListResponseDto;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SongService {
     private final SongRepository songRepository;
+    private final UserRepository userRepository;
 
-    public SongService(final SongRepository songRepository) {
+    public SongService(SongRepository songRepository, UserRepository userRepository) {
         this.songRepository = songRepository;
+        this.userRepository = userRepository;
     }
 
     /**
-     * 완성곡 리스트 반환
+     * 마이페이지 완성곡 리스트 반환
      * songListResponseDto
+     * 페이지네이션 기능 추가
      */
-    public songListResponseDto getAllSongs() {
-        Song song1 = new Song();
-        song1.setName("aa");
-        Song song2 = new Song();
-        songRepository.save(song1);
-        return null;
+    public songListResponseDto getAllSongs(Integer userId, Pageable pageable) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("해당 ID의 유저를 찾을 수 없습니다."));
+        Page<Song> songList = songRepository.findByUserWithMood(user, pageable);
+
+        List<songResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
+            List<String> moodNames = song.getSongMoods().stream()
+                    .map(songMood -> songMood.getMood().getName())
+                    .collect(Collectors.toList());
+            songResponseDto dto = new songResponseDto();
+            dto.setSongId(song.getId());
+            dto.setUserId(song.getUser().getId());
+            dto.setSongPresignedUrl(song.getFilePath());
+            dto.setViewCount(song.getViewCount());
+            dto.setLikes(song.getLikes());
+            dto.setImagePresignedUrl(song.getImagePath());
+            dto.setGenre(song.getGenre().getName());
+            dto.setMood(moodNames);
+            return dto;
+        }).collect(Collectors.toList());
+        
+        return new songListResponseDto(songResponseDtoList);
     }
 
     /**
      * id 기반 완성곡 반환
      *
      */
-    public songDto getSongById(int id) {
+    public songResponseDto getSongById(int id) {
         return null;
     }
 

@@ -9,8 +9,11 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class trackCreateDto {
-    private Integer instrumentId;
-    private Integer recordId;
-    private Integer order;
+public class TrackDto {
+   private Integer trackId;
+   private String instrumentName;
+   private String trackPresignedUrl;
+   private String trackName;
+   private Integer recordId;
+   private Integer order;
 }

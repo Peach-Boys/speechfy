@@ -5,6 +5,8 @@ import com.ssafy.speechfy.dto.song.songListResponseDto;
 import com.ssafy.speechfy.service.MusicGenService;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.SongService;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,11 +23,13 @@ public class SongController {
         this.musicGenService = musicGenService;
     }
 
-    @GetMapping("/{studioId}")
-    public ResponseEntity<songListResponseDto> getSongList(@PathVariable Integer studioId) {
+    // 마이페이지 완성곡 리스트 반환
+    @GetMapping("/{id}")
+    public ResponseEntity<songListResponseDto> getSongList(@PathVariable Integer id) {
+        Pageable pageable = PageRequest.of(0, 3);
+        songListResponseDto songListResponseDto = songService.getAllSongs(id, pageable);
 
-
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok(songListResponseDto);
     }
 
     @PostMapping("/{studioId}")

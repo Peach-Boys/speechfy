@@ -1,7 +1,5 @@
 package com.ssafy.speechfy.dto.work.track;
 
-
-import com.ssafy.speechfy.entity.Track;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,7 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class trackResponseDto { // 프라사인드 반환을 위한 DTO
-    private trackDto trackDto;
-    private recordDto recordDto;
+public class TrackUpdateDto {
+    private Integer trackId;
+    private Integer order;
+    private String trackName;
 }

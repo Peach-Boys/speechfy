@@ -11,8 +11,6 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class trackListResponseDto {
-    private Integer studioId;
-    private String studioName;
-    private List<trackResponseDto> trackList;
+public class TrackListUpdateDto {
+    private List<TrackUpdateDto> updateList;
 }
