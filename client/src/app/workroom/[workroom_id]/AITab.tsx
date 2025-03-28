@@ -13,9 +13,13 @@ interface Props {
 }
 
 function AITab({ select, setSelect }: Props) {
-  const { workroomId } = useParams();
+  const { workroom_id } = useParams();
   const [selectSong, setSelectSong] = useState<number>(-1);
-  const postMutation = usePostPreviewSong(workroomId as string, DUMMY_ADD_SONG);
+
+  const postMutation = usePostPreviewSong(
+    workroom_id as string,
+    DUMMY_ADD_SONG
+  );
 
   async function handleCreateAISong() {
     postMutation.mutate();
