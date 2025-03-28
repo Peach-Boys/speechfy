@@ -29,24 +29,32 @@ public class WorkService {
     private final S3Service s3Service;
 
 
-    //리팩토링 클리어
+    /*
+        Controller: getStudioList
+        StudioSimpleDto 반환 = 작업실 내 트랙리스트 내용 간략 포함된 Dto
+        StudioListResponseDto = StudioSimpleDto에 대한 리스트 반환
+     */
     public StudioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
-
         List<Studio> studioList = studioReposiotry.findByUser(user);
         List<StudioSimpleDto> studioSimpleDtoList = new ArrayList<>();
         if (!studioList.isEmpty()) {
             for (Studio studio : studioList) {
-                StudioSimpleDto dto = getStudioSimpleDto(studio.getId());
+                StudioSimpleDto dto = getStudioSimpleDto(studio.getId());  // simpleDto를 얻는 함수 이용
                 studioSimpleDtoList.add(dto);
             }
         }
-
         return new StudioListResponseDto(studioSimpleDtoList);
     }
 
 
+    /*
+        기능 : 작업실 생성 기능
+        Controller : createStudio
+        반환값 : StudioResponseDto -> 작업실에 대한 정보 반환 이때 getStudio는 작업실의 트랙 반환을 위한 것
+        추후 StudioResponseDto에 완성곡리스트도 달아놓눈 기능 개선 필요
+     */
     @Transactional
     public StudioResponseDto createStudio(Integer userId, StudioCreateDto studioCreateDto){
         Optional<User> optionalUser = userReposiotry.findById(userId);
@@ -233,12 +241,15 @@ public class WorkService {
         );
     }
 
-    //리팩토링 클리어
+    /*
+        StudioSimpleDto를 반환
+        getStudioList에서 사용하는 함수
+     */
     public StudioSimpleDto getStudioSimpleDto(Integer studioId){
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         List<Track> trackList = trackReposiotry.findByStudio(studio);
-        List<String> instrumentList = new ArrayList<String>();
+        List<String> instrumentList = new ArrayList<>();
 
         if(!trackList.isEmpty()) {
             for (Track track : trackList) {
