@@ -43,6 +43,14 @@ dependencies {
 
 	implementation 'org.springframework.boot:spring-boot-starter'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+
+	implementation(platform("software.amazon.awssdk:bom:2.20.30"))
+	implementation("software.amazon.awssdk:s3")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation 'me.paulschwarz:spring-dotenv:4.0.0'
+	implementation 'com.amazonaws:aws-java-sdk-s3:1.12.123'
+	testImplementation("org.mockito:mockito-core")
+	testImplementation("org.mockito:mockito-junit-jupiter")
 }
 
 tasks.named('test') {
