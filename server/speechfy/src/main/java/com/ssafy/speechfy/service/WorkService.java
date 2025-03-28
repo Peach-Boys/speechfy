@@ -13,6 +13,7 @@ import com.ssafy.speechfy.dto.work.work.workListResponseDto;
 import com.ssafy.speechfy.dto.work.work.workListUpdateDto;
 import com.ssafy.speechfy.dto.work.work.workResponseDto;
 import com.ssafy.speechfy.entity.Record;
+import com.ssafy.speechfy.enums.InstrumentType;
 import com.ssafy.speechfy.repository.*;
 import com.ssafy.speechfy.entity.*;
 import org.springframework.stereotype.Service;
@@ -158,8 +159,8 @@ public class WorkService {
         Studio studio = checkElementException(optionalStudio, "Studio not found");
 
         //악기이넘사용
-        Instrument instrument = Instrument.values()[workCreateDto.getInstrumentId()];
-        System.out.println(instrument.name());
+        InstrumentType instrumentType = InstrumentType.values()[workCreateDto.getInstrumentId()];
+        System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성
         String trackName = "Track_" + System.currentTimeMillis();
         System.out.println(trackName);
@@ -189,7 +190,7 @@ public class WorkService {
         Track track = new Track(
                 0,
                 user,
-                instrument, //인스트러먼트 이넘이라 모르겠으
+                instrumentType, //인스트러먼트 이넘이라 모르겠으
                 record,
                 trackName,   // dto에서 네임을 안받은듯, 먼저 백에서 네임 자동생성 방식인ㄷ ㅡㅅ
                 filePath
@@ -275,7 +276,7 @@ public class WorkService {
         Track track = checkElementException(optionalTrack, "Track not found");
         return new trackDto( //dto에 담기
                 track.getId(),
-                track.getInstrument().name(),// 이거 이넘으롱 어떻게 받음 ?
+                track.getInstrumentType().name(),// 이거 이넘으롱 어떻게 받음 ?
                 track.getFilePath(),
                 track.getName(),
                 track.getRecord().getId()
@@ -303,7 +304,7 @@ public class WorkService {
         if(!StudioTrackList.isEmpty()) {
             for (StudioTrack studioTrack : StudioTrackList) {
                 Track track = studioTrack.getTrack();
-                instrumentList.add(track.getInstrument().name());//
+                instrumentList.add(track.getInstrumentType().name());//
             }
         }
 
