@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Setter @Getter
 @Table(name="song")
@@ -44,5 +46,8 @@ public class Song extends BaseEntity {
 
     @Column(name = "file_path")
     private String filePath;
+
+    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY)
+    private List<SongMood> songMoods;
 
 }

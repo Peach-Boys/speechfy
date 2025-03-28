@@ -6,6 +6,7 @@ import com.ssafy.speechfy.dto.work.studio.StudioSimpleDto;
 import com.ssafy.speechfy.dto.work.studio.StudioCreateDto;
 import com.ssafy.speechfy.dto.work.studio.StudioListResponseDto;
 import com.ssafy.speechfy.entity.Record;
+import com.ssafy.speechfy.enums.InstrumentType;
 import com.ssafy.speechfy.repository.*;
 import com.ssafy.speechfy.entity.*;
 import lombok.RequiredArgsConstructor;
@@ -161,7 +162,7 @@ public class WorkService {
         Track track = new Track(
                 0,
                 user,
-                instrument, //인스트러먼트 이넘이라 모르겠으
+                instrumentType, //인스트러먼트 이넘이라 모르겠으
                 record,
                 studio,
                 trackName,   // dto에서 네임을 안받은듯, 먼저 백에서 네임 자동생성 방식인ㄷ ㅡㅅ

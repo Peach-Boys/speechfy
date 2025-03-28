@@ -1,5 +1,6 @@
 package com.ssafy.speechfy.entity;
 
+import com.ssafy.speechfy.enums.InstrumentType;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +25,7 @@ public class Track {
     private User user;
 
     @Enumerated(EnumType.STRING)
-    private Instrument instrument;
+    private InstrumentType instrumentType;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "record_id")
