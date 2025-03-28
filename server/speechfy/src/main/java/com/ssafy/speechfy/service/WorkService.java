@@ -143,8 +143,8 @@ public class WorkService {
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         //악기이넘사용
-        Instrument instrument = Instrument.values()[trackCreateDto.getInstrumentId()];
-        System.out.println(instrument.name());
+        InstrumentType instrumentType = InstrumentType.values()[trackCreateDto.getInstrumentId()];
+        System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
         String trackName = "Track_" + System.currentTimeMillis();
         System.out.println(trackName);
@@ -221,7 +221,7 @@ public class WorkService {
 
         return new TrackDto( //dto에 담기
                 track.getId(),
-                track.getInstrument().name(),// 이거 이넘으롱 어떻게 받음 ?
+                track.getInstrumentType().name(),// 이거 이넘으롱 어떻게 받음 ?
                 "presigne 주소 저장해서 반환",
                 // s3Service.generatePresignedUrl("presigne 주소 저장해서 반환"),
                 track.getName(),
@@ -253,7 +253,7 @@ public class WorkService {
 
         if(!trackList.isEmpty()) {
             for (Track track : trackList) {
-                instrumentList.add(track.getInstrument().name());//
+                instrumentList.add(track.getInstrumentType().name());//
             }
         }
 
