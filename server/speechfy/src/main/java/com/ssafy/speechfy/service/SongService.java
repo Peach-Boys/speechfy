@@ -34,7 +34,7 @@ public class SongService {
     public songListResponseDto getAllSongs(Integer userId, Pageable pageable) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("해당 ID의 유저를 찾을 수 없습니다."));
-        Page<Song> songList = songRepository.findByUser(user, pageable);
+        Page<Song> songList = songRepository.findPageByUser(user, pageable);
 
         List<songResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
             songResponseDto dto = new songResponseDto();
@@ -57,8 +57,19 @@ public class SongService {
      * id 기반 완성곡 반환
      *
      */
-    public songResponseDto getSongById(int id) {
-        return null;
+    public songResponseDto getSongById(int songid) {
+        Song song = songRepository.findById(songid);
+        songResponseDto dto = new songResponseDto();
+        dto.setSongId(song.getId());
+        dto.setUserId(song.getUser().getId());
+        dto.setSongPresignedUrl(song.getFilePath());
+        dto.setViewCount(song.getViewCount());
+        dto.setLikes(song.getLikes());
+        dto.setImagePresignedUrl(song.getImagePath());
+        dto.setGenre(song.getGenreType().toString());
+        dto.setMood(song.getMoodType().toString());
+
+        return dto;
     }
 
     /**
