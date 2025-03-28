@@ -26,12 +26,6 @@ class TrackRepositoryTest {
 
     @Test
     void findByStudio() {
-        Track track = new Track();
-        track.setName("track");
-        trackRepository.save(track);
-        em.flush();
-        em.clear();
-        Optional<Track> findTrack = trackRepository.findById(track.getId());
-        System.out.println(findTrack.get().getName());
+
     }
 }

@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface SongRepository extends JpaRepository<Song, Integer> {
-    Page<Song> findByUser(@Param("user") User user, Pageable pageable);
+    Page<Song> findPageByUser(@Param("user") User user, Pageable pageable);
+    Song findById(int id);
     List<Song> findByStudioId(int studioId);
 }
