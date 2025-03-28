@@ -2,15 +2,14 @@
 
 import Box from '@/components/common/Box';
 import Button from '@/components/common/Button';
+import PlayBar from '@/components/common/PlayBar';
 import InstrumentList from '@/components/features/Track/InstrumentList';
 import TrackMenu from '@/components/features/Track/TrackMenu';
-import WavePlay from '@/components/features/Track/WavePlay';
 import IconDoubleCircle from '@/components/icons/IconDoubleCircle';
 import IconTripleDots from '@/components/icons/IconTripleDots';
 import useOutSideClick from '@/hooks/useOutSideClick';
-import { useRef, useState, useEffect } from 'react';
 import { ITrack } from '@/types/track';
-import PlayBar from '@/components/common/PlayBar';
+import { useEffect, useRef, useState } from 'react';
 
 interface Props {
   track: ITrack;

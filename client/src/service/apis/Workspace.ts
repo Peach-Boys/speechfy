@@ -1,6 +1,5 @@
 import { client } from '@/service/clients';
 import { StudioData } from '@/service/types/Workspace';
-import { ITrack } from '@/types/track';
 
 export const getTracks = async (workroomId: string): Promise<StudioData> => {
   try {
