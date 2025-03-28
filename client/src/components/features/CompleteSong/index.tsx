@@ -80,7 +80,7 @@ function CompleteSong() {
         </span>
       </div>
     );
-  console.log('selectSong:', selectSong);
+
   return (
     <div className='w-full  flex flex-col items-center gap-5'>
       <div className='w-full flex text-xl'>AI 완성곡 듣기</div>
