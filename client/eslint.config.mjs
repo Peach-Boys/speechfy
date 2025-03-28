@@ -1,4 +1,4 @@
-import pluginJs from '@eslint/js';
+import { default as pluginJs } from '@eslint/js';
 import tanstackQuery from '@tanstack/eslint-plugin-query';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
@@ -6,11 +6,14 @@ import airbnb from 'eslint-config-airbnb';
 import configPrettier from 'eslint-config-prettier';
 import pluginPrettier from 'eslint-plugin-prettier';
 import pluginReact from 'eslint-plugin-react';
-import globals, { node } from 'globals';
+import globals from 'globals';
 
 const baseConfig = {
   languageOptions: {
-    globals: globals.browser,
+    globals: {
+      ...globals.browser,
+      ...globals.node,
+    },
     parser: tsParser,
     parserOptions: {
       ecmaVersion: 'latest',
@@ -49,10 +52,6 @@ export default [
   {
     ...baseConfig,
     files: ['**/*.{js,mjs,cjs,ts,tsx,jsx}'],
-    env: {
-      browser: true,
-      node: true,
-    },
   },
   prettierAndReactConfig,
 ];

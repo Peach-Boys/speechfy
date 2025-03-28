@@ -8,7 +8,7 @@ import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
 import { IPreviewSong } from '@/types/song';
 import clsx from 'clsx';
-import { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 interface Props {
   song: IPreviewSong;

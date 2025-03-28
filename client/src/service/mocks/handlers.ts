@@ -1,6 +1,7 @@
 import { DUMMY_AI_SONGS } from '@/service/mocks/dummies/SongList';
 import { http, HttpResponse } from 'msw';
 import { DUMMYSTUDIO } from './dummies/TrackList';
+
 const BASEURL = process.env.NEXT_PUBLIC_API_BASE;
 export const handlers = [
   http.get(`${BASEURL}/work/studio/1`, () => {

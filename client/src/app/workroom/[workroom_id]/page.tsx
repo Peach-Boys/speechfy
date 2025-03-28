@@ -2,19 +2,11 @@ import ClientWorkroom from '@/app/workroom/[workroom_id]/ClientWorkroom';
 import ClientProvider from '@/components/common/ClientProvider';
 import MswInitializer from '@/components/common/MswInitializer';
 
-type Props = {
-  params: {
-    workroom_id: string;
-  };
-};
-
-async function WorkroomPage({ params }: Props) {
-  const { workroom_id } = params;
-
+async function WorkroomPage() {
   return (
     <ClientProvider>
       <MswInitializer />
-      <ClientWorkroom id={workroom_id} />
+      <ClientWorkroom />
     </ClientProvider>
   );
 }
