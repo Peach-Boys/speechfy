@@ -13,6 +13,7 @@ RUN chmod +x gradlew
 RUN ./gradlew dependencies --no-daemon
 
 # 4. 프로젝트 코드 복사 및 빌드 실행
+COPY .env .env
 COPY src src
 RUN ./gradlew build --no-daemon
 
