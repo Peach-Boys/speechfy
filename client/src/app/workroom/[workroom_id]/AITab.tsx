@@ -25,6 +25,7 @@ function AITab({ selectTag, setSelectTag }: Props) {
   const { mergeWavFiles } = useMergeAudio();
   async function handleCreateAISong() {
     const mergedAudio = await handleMerge();
+    console.log(mergedAudio);
     postMutation.mutate();
   }
   const handleMerge = async (): Promise<string> => {
