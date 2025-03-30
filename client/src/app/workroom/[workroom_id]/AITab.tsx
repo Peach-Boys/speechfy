@@ -22,11 +22,7 @@ function AITab({ selectTag, setSelectTag }: Props) {
     workroom_id as string,
     DUMMY_ADD_SONG
   );
-  const {
-    mergeWavFiles,
-    isLoading: isMerging,
-    error: mergeError,
-  } = useMergeAudio();
+  const { mergeWavFiles } = useMergeAudio();
   async function handleCreateAISong() {
     const mergedAudio = await handleMerge();
     postMutation.mutate();
