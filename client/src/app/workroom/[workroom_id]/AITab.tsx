@@ -34,6 +34,10 @@ function AITab({ selectTag, setSelectTag }: Props) {
       const wavBuffer = await mergeWavFiles(fileUrls);
       const blob = new Blob([wavBuffer], { type: 'audio/wav' });
       const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'merged.wav';
+      a.click();
       return url;
     } catch (error: unknown) {
       throw new Error((error as Error).message);

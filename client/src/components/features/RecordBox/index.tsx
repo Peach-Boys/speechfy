@@ -8,6 +8,8 @@ import React, { SetStateAction, useEffect, useState } from 'react';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
+import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
+import InstrumentGenerator from '../InstrumentGenerator';
 
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -19,6 +21,8 @@ const label = ['악기 선택', '녹음', '녹음 중'];
 function RecordBox({ setIsCreate, addTrack }: Props) {
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
   const [level, setLevel] = useState<number>(0); // 녹음 절차
+  const [instrument, setInstrument] = useState<INSTRUMENT_TYPE | null>(null);
+  const [isAutoComplete, setAutoComplete] = useState<boolean>();
 
   function handleNextLevel() {
     setLevel(level + 1);
@@ -58,14 +62,27 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
             </div>
           )}
         </div>
-        {level == 0 && <SelectInstrument handleNextLevel={handleNextLevel} />}
-        {level == 1 && <SelectMode handleNextLevel={handleNextLevel} />}
-        {level == 2 && (
+        {level == 0 && (
+          <SelectInstrument
+            handleNextLevel={handleNextLevel}
+            setInstrument={setInstrument}
+          />
+        )}
+        {level == 1 && (
+          <SelectMode
+            handleNextLevel={handleNextLevel}
+            setAutoComplete={setAutoComplete}
+          />
+        )}
+        {level == 2 && !isAutoComplete && (
           <Recording
             isRecording={isRecording}
             stopRecording={stopRecording}
             startRecording={startRecording}
           />
+        )}
+        {level == 2 && isAutoComplete && (
+          <InstrumentGenerator selectedInst={instrument} />
         )}
       </div>
     </Box>
