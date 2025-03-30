@@ -1,4 +1,5 @@
 import { formatMusicTime } from '@/utils/format';
+import React from 'react';
 
 interface Props {
   currentTime: number;

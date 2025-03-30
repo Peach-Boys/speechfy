@@ -8,17 +8,14 @@ import WorkroomTabs from '@/app/workroom/[workroom_id]/WorkroomTabs';
 import { useGetTracks } from '@/service/queries/useGetTracks';
 import { TrackListItem } from '@/service/types/Workspace';
 import { useWorkRoomStore } from '@/stores/workroomStore';
+import { useParams } from 'next/navigation';
 
-interface Props {
-  id: string;
-}
-
-function ClientWorkroom({ id }: Props) {
+function ClientWorkroom() {
+  const { workroom_id } = useParams();
   const [tab, setTab] = useState<string>('work');
   const [selectTag, setSelectTag] = useState<(number | null)[]>([null, null]);
-  const [selectSong, setSelectSong] = useState<number>(-1);
   const { setTracks } = useWorkRoomStore();
-  const { data, isLoading, isError } = useGetTracks(id);
+  const { data, isLoading, isError } = useGetTracks(workroom_id as string);
 
   useEffect(() => {
     if (isError) {
@@ -46,7 +43,7 @@ function ClientWorkroom({ id }: Props) {
     <div className='w-full h-full flex flex-col'>
       <WorkroomTabs tab={tab} setTab={setTab} />
       <div className='w-full flex justify-center text-2xl h-fit'>
-        당근할아버지 프로젝트 {id}
+        당근할아버지 프로젝트 {workroom_id}
       </div>
       <div className='relative w-full h-full'>
         <div className={tab === 'work' ? 'block' : 'hidden'}>

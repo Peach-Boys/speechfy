@@ -3,11 +3,11 @@
 import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
 import { useRecord } from '@/hooks/useRecord';
+import { ITrack } from '@/types/track';
 import React, { SetStateAction, useEffect, useState } from 'react';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
-import { ITrack } from '@/types/track';
 
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -31,6 +31,7 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
 
   function handleAddTrack() {
     addTrack({
+      order: 0,
       trackId: 1,
       instrumentName: 'SoundHelix-Song-1',
       isPlaying: false,
