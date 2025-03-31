@@ -1,6 +1,5 @@
 'use client';
 
-import { useEffect, useState } from 'react';
 import AITab from '@/app/workroom/[workroom_id]/AITab';
 import CompleteTab from '@/app/workroom/[workroom_id]/CompleteTab';
 import TrackTab from '@/app/workroom/[workroom_id]/TrackTab';
@@ -9,6 +8,7 @@ import { useGetTracks } from '@/service/queries/useGetTracks';
 import { TrackListItem } from '@/service/types/Workspace';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 function ClientWorkroom() {
   const { workroom_id } = useParams();
@@ -32,6 +32,8 @@ function ClientWorkroom() {
           instrumentName: trackData.track.instrumentName,
           trackUrl: trackData.track.trackUrl,
           trackName: trackData.track.trackName,
+          recordId: trackData.record.recordId,
+          recordUrl: trackData.record.recordUrl,
           isPlaying: false,
           order: trackData.order,
         }))

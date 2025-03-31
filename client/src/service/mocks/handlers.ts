@@ -26,9 +26,27 @@ export const handlers = [
     return HttpResponse.json(DUMMY_AI_SONGS);
   }),
 
-  http.post(`${BASEURL}/song/:workroom_id`, async () => {
+  http.post(`${BASEURL}/song/:workroom_id`, () => {
     return new Response(null, {
       status: 204,
+    });
+  }),
+
+  http.get(`${BASEURL}/S3/:workroom_id`, () => {
+    return new Response(null, {
+      status: 200,
+    });
+  }),
+
+  http.put(`${BASEURL}/presignedUrl/:workroom_id`, () => {
+    return new Response(null, {
+      status: 200,
+    });
+  }),
+
+  http.post(`${BASEURL}/work/check/:workroom_id`, () => {
+    return new Response(null, {
+      status: 200,
     });
   }),
 ];
