@@ -6,13 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
 @Table(name="`record`")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Record {
+public class Record extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,4 +24,12 @@ public class Record {
 
     @Column(name = "file_path")
     private String filePath;
+
+    @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Track> tracks = new ArrayList<>();
+
+    public Record(int id, String filePath) {
+        this.id = id;
+        this.filePath = filePath;
+    }
 }

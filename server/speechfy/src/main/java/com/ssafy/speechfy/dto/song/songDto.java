@@ -14,7 +14,7 @@ public class songDto {
     private Integer userId;
     private String songUrl;
     private Integer viewCount;
-    private Integer likes;
+    private Integer likesCount;
     private String imageUrl;
     private String genre;
     private String mood;

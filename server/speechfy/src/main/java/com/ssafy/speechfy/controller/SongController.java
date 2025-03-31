@@ -25,10 +25,10 @@ public class SongController {
     }
 
     // 마이페이지 완성곡 리스트 반환
-    @GetMapping("/{id}")
-    public ResponseEntity<songListResponseDto> getSongList(@PathVariable Integer id) {
+    @GetMapping("/{userId}")
+    public ResponseEntity<songListResponseDto> getSongList(@PathVariable Integer userId) {
         Pageable pageable = PageRequest.of(0, 3);
-        songListResponseDto songListResponseDto = songService.getAllSongs(id, pageable);
+        songListResponseDto songListResponseDto = songService.getAllSongs(userId, pageable);
 
         return ResponseEntity.ok(songListResponseDto);
     }
@@ -41,17 +41,17 @@ public class SongController {
     }
 
     // 완성곡 다운로드
-    @GetMapping("/download/{id}")
-    public ResponseEntity<songResponseDto> getSong(@PathVariable Integer id) {
-        songResponseDto dto = songService.getSongById(id);
+    @GetMapping("/download/{songId}")
+    public ResponseEntity<songResponseDto> getSong(@PathVariable Integer songId) {
+        songResponseDto dto = songService.getSongById(songId);
         return ResponseEntity.ok(dto);
     }
 
     // 완성곡 삭제
-    @DeleteMapping("/download/{id}")
-    public ResponseEntity<String> deleteSong(@PathVariable Integer studioId) {
-
-        return ResponseEntity.ok(null);
+    @DeleteMapping("/download/{songId}")
+    public ResponseEntity<String> deleteSong(@PathVariable Integer songId) {
+        songService.deleteSongById(songId);
+        return ResponseEntity.noContent().build();
     }
 
     // 앨범 커버 생성

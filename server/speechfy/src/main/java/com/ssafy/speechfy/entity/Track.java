@@ -13,7 +13,7 @@ import lombok.Setter;
 @Table(name="track")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Track {
+public class Track extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

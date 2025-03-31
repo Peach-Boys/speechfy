@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 import com.ssafy.speechfy.dto.song.songListResponseDto;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -42,7 +40,7 @@ public class SongService {
             dto.setUserId(userId);
             dto.setSongPresignedUrl(song.getFilePath());
             dto.setViewCount(song.getViewCount());
-            dto.setLikes(song.getLikes());
+            dto.setLikesCount(song.getLikesCount());
             dto.setImagePresignedUrl(song.getImagePath());
             dto.setGenre(song.getGenreType().toString());
             dto.setMood(song.getMoodType().toString());
@@ -64,7 +62,7 @@ public class SongService {
         dto.setUserId(song.getUser().getId());
         dto.setSongPresignedUrl(song.getFilePath());
         dto.setViewCount(song.getViewCount());
-        dto.setLikes(song.getLikes());
+        dto.setLikesCount(song.getLikesCount());
         dto.setImagePresignedUrl(song.getImagePath());
         dto.setGenre(song.getGenreType().toString());
         dto.setMood(song.getMoodType().toString());
@@ -84,7 +82,9 @@ public class SongService {
      * 완성곡 삭제
      */
     @Transactional
-    public void deleteSongById(int id) {}
+    public void deleteSongById(int songId) {
+        songRepository.deleteById(songId);
+    }
 
     /**
      * 앨범커버 생성
