@@ -4,7 +4,7 @@ import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
 import { useRecord } from '@/hooks/useRecord';
 import { useUploadFlow } from '@/service/queries/useUploadFlow';
-import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
+// import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
 import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
@@ -12,6 +12,8 @@ import InstrumentGenerator from '../InstrumentGenerator';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
+import { useDDSP } from '@/hooks/useDDSP';
+import Skeleton from '@/components/common/Skeleton';
 
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -24,7 +26,8 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   const { workroom_id } = useParams();
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
   const [level, setLevel] = useState<number>(0); // 녹음 절차
-  const [instrument, setInstrument] = useState<INSTRUMENT_TYPE | null>(null);
+  const [instrument, setInstrument] = useState<string | null>(null);
+  const { initialized, toneTransfer, loading } = useDDSP();
   const [isAutoComplete, setAutoComplete] = useState<boolean>();
   const mutation = useUploadFlow(workroom_id as string, audio);
 
@@ -37,26 +40,32 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
     setLevel(0);
   }
 
-  function handleAddTrack() {
+  function handleAddTrack(convertedUrl: string) {
     mutation.mutate();
     addTrack({
       order: 0,
       trackId: 1,
       instrumentName: 'SoundHelix-Song-1',
       trackName: 'SoundHelix-Song-1',
-      trackUrl: audio,
+      trackUrl: convertedUrl,
       recordId: 1,
       recordUrl: '',
       isPlaying: false,
     });
   }
   useEffect(() => {
-    console.log(audio);
-    if (!isRecording && audio !== '') {
-      handleAddTrack();
-      setIsCreate(false);
+    console.log(audio, initialized);
+    async function processRecording() {
+      if (!isRecording && audio !== '' && initialized) {
+        if (!instrument) return;
+        const convertedUrl = await toneTransfer(instrument, audio);
+        console.log(convertedUrl);
+        handleAddTrack(convertedUrl);
+        setIsCreate(false);
+      }
     }
-  }, [audio]);
+    processRecording();
+  }, [audio, instrument, initialized]);
 
   return (
     <Box borderStyle='solid'>
@@ -69,6 +78,7 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
             </div>
           )}
         </div>
+        {loading && <Skeleton className='w-full h-24' />}
         {level == 0 && (
           <SelectInstrument
             handleNextLevel={handleNextLevel}
