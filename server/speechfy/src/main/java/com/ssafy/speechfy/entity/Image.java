@@ -9,7 +9,7 @@ import lombok.Setter;
 @Entity
 @Setter
 @Getter
-@Table(name="user")
+@Table(name="image")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image extends BaseEntity {

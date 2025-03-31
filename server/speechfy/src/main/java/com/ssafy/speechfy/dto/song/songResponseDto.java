@@ -16,7 +16,7 @@ public class songResponseDto {
     private Integer userId;
     private String songPresignedUrl;
     private Integer viewCount;
-    private Integer likes;
+    private Integer likesCount;
     private String imagePresignedUrl;
     private String genre;
     private String mood;

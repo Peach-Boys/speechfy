@@ -31,6 +31,7 @@ class SongRepositoryTest {
 
     @Test
     public void testSave() {
+        em.clear();
 
     }
 }

@@ -8,6 +8,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Setter @Getter
 @Table(name="song")
@@ -37,8 +40,8 @@ public class Song extends BaseEntity {
     @Column(name = "view_count")
     private int viewCount;
 
-    @Column(name = "likes")
-    private int likes;
+    @Column(name = "likes_count")
+    private int likesCount;
 
     @Column(name = "image_path")
     private String imagePath;
@@ -48,4 +51,10 @@ public class Song extends BaseEntity {
 
     @Column(name = "file_path")
     private String filePath;
+
+    @OneToMany(mappedBy = "song", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Like> likes;
+
+    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 }

@@ -32,6 +32,8 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-devtools'
 	implementation 'com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.9.0'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
+	// oauth
+	implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
 
 	compileOnly 'org.projectlombok:lombok'
 	// 중복된 MySQL 드라이버 의존성을 하나로 정리
