@@ -1,5 +1,9 @@
 import { client } from '@/service/clients';
-import { INSTRUMENT_TYPE, StudioData } from '@/service/types/Workspace';
+import {
+  INSTRUMENT_TYPE,
+  StudioData,
+  WorkroomList,
+} from '@/service/types/Workspace';
 
 export const getTracks = async (workroomId: string): Promise<StudioData> => {
   try {
@@ -52,6 +56,15 @@ export const postChangeInstrument = async (
       recordId: recordId,
       instrumentType: instrumentType,
     });
+  } catch (err: unknown) {
+    throw new Error((err as Error).message);
+  }
+};
+
+export const getWorkrommList = async (): Promise<WorkroomList[]> => {
+  try {
+    const res = await client.get('/work/studio');
+    return res.data;
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
