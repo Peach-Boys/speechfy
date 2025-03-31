@@ -100,7 +100,6 @@ public class WorkService {
     @Transactional
     public void deleteTrack(Integer trackId){ // 사운드뱅크 삭제 위해 userId필요
         // 스튜디오 트랙 리스트 호출
-       ;
         // 스튜디오 트랙 리스트 삭제
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
