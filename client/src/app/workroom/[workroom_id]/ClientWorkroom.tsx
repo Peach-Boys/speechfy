@@ -7,18 +7,15 @@ import WorkroomTabs from '@/app/workroom/[workroom_id]/WorkroomTabs';
 import { useGetTracks } from '@/service/queries/useGetTracks';
 import { TrackListItem } from '@/service/types/Workspace';
 import { useWorkRoomStore } from '@/stores/workroomStore';
+import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
-interface Props {
-  id: string;
-}
-
-function ClientWorkroom({ id }: Props) {
+function ClientWorkroom() {
+  const { workroom_id } = useParams();
   const [tab, setTab] = useState<string>('work');
-  const [select, setSelect] = useState<(number | null)[]>([null, null]);
-  // const [tracks, setTracks] = useState<ITrack[]>([]);
+  const [selectTag, setSelectTag] = useState<(number | null)[]>([null, null]);
   const { setTracks } = useWorkRoomStore();
-  const { data, isLoading, isError } = useGetTracks(id);
+  const { data, isLoading, isError } = useGetTracks(workroom_id as string);
 
   useEffect(() => {
     if (isError) {
@@ -35,22 +32,32 @@ function ClientWorkroom({ id }: Props) {
           instrumentName: trackData.track.instrumentName,
           trackUrl: trackData.track.trackUrl,
           trackName: trackData.track.trackName,
+          recordId: trackData.record.recordId,
+          recordUrl: trackData.record.recordUrl,
           isPlaying: false,
           order: trackData.order,
         }))
       );
     }
-  }, [data, isLoading]);
+  }, [data, isLoading, setTracks]);
 
   return (
     <div className='w-full h-full flex flex-col'>
       <WorkroomTabs tab={tab} setTab={setTab} />
       <div className='w-full flex justify-center text-2xl h-fit'>
-        당근할아버지 프로젝트 {id}
+        당근할아버지 프로젝트 {workroom_id}
       </div>
-      {tab === 'work' && <TrackTab />}
-      {tab === 'gerne' && <AITab select={select} setSelect={setSelect} />}
-      {tab === 'complete' && <CompleteTab />}
+      <div className='relative w-full h-full'>
+        <div className={tab === 'work' ? 'block' : 'hidden'}>
+          <TrackTab />
+        </div>
+        <div className={tab === 'gerne' ? 'block' : 'hidden'}>
+          <AITab selectTag={selectTag} setSelectTag={setSelectTag} />
+        </div>
+        <div className={tab === 'complete' ? 'block' : 'hidden'}>
+          <CompleteTab />
+        </div>
+      </div>
     </div>
   );
 }

@@ -3,18 +3,26 @@ import IconMic from '@/components/icons/IconMic';
 
 interface Props {
   handleNextLevel: () => void;
+  setAutoComplete: (isAutoComplete: boolean) => void;
 }
 
-function SelectMode({ handleNextLevel }: Props) {
+function SelectMode({ handleNextLevel, setAutoComplete }: Props) {
+  function handleNext(isAutoComplete: boolean) {
+    handleNextLevel();
+    setAutoComplete(isAutoComplete);
+  }
   return (
     <div className='w-full flex justify-around items-center'>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={handleNextLevel}
+        onClick={() => handleNext(false)}
       >
         <IconMic width={20} height={20} color='#000000' />
       </div>
-      <div className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'>
+      <div
+        className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
+        onClick={() => handleNext(true)}
+      >
         <IconMagic />
       </div>
     </div>

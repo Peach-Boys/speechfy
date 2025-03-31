@@ -3,11 +3,15 @@
 import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
 import { useRecord } from '@/hooks/useRecord';
+import { useUploadFlow } from '@/service/queries/useUploadFlow';
+import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
+import { ITrack } from '@/types/track';
+import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
+import InstrumentGenerator from '../InstrumentGenerator';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
-import { ITrack } from '@/types/track';
 
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -17,8 +21,12 @@ interface Props {
 const label = ['악기 선택', '녹음', '녹음 중'];
 
 function RecordBox({ setIsCreate, addTrack }: Props) {
+  const { workroom_id } = useParams();
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
   const [level, setLevel] = useState<number>(0); // 녹음 절차
+  const [instrument, setInstrument] = useState<INSTRUMENT_TYPE | null>(null);
+  const [isAutoComplete, setAutoComplete] = useState<boolean>();
+  const mutation = useUploadFlow(workroom_id as string, audio);
 
   function handleNextLevel() {
     setLevel(level + 1);
@@ -30,13 +38,16 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   }
 
   function handleAddTrack() {
+    mutation.mutate();
     addTrack({
+      order: 0,
       trackId: 1,
       instrumentName: 'SoundHelix-Song-1',
-      isPlaying: false,
       trackName: 'SoundHelix-Song-1',
       trackUrl: audio,
-      order: 999,
+      recordId: 1,
+      recordUrl: '',
+      isPlaying: false,
     });
   }
   useEffect(() => {
@@ -52,20 +63,33 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
       <div className='flex flex-col items-center gap-10'>
         <div className='w-full h-full flex justify-between'>
           <span>{label[level]}</span>
-          {!isRecording && (
+          {!isRecording && !isAutoComplete && (
             <div className='cursor-pointer' onClick={handleClose}>
               <IconClose width={15} height={15} color='#ffffff' />
             </div>
           )}
         </div>
-        {level == 0 && <SelectInstrument handleNextLevel={handleNextLevel} />}
-        {level == 1 && <SelectMode handleNextLevel={handleNextLevel} />}
-        {level == 2 && (
+        {level == 0 && (
+          <SelectInstrument
+            handleNextLevel={handleNextLevel}
+            setInstrument={setInstrument}
+          />
+        )}
+        {level == 1 && (
+          <SelectMode
+            handleNextLevel={handleNextLevel}
+            setAutoComplete={setAutoComplete}
+          />
+        )}
+        {level == 2 && !isAutoComplete && (
           <Recording
             isRecording={isRecording}
             stopRecording={stopRecording}
             startRecording={startRecording}
           />
+        )}
+        {level == 2 && isAutoComplete && (
+          <InstrumentGenerator selectedInst={instrument} />
         )}
       </div>
     </Box>

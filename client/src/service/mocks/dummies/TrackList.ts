@@ -6,8 +6,7 @@ export const DUMMYSTUDIO = {
       track: {
         trackId: 101,
         instrumentName: 'Guitar',
-        trackUrl:
-          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        trackUrl: '/sounds/045252_comedy_music_samples_040wav-68551.mp3',
         trackName: 'Rhythm Guitar',
       },
       record: {
@@ -20,8 +19,7 @@ export const DUMMYSTUDIO = {
       track: {
         trackId: 102,
         instrumentName: 'Drums',
-        trackUrl:
-          'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3',
+        trackUrl: '/sounds/djembe-loop-273068.mp3',
         trackName: 'Drum Solo',
       },
       record: {
