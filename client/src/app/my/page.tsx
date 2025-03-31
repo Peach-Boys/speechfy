@@ -1,4 +1,4 @@
-import ClientMy from '@/app/my/[my_id]/ClientMy';
+import ClientMy from '@/app/my/ClientMy';
 import ClientProvider from '@/components/common/ClientProvider';
 import MswInitializer from '@/components/common/MswInitializer';
 

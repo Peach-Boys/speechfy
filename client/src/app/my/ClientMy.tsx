@@ -1,6 +1,6 @@
 'use client';
 
-import WorkroomTab from '@/app/my/[my_id]/WorkroomTab';
+import WorkroomTab from '@/app/my/WorkroomTab';
 import clsx from 'clsx';
 import { useState } from 'react';
 
