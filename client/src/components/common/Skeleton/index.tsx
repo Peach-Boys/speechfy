@@ -1,13 +1,11 @@
-import React from 'react';
-
 interface SkeletonProps {
   className?: string;
 }
 
-const Skeleton: React.FC<SkeletonProps> = ({ className = '' }) => {
+const Skeleton = ({ className = '' }: SkeletonProps) => {
   return (
     <div
-      className={`relative overflow-hidden ${className} animate-loading-skeleton opacity-70`}
+      className={`relative overflow-hidden rounded-[10px] ${className} animate-loading-skeleton opacity-70`}
     >
       <style>{`
         @keyframes loading-skeleton {

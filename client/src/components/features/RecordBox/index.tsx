@@ -3,13 +3,13 @@
 import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
 import { useRecord } from '@/hooks/useRecord';
+import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
 import { ITrack } from '@/types/track';
 import React, { SetStateAction, useEffect, useState } from 'react';
+import InstrumentGenerator from '../InstrumentGenerator';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
-import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
-import InstrumentGenerator from '../InstrumentGenerator';
 
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -56,7 +56,7 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
       <div className='flex flex-col items-center gap-10'>
         <div className='w-full h-full flex justify-between'>
           <span>{label[level]}</span>
-          {!isRecording && (
+          {!isRecording && !isAutoComplete && (
             <div className='cursor-pointer' onClick={handleClose}>
               <IconClose width={15} height={15} color='#ffffff' />
             </div>
