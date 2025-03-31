@@ -210,12 +210,12 @@ public class WorkService {
     public TrackDto getTrackDto(Integer trackId){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
+        String objectKey = "users/1/track/" + track.getId();
 
         return new TrackDto( //dto에 담기
                 track.getId(),
                 track.getInstrumentType().name(),// 이거 이넘으롱 어떻게 받음 ?
-                "presigne 주소 저장해서 반환",
-                // s3Service.generatePresignedUrl("presigne 주소 저장해서 반환"),
+                s3Service.generatePresignedUrl(objectKey).toString(),
                 track.getName(),
                 track.getRecord().getId(),
                 track.getOrder()
