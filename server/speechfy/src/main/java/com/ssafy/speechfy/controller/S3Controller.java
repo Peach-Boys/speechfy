@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.NoSuchElementException;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/S3")
@@ -22,11 +24,17 @@ public class S3Controller {
     private final TrackRepository trackRepository;
     @GetMapping("/presignedUrl")
     public ResponseEntity<PresignedUrlDto> getUrl(@RequestParam(value = "category", required = false) String category) {
-        String objectKey = "users/1/" + category;
-        PresignedUrlDto responseDto = new PresignedUrlDto(
-                s3Service.generatePresignedUrl(objectKey).toString()
-        );
-        return ResponseEntity.ok(responseDto);
+        if (category == null) throw new NullPointerException("category is null");
+        else if (category.equals("track") || category.equals("song") || category.equals("record")) {
+            int userId = 1;
+            String objectKey = "users/" + Integer.toString(userId) + "/" + category;
+            PresignedUrlDto responseDto = new PresignedUrlDto(
+                    s3Service.generatePresignedUrl(objectKey).toString()
+            );
+            return ResponseEntity.ok(responseDto);
+        }
+        else throw new IllegalArgumentException("category must be track or record or song");
+
     }
 
 }

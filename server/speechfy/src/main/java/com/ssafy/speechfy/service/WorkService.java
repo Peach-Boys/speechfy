@@ -241,7 +241,7 @@ public class WorkService {
 
         if(!trackList.isEmpty()) {
             for (Track track : trackList) {
-                instrumentList.add(track.getInstrumentType().name());//
+                instrumentList.add(track.getInstrumentType().name());
             }
         }
 
