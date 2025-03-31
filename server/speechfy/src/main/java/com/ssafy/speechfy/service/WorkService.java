@@ -134,7 +134,11 @@ public class WorkService {
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         //악기이넘사용
-        InstrumentType instrumentType = InstrumentType.values()[trackCreateDto.getInstrumentId()];
+        Integer instrumentId = trackCreateDto.getInstrumentId();
+        if (instrumentId < 0 || instrumentId >= InstrumentType.values().length) {
+            throw new IllegalArgumentException("Invalid instrument id");
+        }
+        InstrumentType instrumentType = InstrumentType.values()[instrumentId];
         System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
         String trackName = "Track_" + System.currentTimeMillis();
@@ -198,18 +202,19 @@ public class WorkService {
     public RecordDto getRecordDto(Integer recordId){
         Optional<Record> optionalRecord = recordReposiotry.findById(recordId);
         Record record = checkElementException(optionalRecord, "Record not found");
-
+        int userId = 1;
+        String objectKey = "users/"+ Integer.toString(userId) +"/record/" + record.getId();
         return new RecordDto( //dto에 담기
                 record.getId(),
-                "presigne 주소 저장해서 반환"
-                //s3Service.generatePresignedUrl("presigne 주소 저장해서 반환")
+                s3Service.generatePresignedUrl(objectKey).toString()
         );
     }
 
     public TrackDto getTrackDto(Integer trackId){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
-        String objectKey = "users/1/track/" + track.getId();
+        int userId = 1;
+        String objectKey = "users/"+ Integer.toString(userId) +"/track/" + track.getId();
 
         return new TrackDto( //dto에 담기
                 track.getId(),
@@ -241,7 +246,7 @@ public class WorkService {
 
         if(!trackList.isEmpty()) {
             for (Track track : trackList) {
-                instrumentList.add(track.getInstrumentType().name());//
+                instrumentList.add(track.getInstrumentType().name());
             }
         }
 
