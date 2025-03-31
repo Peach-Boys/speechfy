@@ -5,14 +5,14 @@ import {
 } from '@/service/apis/Upload';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useUploadFlow = (uploadType: string, audio: string) => {
+export const useUploadFlow = (category: string, audio: string) => {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async () => {
-      const presignedUrl = await getRequestPresignedUrlTrack(uploadType);
+      const presignedUrl = await getRequestPresignedUrlTrack(category);
       console.log('presi:', presignedUrl);
-      await putUploadTrack('presignedUrl', uploadType, audio);
+      await putUploadTrack('presignedUrl', category, audio);
       await postSuccess(presignedUrl);
     },
     onSuccess: () => {
