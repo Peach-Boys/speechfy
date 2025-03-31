@@ -3,8 +3,10 @@
 import Box from '@/components/common/Box';
 import IconClose from '@/components/icons/IconClose';
 import { useRecord } from '@/hooks/useRecord';
+import { useUploadFlow } from '@/service/queries/useUploadFlow';
 import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
 import { ITrack } from '@/types/track';
+import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
 import InstrumentGenerator from '../InstrumentGenerator';
 import Recording from './Recording';
@@ -19,10 +21,12 @@ interface Props {
 const label = ['악기 선택', '녹음', '녹음 중'];
 
 function RecordBox({ setIsCreate, addTrack }: Props) {
+  const { workroom_id } = useParams();
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
   const [level, setLevel] = useState<number>(0); // 녹음 절차
   const [instrument, setInstrument] = useState<INSTRUMENT_TYPE | null>(null);
   const [isAutoComplete, setAutoComplete] = useState<boolean>();
+  const mutation = useUploadFlow(workroom_id as string, audio);
 
   function handleNextLevel() {
     setLevel(level + 1);
@@ -34,13 +38,16 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   }
 
   function handleAddTrack() {
+    mutation.mutate();
     addTrack({
       order: 0,
       trackId: 1,
       instrumentName: 'SoundHelix-Song-1',
-      isPlaying: false,
       trackName: 'SoundHelix-Song-1',
       trackUrl: audio,
+      recordId: 1,
+      recordUrl: '',
+      isPlaying: false,
     });
   }
   useEffect(() => {
