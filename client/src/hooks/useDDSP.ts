@@ -3,8 +3,7 @@
 import { useRef, useState, useEffect } from 'react';
 import { encodeWAV } from '@/lib/utils/encodeWAV';
 import * as m from '@magenta/music';
-const PRESET_MODEL_URL =
-  'https://storage.googleapis.com/magentadata/js/checkpoints/ddsp/tenor_saxophone';
+const PRESET_MODEL_URL = '/model';
 
 export function useDDSP(audioUrl: string) {
   const [loading, setLoading] = useState(false);
@@ -13,7 +12,6 @@ export function useDDSP(audioUrl: string) {
   const spice = useRef<m.SPICE>(null);
   const audioFeatures = useRef(null);
   const mmModule = useRef<typeof m>(null);
-
   // 클라이언트 환경에서만 mm 모듈을 동적 import
   useEffect(() => {
     import('@magenta/music')
@@ -25,6 +23,12 @@ export function useDDSP(audioUrl: string) {
       });
   }, []);
 
+  useEffect(() => {
+    async function initModel() {
+      await initialize();
+    }
+    initModel();
+  }, []);
   const initialize = async () => {
     try {
       // 혹시 mmModule이 아직 로드되지 않았다면 여기서 재시도
@@ -65,14 +69,14 @@ export function useDDSP(audioUrl: string) {
     }
   };
 
-  const toneTransfer = async (checkpointUrl = PRESET_MODEL_URL) => {
+  const toneTransfer = async (modelType: string) => {
     setLoading(true);
     try {
       const mm = mmModule.current;
       if (mm === null) {
         throw new Error('Failed to load @magenta/music');
       }
-      const ddsp = new mm.DDSP(checkpointUrl);
+      const ddsp = new mm.DDSP(PRESET_MODEL_URL + `/${modelType}`);
       await ddsp.initialize();
       const toneTransferredAudioData = await ddsp.synthesize(
         audioFeatures.current
