@@ -20,3 +20,10 @@ export interface StudioData {
   studioName: string;
   trackList: TrackListItem[];
 }
+
+export enum INSTRUMENT_TYPE {
+  GUITAR,
+  KEYBOARD,
+  DRUM,
+  BASS,
+}

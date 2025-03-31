@@ -4,8 +4,11 @@ import PreviewSongList from '@/components/features/PreviewSongList';
 import TagField from '@/components/features/TagField';
 import { DUMMY_ADD_SONG } from '@/service/mocks/dummies/AddSong';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
+import { useWorkRoomStore } from '@/stores/workroomStore';
+import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import React from 'react';
+import useMergeAudio from '@/hooks/useMergeAudio';
 
 interface Props {
   selectTag: (number | null)[];
@@ -14,16 +17,32 @@ interface Props {
 
 function AITab({ selectTag, setSelectTag }: Props) {
   const { workroom_id } = useParams();
-
+  const { tracks } = useWorkRoomStore();
   const postMutation = usePostPreviewSong(
     workroom_id as string,
     DUMMY_ADD_SONG
   );
-
+  const { mergeWavFiles } = useMergeAudio();
   async function handleCreateAISong() {
+    const mergedAudio = await handleMerge();
+    console.log(mergedAudio);
     postMutation.mutate();
   }
-
+  const handleMerge = async (): Promise<string> => {
+    const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
+    try {
+      const wavBuffer = await mergeWavFiles(fileUrls);
+      const blob = new Blob([wavBuffer], { type: 'audio/wav' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'merged.wav';
+      a.click();
+      return url;
+    } catch (error: unknown) {
+      throw new Error((error as Error).message);
+    }
+  };
   return (
     <div className='w-full h-full min-h-4/5 max-h-5/6 p-5 flex flex-col items-center gap-3'>
       <div className='text-sm h-fit'>

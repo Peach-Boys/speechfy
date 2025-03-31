@@ -23,7 +23,7 @@ export const DUMMY_AI_SONGS = [
   },
   {
     songId: 3,
-    songSrc: 'https://samplelib.com/lib/preview/mp4/sample-5s.mp4',
+    songSrc: 'https://www.soundhelix.com/examples/mp3/SoundHelix-Song-6.mp3',
     instruments: [{ id: 1, label: '기타' }],
     gerne: '재즈',
     mood: '에너지넘치는',
