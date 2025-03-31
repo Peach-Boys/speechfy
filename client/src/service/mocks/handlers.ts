@@ -1,4 +1,5 @@
 import { DUMMY_AI_SONGS } from '@/service/mocks/dummies/SongList';
+import { WORKROOM_LIST } from '@/service/mocks/dummies/WorkroomList';
 import { http, HttpResponse } from 'msw';
 import { DUMMYSTUDIO } from './dummies/TrackList';
 
@@ -48,5 +49,9 @@ export const handlers = [
     return new Response(null, {
       status: 200,
     });
+  }),
+
+  http.get(`${BASEURL}/work/studio`, () => {
+    return HttpResponse.json(WORKROOM_LIST);
   }),
 ];
