@@ -1,20 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useRecord } from '@/hooks/useRecord';
 import { useDDSP } from '@/hooks/useDDSP';
 
 export default function DdspPage() {
   // useRecord 훅은 음원 녹음을 위한 훅입니다.
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
-
+  const [convertedUrl, setConvertedUrl] = useState<string>('');
   // useDDSP 훅은 녹음된 오디오 URL을 기반으로 모델을 초기화하고 음원 변환을 수행합니다.
-  const { initialized, toneTransfer, loading, convertedUrl } = useDDSP(audio);
+  const { initialized, toneTransfer, loading } = useDDSP();
 
   // 변환 버튼 클릭 시 호출되는 핸들러
   const handleConvert = async (modelType: string) => {
     try {
-      await toneTransfer(modelType);
+      const url = await toneTransfer(modelType, audio);
+      setConvertedUrl(url);
     } catch (error) {
       console.error('Tone transfer error:', error);
     }

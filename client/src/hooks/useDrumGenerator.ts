@@ -116,7 +116,9 @@ export function useDrumGenerator(
 
     try {
       const mm = await import('@magenta/music');
-      const { default: WavEncoder } = await import('wav-encoder');
+
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const WavEncoder = require('wav-encoder');
 
       // 1) DrumsRNN 모델 초기화
       const drumModel = new mm.MusicRNN(DRUM_RNN_CHECKPOINT);
@@ -129,7 +131,7 @@ export function useDrumGenerator(
       // 3) bars 만큼 생성 (1마디=16스텝 → totalSteps = bars*16)
       const totalSteps = bars * 16;
       const seedSteps = quantizedSeed.totalQuantizedSteps; // ex. 16
-      const stepsToGenerate = totalSteps + 32; // ex. bars*16 - 16
+      const stepsToGenerate = totalSteps; // ex. bars*16 - 16
 
       // temperature 커스텀
       const temperature = 1.15;
@@ -143,7 +145,10 @@ export function useDrumGenerator(
 
       // 4) OfflineAudioContext
       // bars마디 => totalSteps => computeDuration
-      const offlineDurationSeconds = computeDurationSeconds(totalSteps, bpm);
+      const offlineDurationSeconds = computeDurationSeconds(
+        totalSteps + 5,
+        bpm
+      );
       const sampleRate = 44100;
       const offlineCtx = new OfflineAudioContext(
         2,
