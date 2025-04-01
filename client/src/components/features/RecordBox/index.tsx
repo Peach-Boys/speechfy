@@ -5,6 +5,8 @@ import IconClose from '@/components/icons/IconClose';
 import { useRecord } from '@/hooks/useRecord';
 import { useUploadFlow } from '@/service/queries/useUploadFlow';
 // import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
+import Skeleton from '@/components/common/Skeleton';
+import { useDDSP } from '@/hooks/useDDSP';
 import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
@@ -12,8 +14,6 @@ import InstrumentGenerator from '../InstrumentGenerator';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
-import { useDDSP } from '@/hooks/useDDSP';
-import Skeleton from '@/components/common/Skeleton';
 
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
@@ -29,7 +29,7 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   const [instrument, setInstrument] = useState<string | null>(null);
   const { initialized, toneTransfer, loading } = useDDSP();
   const [isAutoComplete, setAutoComplete] = useState<boolean>();
-  const mutation = useUploadFlow(workroom_id as string, audio);
+  const mutation = useUploadFlow(workroom_id as string, audio, 1, 0);
 
   function handleNextLevel() {
     setLevel(level + 1);
