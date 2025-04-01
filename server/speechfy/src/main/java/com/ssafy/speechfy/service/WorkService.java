@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -137,25 +134,23 @@ public class WorkService {
         InstrumentType instrumentType = InstrumentType.values()[trackCreateDto.getInstrumentId()];
         System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
-        String trackName = "Track_" + System.currentTimeMillis();
-        System.out.println(trackName);
+        String trackName = trackCreateDto.getTrackName();
         // 레코드 엔티티 불러오기
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record;
         if (optionalRecord.isPresent()) {
             record = optionalRecord.get();
         } else { // 해당 레코드가 없으면 새로운 레코드 만들기
+            String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
             record = new Record(
                     0,
-                    "저장할 파일에 대한 S3 경로 알고리즘 만들어야 함"
+                    recordFilePath
             );
             record = recordReposiotry.save(record);
         }
         //S3파일경로 만들기
-        String filePath = "저장할 파일에 대한 S3 경로 알고리즘 만들어얗ㅁ";
-        //s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
-        //????
-        /// //////////
+
+        String trackFilePath = "users/" + userId + "/track/" + trackCreateDto.getTrackUUID() + ".wav";
 
         // 트랙 엔티티 생성하기
         Track track = new Track(
@@ -165,21 +160,41 @@ public class WorkService {
                 record,
                 studio,
                 trackName,   // dto에서 네임을 안받은듯, 먼저 백에서 네임 자동생성 방식인ㄷ ㅡㅅ
-                filePath,
+                trackFilePath,
                 trackCreateDto.getOrder()
         );
-        trackReposiotry.save(track);
+        track = trackReposiotry.save(track);
 
         TrackResponseDto trackResponseDto = getTrackResponseDto(track.getId());
 
-        if(trackCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
-            trackResponseDto.getRecordDto().setRecordPresignedUrl(null);
-            System.out.println(trackResponseDto.getRecordDto().getRecordId());
-        }
+//        if(trackCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
+//            trackResponseDto.getRecordDto().setRecordPresignedUrl(null);
+//            System.out.println(trackResponseDto.getRecordDto().getRecordId());
+//        }
 
         return trackResponseDto;
     }
 
+    @Transactional
+    public void createTrackFail(Integer userId, TrackCreateFailDto trackCreateFailDto){
+        // 유저 엔티티 불러오기
+        String trackFilePath = "users/" + userId + "/track/"; //+ trackCreateFailDto.getTrackUUID() + ".wav";
+        String recordFilePath = "users/" + userId + "/record/";// + trackCreateFailDto.getRecordUUID()+ ".wav";
+
+
+        //s3내의 트랙파일 삭제하기
+        if(trackCreateFailDto.getTrackUUID() != null){
+            trackFilePath += trackCreateFailDto.getTrackUUID() + ".wav";
+            System.out.println(trackFilePath);
+        }
+        //s3내의 레코드파일 삭제하기
+        if(trackCreateFailDto.getRecordUUID() != null){
+            recordFilePath += trackCreateFailDto.getRecordUUID() + ".wav";
+            System.out.println(recordFilePath);
+        }
+
+
+    }
     @Transactional
     public void updateTrack(Integer studioId,Integer trackId, TrackUpdateDto trackUpdateDto){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
@@ -198,11 +213,10 @@ public class WorkService {
     public RecordDto getRecordDto(Integer recordId){
         Optional<Record> optionalRecord = recordReposiotry.findById(recordId);
         Record record = checkElementException(optionalRecord, "Record not found");
-
+        String objectKey = "users/1/record/" + record.getId();
         return new RecordDto( //dto에 담기
                 record.getId(),
-                "presigne 주소 저장해서 반환"
-                //s3Service.generatePresignedUrl("presigne 주소 저장해서 반환")
+                s3Service.generatePresignedUrl(objectKey).toString()
         );
     }
 

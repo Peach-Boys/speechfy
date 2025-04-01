@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/api/S3")
@@ -20,11 +22,19 @@ public class S3Controller {
     private final RecordReposiotry recordReposiotry;
     private final SongRepository songRepository;
     private final TrackRepository trackRepository;
-    @GetMapping("/presignedUrl")
-    public ResponseEntity<PresignedUrlDto> getUrl(@RequestParam(value = "category", required = false) String category) {
-        String objectKey = "users/1/" + category;
+    @GetMapping("/presignedUrl/{studioId}")
+    public ResponseEntity<PresignedUrlDto> getDdspUrl(@PathVariable Integer studioId) {
+        int userId = 1;
+        String trackUUID =  UUID.randomUUID().toString();
+        String recordUUID =  UUID.randomUUID().toString();
+
+        String trackPath = "users/" + userId + "/track/" + trackUUID + ".wav";
+        String recordPath = "users/" + userId + "/record/" + recordUUID + ".wav";
         PresignedUrlDto responseDto = new PresignedUrlDto(
-                s3Service.generatePresignedUrl(objectKey).toString()
+                s3Service.generatePresignedUrl(trackPath).toString(),
+                s3Service.generatePresignedUrl(recordPath).toString(),
+                trackUUID,
+                recordUUID
         );
         return ResponseEntity.ok(responseDto);
     }
