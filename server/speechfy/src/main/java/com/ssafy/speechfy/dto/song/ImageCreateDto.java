@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class imageResponseDto {
-    private Integer id;
-    private String presignedUrl;
+public class ImageCreateDto {
+    private String title;
+    private String mood;
+    private String genre;
 
 }

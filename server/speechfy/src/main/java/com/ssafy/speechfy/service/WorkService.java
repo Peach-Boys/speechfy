@@ -185,7 +185,7 @@ public class WorkService {
     }
 
     @Transactional
-    public void updateTrack(Integer studioId,Integer trackId, TrackUpdateDto trackUpdateDto){
+    public void updateTrack(Integer studioId, Integer trackId, TrackUpdateDto trackUpdateDto){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
