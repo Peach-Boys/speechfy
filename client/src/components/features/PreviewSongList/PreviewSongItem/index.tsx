@@ -6,9 +6,9 @@ import Tag from '@/components/common/Tag';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
+import { useAudioPlayer } from '@/hooks/useAudioPlayer';
 import { IPreviewSong } from '@/types/song';
 import clsx from 'clsx';
-import React, { useEffect, useRef, useState } from 'react';
 
 interface Props {
   song: IPreviewSong;
@@ -17,65 +17,15 @@ interface Props {
 }
 
 function PreviewSongItem({ song, selected, onSelect }: Props) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [currentTime, setCurrentTime] = useState<number>(0);
-  const [endTime, setEndTime] = useState<number>(0);
-  const [isReady, setIsReady] = useState<boolean>(false); // 재생바 로딩 상태
-
-  function handlePlayTrack(e: React.MouseEvent<HTMLDivElement>) {
-    e.stopPropagation();
-    if (!audioRef.current) return;
-    if (!isPlaying) {
-      audioRef.current.play();
-      setIsPlaying(true);
-    } else {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-      setCurrentTime(0);
-      setIsPlaying(false);
-    }
-  }
-
-  function handlePlayBar(time: number) {
-    if (!audioRef.current) return;
-    audioRef.current.currentTime = time;
-    setCurrentTime(time);
-  }
-
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    const handleReady = () => {
-      setIsReady(true);
-    };
-
-    audio.addEventListener('canplaythrough', handleReady);
-    return () => audio.removeEventListener('canplaythrough', handleReady);
-  }, [audioRef.current]);
-
-  useEffect(() => {
-    const audioEl = audioRef.current;
-    if (!audioEl) return;
-
-    const handleTimeUpdate = () => {
-      setCurrentTime(audioEl.currentTime);
-      setEndTime(audioEl.duration);
-    };
-    audioEl.addEventListener('canplaythrough', handleTimeUpdate);
-    audioEl.addEventListener('timeupdate', handleTimeUpdate);
-
-    return () => {
-      audioEl.removeEventListener('timeupdate', handleTimeUpdate);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (currentTime === endTime) {
-      setIsPlaying(false);
-    }
-  }, [currentTime, endTime]);
+  const {
+    audioRef,
+    currentTime,
+    endTime,
+    handlePlay,
+    handleSeek,
+    isPlaying,
+    isReady,
+  } = useAudioPlayer(song.songSrc);
 
   return (
     <div
@@ -100,7 +50,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
       <div className='w-fit flex gap-1'>
         {isReady ? (
           <div
-            onClick={(e) => handlePlayTrack(e)}
+            onClick={(e) => handlePlay(e)}
             className='size-8 p-2 bg-gray-200 rounded-full cursor-pointer hover:scale-105 transition'
           >
             {isPlaying ? <IconStop /> : <IconPlay width={15} height={16} />}
@@ -121,7 +71,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
           currentTime={currentTime}
           endTime={endTime}
           isReady={isReady}
-          onSeek={(time: number) => handlePlayBar(time)}
+          onSeek={(time: number) => handleSeek(time)}
         />
       </div>
       <div className='w-fit h-full flex items-center cursor-pointer hover:scale-110 transition-transform active:scale-95'>
