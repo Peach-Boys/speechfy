@@ -19,21 +19,24 @@ public class WorkController {
 
     // API : 작업실 리스트 조회
     @GetMapping("/studio")
-    public ResponseEntity<StudioListResponseDto> getStudioList(@CookieValue(name = "userId") Integer userId) {
+    public ResponseEntity<StudioListResponseDto> getStudioList(@CookieValue(name = "userId") Integer user) {
+        int userId = user;
         StudioListResponseDto responseDto = workService.getStudioList(userId);
         return ResponseEntity.ok(responseDto);
     }
 
     //API: 작업실 생성
     @PostMapping("/studio")
-    public ResponseEntity<StudioResponseDto> createStudio(@CookieValue(name = "userId") Integer userId, @RequestBody StudioCreateDto studioCreateDto) {
+    public ResponseEntity<StudioResponseDto> createStudio(@CookieValue(name = "userId") Integer user, @RequestBody StudioCreateDto studioCreateDto) {
+        int userId = user; // 추후 자바 시큐리티관련으로 바꿔야함
         StudioResponseDto responseDto = workService.createStudio(userId, studioCreateDto);
         return ResponseEntity.ok(responseDto);
     }
 
     // API: 작업실 삭제
     @DeleteMapping("/studio/{studioId}")
-    public ResponseEntity<String> deleteStudio(@CookieValue(name = "userId") Integer userId, @PathVariable Integer studioId){
+    public ResponseEntity<String> deleteStudio(@CookieValue(name = "userId") Integer user, @PathVariable Integer studioId){
+        int userId = user;
         workService.deleteStudio(userId, studioId);
         return ResponseEntity.noContent().build();
     }
@@ -56,7 +59,8 @@ public class WorkController {
 
     //API: 작업실 트랙 초기화
     @DeleteMapping("/studio/{studioId}/reset")
-    public ResponseEntity<String> deleteTrackList(@CookieValue(name = "userId") Integer userId, @PathVariable Integer studioId){
+    public ResponseEntity<String> deleteTrackList(@CookieValue(name = "userId") Integer user, @PathVariable Integer studioId){
+        int userId = user;
         workService.deleteTrackList(userId, studioId);
         return ResponseEntity.noContent().build();
     }

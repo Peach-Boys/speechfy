@@ -10,6 +10,4 @@ import java.util.List;
 @Repository
 public interface StudioRepository extends JpaRepository<Studio, Integer>  {
     List<Studio> findByUser(User user);
-
-    List<Studio> findByUserId(int user_id);
 }

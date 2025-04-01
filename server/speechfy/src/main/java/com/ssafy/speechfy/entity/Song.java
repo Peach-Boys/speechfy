@@ -57,4 +57,5 @@ public class Song extends BaseEntity {
 
     @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Image> images = new ArrayList<>();
+
 }

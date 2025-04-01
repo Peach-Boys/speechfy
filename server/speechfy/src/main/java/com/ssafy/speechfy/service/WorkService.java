@@ -125,7 +125,11 @@ public class WorkService {
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
         //악기이넘사용
-        InstrumentType instrumentType = InstrumentType.values()[trackCreateDto.getInstrumentId()];
+        Integer instrumentId = trackCreateDto.getInstrumentId();
+        if (instrumentId < 0 || instrumentId >= InstrumentType.values().length) {
+            throw new IllegalArgumentException("Invalid instrument id");
+        }
+        InstrumentType instrumentType = InstrumentType.values()[instrumentId];
         System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
         String trackName = trackCreateDto.getTrackName();
@@ -244,7 +248,7 @@ public class WorkService {
 
         if(!trackList.isEmpty()) {
             for (Track track : trackList) {
-                instrumentList.add(track.getInstrumentType().name());//
+                instrumentList.add(track.getInstrumentType().name());
             }
         }
 
