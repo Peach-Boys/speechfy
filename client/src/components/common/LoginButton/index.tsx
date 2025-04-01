@@ -6,7 +6,7 @@ function LoginButton() {
   }
   function kakaoLogin() {
     const REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT;
-    const KAKAO_SECRET = process.env.NEXT_PUBLIC_KAKAO_KEY;
+    const KAKAO_SECRET = process.env.NEXT_PUBLIC_KAKAO_SECRET;
     if (!REDIRECT_URI) return;
     const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_SECRET}&redirect_uri=${encodeURIComponent(
       REDIRECT_URI
