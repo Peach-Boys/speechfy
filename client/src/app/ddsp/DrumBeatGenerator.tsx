@@ -25,12 +25,10 @@ const SEED_PATTERN_8BEAT: number[][] = [
 ];
 
 export default function DrumOfflineRenderer() {
-  // 예: bpm=125, bars=8
-  // -> 8마디 => totalSteps=8*16=128
   const { loading, audioURL, generateDrumBeat } = useDrumGenerator(
     SEED_PATTERN_8BEAT,
-    125, // bpm
-    8 // bars
+    125,
+    8
   );
 
   return (

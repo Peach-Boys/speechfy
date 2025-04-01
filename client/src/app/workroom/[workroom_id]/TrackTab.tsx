@@ -8,7 +8,7 @@ import { useDeleteAllTrack } from '@/service/queries/useDeleteAllTrack';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import DrumBeatGenerator from './DrumBeatGenerator';
+import DrumBeatGenerator from '@/app/ddsp/DrumBeatGenerator';
 
 function TrackTab() {
   const [isAllPlay, setIsAllPlay] = useState<boolean>(false);
