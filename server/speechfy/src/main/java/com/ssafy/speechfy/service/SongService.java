@@ -1,29 +1,30 @@
 package com.ssafy.speechfy.service;
 
+import com.ssafy.speechfy.dto.song.basicSongPresignedUrlResponseDto;
 import com.ssafy.speechfy.dto.song.songResponseDto;
 import com.ssafy.speechfy.entity.Song;
 import com.ssafy.speechfy.entity.User;
 import com.ssafy.speechfy.repository.SongRepository;
 import com.ssafy.speechfy.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import com.ssafy.speechfy.dto.song.songListResponseDto;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URL;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
+@RequiredArgsConstructor
 @Service
 public class SongService {
     private final SongRepository songRepository;
     private final UserRepository userRepository;
-
-    public SongService(SongRepository songRepository, UserRepository userRepository) {
-        this.songRepository = songRepository;
-        this.userRepository = userRepository;
-    }
+    private final S3Service s3Service;
 
     /**
      * 마이페이지 완성곡 리스트 반환
@@ -54,7 +55,6 @@ public class SongService {
 
     /**
      * id 기반 완성곡 반환
-     *
      */
     public songResponseDto getSongById(int songId) {
         Song song = songRepository.findById(songId).orElseThrow(
@@ -108,5 +108,15 @@ public class SongService {
      */
     @Transactional
     public void deleteSong() {}
+
+    // 기본 곡 저장을 위한 presignedUrl 생성
+    public basicSongPresignedUrlResponseDto generateBasicSongPresignedUrl(int userId) {
+        String basicSongFilePath = "users/" + userId + "/basicSong/" + UUID.randomUUID().toString() + ".wav";
+        URL basicSongPresignedUrl = s3Service.generatePresignedUrl(basicSongFilePath);
+        return basicSongPresignedUrlResponseDto.builder()
+                .basicSongPresignedUrl(basicSongPresignedUrl)
+                .basicSongUUID(basicSongFilePath)
+                .build();
+    }
 
 }
