@@ -21,13 +21,6 @@ export interface StudioData {
   trackList: TrackListItem[];
 }
 
-export interface WorkroomList {
-  studioId: number;
-  name: string;
-  trackInfo: string[];
-  modifiedAt: string;
-}
-
 export enum INSTRUMENT_TYPE {
   TRUMPET,
   VIOLIN,
