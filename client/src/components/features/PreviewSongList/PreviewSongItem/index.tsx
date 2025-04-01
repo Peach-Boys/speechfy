@@ -6,7 +6,7 @@ import Tag from '@/components/common/Tag';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
-import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
 import { IPreviewSong } from '@/types/song';
 import clsx from 'clsx';
 
@@ -25,7 +25,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
     handleSeek,
     isPlaying,
     isReady,
-  } = useAudioPlayer(song.songSrc);
+  } = useAudioPlayBar(song.songSrc);
 
   return (
     <div

@@ -1,7 +1,7 @@
 import PlayBar from '@/components/common/PlayBar';
 import Tag from '@/components/common/Tag';
 import IconTripleDots from '@/components/icons/IconTripleDots';
-import { useAudioPlayer } from '@/hooks/useAudioPlayer';
+import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
 import { BaseCompletedSong } from '@/types/workroom';
 
 interface Props {
@@ -17,7 +17,7 @@ function CompletedSongBox({ song }: Props) {
     handleSeek,
     isPlaying,
     isReady,
-  } = useAudioPlayer(song.completeUrl);
+  } = useAudioPlayBar(song.completeUrl);
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
