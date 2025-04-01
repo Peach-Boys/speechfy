@@ -53,9 +53,13 @@ function CompletedSongBox({ song }: Props) {
         >
           {isPlaying ? '정지' : '재생'}
         </button>
-        <button className='w-full py-3 bg-gray-200 text-black rounded-[10px] cursor-pointer'>
+        <a
+          href={song.completeUrl}
+          className='w-full py-3 bg-gray-200 text-black rounded-[10px] cursor-pointer'
+          download
+        >
           다운로드
-        </button>
+        </a>
       </div>
       <audio ref={audioRef} src={song.completeUrl} />
     </article>
