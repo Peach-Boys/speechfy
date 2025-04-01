@@ -59,4 +59,10 @@ export const handlers = [
   http.get(`${BASEURL}/song`, () => {
     return HttpResponse.json(DUMMY_COMPLETED_SONG_LIST);
   }),
+
+  http.post(`${BASEURL}/work/studio`, () => {
+    return new Response(null, {
+      status: 201,
+    });
+  }),
 ];

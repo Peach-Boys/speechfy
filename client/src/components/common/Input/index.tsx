@@ -5,9 +5,10 @@ interface Props {
   customClass?: string;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
+  maxLen: number;
 }
 
-function Input({ customClass, title, setTitle }: Props) {
+function Input({ customClass, title, setTitle, maxLen }: Props) {
   return (
     <div
       className={clsx(
@@ -19,9 +20,11 @@ function Input({ customClass, title, setTitle }: Props) {
         className='w-full outline-0'
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        maxLength={20}
+        maxLength={maxLen}
       />
-      <div className='text-gray-400'>{title.length}/20</div>
+      <div className='text-gray-400'>
+        {title.length}/{maxLen}
+      </div>
     </div>
   );
 }
