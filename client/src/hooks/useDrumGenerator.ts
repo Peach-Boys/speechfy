@@ -1,4 +1,5 @@
 // hooks/useDrumRnnGenerator.ts
+import { tensorflow } from '@magenta/music/esm/protobuf/proto';
 import { useState } from 'react';
 
 const DRUM_RNN_CHECKPOINT =
@@ -39,7 +40,7 @@ export function useDrumGenerator(
     const secPerStep = 60 / curBpm / 4; // 4/4 박자, stepsPerQuarter=4
     const totalTime = steps * secPerStep;
 
-    const notes: any[] = [];
+    const notes = [];
     for (let stepIdx = 0; stepIdx < steps; stepIdx++) {
       const drumList = pattern[stepIdx];
       if (drumList.length > 0) {
@@ -74,13 +75,13 @@ export function useDrumGenerator(
 
   // (3) DrumsRNN이 만든 NoteSequence -> 오프라인 렌더링
   async function scheduleDrumSamples(
-    rnnResult: any,
+    rnnResult: tensorflow.magenta.INoteSequence,
     offlineCtx: OfflineAudioContext
   ) {
     // 샘플 로딩
     const sampleCache: Record<number, AudioBuffer> = {};
     const pitchesUsed = Array.from(
-      new Set(rnnResult.notes.map((n: any) => n.pitch))
+      new Set(rnnResult.notes?.map((n) => n.pitch))
     );
 
     // fetch & decode
@@ -93,16 +94,16 @@ export function useDrumGenerator(
     }
 
     // 각 노트를 스케줄
-    for (let note of rnnResult.notes) {
+    for (let note of rnnResult.notes!) {
       const pitch = note.pitch;
-      if (!sampleCache[pitch]) continue;
+      if (!sampleCache[pitch as number]) continue;
       const startStep = note.quantizedStartStep || 0;
-      const qpm = (rnnResult.tempos[0] && rnnResult.tempos[0].qpm) || bpm;
+      const qpm = (rnnResult.tempos![0] && rnnResult.tempos![0].qpm) || bpm;
       const secPerStep = 60 / qpm / 4;
       const startTime = startStep * secPerStep;
 
       const source = offlineCtx.createBufferSource();
-      source.buffer = sampleCache[pitch];
+      source.buffer = sampleCache[pitch as number];
       source.connect(offlineCtx.destination);
       source.start(startTime);
     }
@@ -130,7 +131,6 @@ export function useDrumGenerator(
 
       // 3) bars 만큼 생성 (1마디=16스텝 → totalSteps = bars*16)
       const totalSteps = bars * 16;
-      const seedSteps = quantizedSeed.totalQuantizedSteps; // ex. 16
       const stepsToGenerate = totalSteps; // ex. bars*16 - 16
 
       // temperature 커스텀
