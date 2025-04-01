@@ -165,14 +165,7 @@ public class WorkService {
         );
         track = trackReposiotry.save(track);
 
-        TrackResponseDto trackResponseDto = getTrackResponseDto(track.getId());
-
-//        if(trackCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
-//            trackResponseDto.getRecordDto().setRecordPresignedUrl(null);
-//            System.out.println(trackResponseDto.getRecordDto().getRecordId());
-//        }
-
-        return trackResponseDto;
+        return getTrackResponseDto(track.getId());
     }
 
     @Transactional
@@ -264,11 +257,9 @@ public class WorkService {
                 studio.getUser().getId(),
                 studio.getName(),
                 instrumentList,
-                null    // 불러오는 방식 모르겠음
+                studio.getUpdatedAt().toString()  // 불러오는 방식 모르겠음
         );
     }
-
-
 
     public static <T> T checkElementException(Optional<T> optional, String message) {
         if (optional.isPresent()) {
