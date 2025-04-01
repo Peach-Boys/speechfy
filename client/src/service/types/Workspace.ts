@@ -22,8 +22,8 @@ export interface StudioData {
 }
 
 export enum INSTRUMENT_TYPE {
-  GUITAR,
-  KEYBOARD,
+  TRUMPET,
+  VIOLIN,
   DRUM,
-  BASS,
+  TENOR_SAXOPHONE,
 }

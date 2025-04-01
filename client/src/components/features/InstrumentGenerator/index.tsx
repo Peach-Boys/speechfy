@@ -1,8 +1,7 @@
 import Skeleton from '@/components/common/Skeleton';
-import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
 
 interface Props {
-  selectedInst: INSTRUMENT_TYPE | null;
+  selectedInst: string | null;
 }
 
 function InstrumentGenerator({ selectedInst }: Props) {
