@@ -5,7 +5,7 @@ interface Props {
   customClass?: string;
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
-  maxLen: number;
+  maxLen?: number;
 }
 
 function Input({ customClass, title, setTitle, maxLen }: Props) {
