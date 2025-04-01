@@ -17,4 +17,34 @@ export const WORKROOM_LIST = [
     trackInfo: ['기타', '바이올린'],
     modifyAt: '2025.03.18',
   },
+  {
+    studioId: 4,
+    name: '작업실 이이요이',
+    trackInfo: ['기타', '바이올린'],
+    modifyAt: '2025.03.18',
+  },
+  {
+    studioId: 5,
+    name: '작업실 이이요이',
+    trackInfo: ['기타', '바이올린'],
+    modifyAt: '2025.03.18',
+  },
+  {
+    studioId: 6,
+    name: '작업실 이이요이',
+    trackInfo: ['기타', '바이올린'],
+    modifyAt: '2025.03.18',
+  },
+  {
+    studioId: 7,
+    name: '작업실 이이요이',
+    trackInfo: ['기타', '바이올린'],
+    modifyAt: '2025.03.18',
+  },
+  {
+    studioId: 8,
+    name: '작업실 이이요이',
+    trackInfo: ['기타', '바이올린'],
+    modifyAt: '2025.03.18',
+  },
 ];
