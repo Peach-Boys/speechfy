@@ -9,6 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class songCreateDto {
-    private String name;
+public class SongDeleteDto {
+    private Integer id;
 }
