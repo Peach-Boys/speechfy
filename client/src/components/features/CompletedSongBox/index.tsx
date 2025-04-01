@@ -55,7 +55,7 @@ function CompletedSongBox({ song }: Props) {
         </button>
         <a
           href={song.completeUrl}
-          className='w-full py-3 bg-gray-200 text-black rounded-[10px] cursor-pointer'
+          className='w-full py-3 flex justify-center bg-gray-200 text-black rounded-[10px] cursor-pointer'
           download
         >
           다운로드
