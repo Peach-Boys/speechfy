@@ -10,14 +10,10 @@ function WorkroomTab() {
   const [workroomList, setWorkroomList] = useState<BaseWorkroom[]>([]);
   const { data, isLoading } = useGetWorkroomList();
   useEffect(() => {
-    if (data) {
-      console.log(data);
-      setWorkroomList(data);
-    }
+    if (data) setWorkroomList(data);
   }, [data]);
 
   if (isLoading) return <Spinner />;
-  console.log('workroom:', workroomList);
 
   return (
     <div className='w-full flex flex-col gap-5'>
