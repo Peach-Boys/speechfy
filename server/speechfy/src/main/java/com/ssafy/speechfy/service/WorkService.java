@@ -25,8 +25,6 @@ public class WorkService {
     private final UserRepository userReposiotry;
     private final S3Service s3Service;
 
-
-    //리팩토링 클리어
     public StudioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
@@ -53,8 +51,8 @@ public class WorkService {
                 0,
                 user,
                 studioCreateDto.getStudioName()
-        );
-        studio = studioReposiotry.save(studio);
+                );
+       studio = studioReposiotry.save(studio);
         return new StudioResponseDto(getStudio(studio.getId()));
     }
 
@@ -96,8 +94,6 @@ public class WorkService {
 
     @Transactional
     public void deleteTrack(Integer trackId){ // 사운드뱅크 삭제 위해 userId필요
-        // 스튜디오 트랙 리스트 호출
-        // 스튜디오 트랙 리스트 삭제
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         List<Track> trackList = trackReposiotry.findByRecord(track.getRecord());
@@ -105,8 +101,6 @@ public class WorkService {
             recordReposiotry.delete(track.getRecord());
         }
         trackReposiotry.delete(track);
-
-
     }
 
     @Transactional
@@ -206,7 +200,8 @@ public class WorkService {
     public RecordDto getRecordDto(Integer recordId){
         Optional<Record> optionalRecord = recordReposiotry.findById(recordId);
         Record record = checkElementException(optionalRecord, "Record not found");
-        String objectKey = "users/1/record/" + record.getId();
+        int userId = 1;
+        String objectKey = "users/"+ Integer.toString(userId) +"/record/" + record.getId();
         return new RecordDto( //dto에 담기
                 record.getId(),
                 s3Service.generatePresignedUrl(objectKey).toString()
@@ -216,7 +211,8 @@ public class WorkService {
     public TrackDto getTrackDto(Integer trackId){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
-        String objectKey = "users/1/track/" + track.getId();
+        int userId = 1;
+        String objectKey = "users/"+ Integer.toString(userId) + "/track/" + track.getId();
 
         return new TrackDto( //dto에 담기
                 track.getId(),
