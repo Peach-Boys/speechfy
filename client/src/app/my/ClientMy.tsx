@@ -1,5 +1,6 @@
 'use client';
 
+import CompletedSongTab from '@/app/my/CompletedSongTab';
 import WorkroomTab from '@/app/my/WorkroomTab';
 import clsx from 'clsx';
 import { useState } from 'react';
@@ -27,15 +28,21 @@ function ClientMy() {
         <li
           className={clsx(
             'w-full py-2 flex justify-center items-center rounded-[10px] cursor-pointer',
-            tab === 'complete' && 'bg-pink-500'
+            tab === 'completed' && 'bg-pink-500'
           )}
-          onClick={() => setTab('complete')}
+          onClick={() => setTab('completed')}
         >
           완성곡
         </li>
       </ul>
-
-      <WorkroomTab />
+      <div className='relative w-full h-full'>
+        <div className={tab === 'work' ? 'block' : 'hidden'}>
+          <WorkroomTab />
+        </div>
+        <div className={tab === 'completed' ? 'block' : 'hidden'}>
+          <CompletedSongTab />
+        </div>
+      </div>
     </div>
   );
 }

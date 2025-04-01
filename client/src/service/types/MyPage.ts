@@ -1,11 +1,11 @@
-export interface BaseWorkroom {
+export interface IWorkroom {
   studioId: number;
   name: string;
   trackInfo: string[];
   modifiedAt: string;
 }
 
-export interface BaseCompletedSong {
+export interface ICompletedSong {
   songId: number;
   userId: number;
   title: string;
