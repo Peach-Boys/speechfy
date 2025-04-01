@@ -20,14 +20,9 @@ function WorkroomTab() {
   console.log('workroom:', workroomList);
 
   return (
-    <div className='w-full'>
+    <div className='w-full flex flex-col gap-5'>
       {workroomList.map((workroom) => (
-        <WorkroomBox
-          key={workroom.studioId}
-          name={workroom.name}
-          trackInfo={workroom.trackInfo}
-          modifiedAt={workroom.modifiedAt}
-        />
+        <WorkroomBox key={workroom.studioId} workroom={workroom} />
       ))}
     </div>
   );
