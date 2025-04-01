@@ -1,4 +1,4 @@
-export const WORKROOM_LIST = [
+export const DUMMY_WORKROOM_LIST = [
   {
     studioId: 1,
     name: '작업실 이이요',
