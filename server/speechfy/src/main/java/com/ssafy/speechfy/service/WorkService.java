@@ -1,5 +1,6 @@
 package com.ssafy.speechfy.service;
 
+import com.ssafy.speechfy.controller.WebExceptionHandler;
 import com.ssafy.speechfy.dto.work.studio.StudioResponseDto;
 import com.ssafy.speechfy.dto.work.track.*;
 import com.ssafy.speechfy.dto.work.studio.StudioSimpleDto;
@@ -7,6 +8,7 @@ import com.ssafy.speechfy.dto.work.studio.StudioCreateDto;
 import com.ssafy.speechfy.dto.work.studio.StudioListResponseDto;
 import com.ssafy.speechfy.entity.Record;
 import com.ssafy.speechfy.enums.InstrumentType;
+import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.repository.*;
 import com.ssafy.speechfy.entity.*;
 import lombok.RequiredArgsConstructor;
@@ -24,6 +26,10 @@ public class WorkService {
     private final StudioRepository studioReposiotry;
     private final UserRepository userReposiotry;
     private final S3Service s3Service;
+
+    private Integer getCurrentUserId() {
+        return SecurityUtil.getCurrentUserId();
+    }
 
     public StudioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
@@ -43,7 +49,8 @@ public class WorkService {
 
 
     @Transactional
-    public StudioResponseDto createStudio(Integer userId, StudioCreateDto studioCreateDto){
+    public StudioResponseDto createStudio(StudioCreateDto studioCreateDto){
+        Integer userId = getCurrentUserId();
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
 
@@ -57,8 +64,8 @@ public class WorkService {
     }
 
     @Transactional
-    public void deleteStudio( Integer userId, Integer studioId){
-        deleteTrackList(userId,studioId);
+    public void deleteStudio( Integer studioId){
+        deleteTrackList(studioId);
         studioReposiotry.deleteById(studioId);
     }
 
@@ -104,10 +111,16 @@ public class WorkService {
     }
 
     @Transactional
-    public void deleteTrackList(Integer userId, Integer studioId){ // 사운드뱅크 삭제 위해 userId필요
+    public void deleteTrackList(Integer studioId){
         // 스튜디오 트랙 리스트 호출
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
+
+        Integer userId = getCurrentUserId();
+        if(studio.getUser().getId() != userId){
+            throw new WebExceptionHandler.UnauthorizedAccessException("잘못된 접근입니다: 해당 스튜디오는 사용자의 것이 아닙니다.");
+        }
+
         List<Track> trackList = trackReposiotry.findByStudio(studio);
         if(!trackList.isEmpty()){
             for (Track track : trackList) {
@@ -117,8 +130,9 @@ public class WorkService {
     }
 
     @Transactional
-    public TrackResponseDto createTrack(Integer userId, Integer studioId, TrackCreateDto trackCreateDto) {
+    public TrackResponseDto createTrack(Integer studioId, TrackCreateDto trackCreateDto) {
         // 유저 엔티티 불러오기
+        Integer userId = getCurrentUserId();
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
         // 작업실 엔티티 불러오기
@@ -167,8 +181,9 @@ public class WorkService {
     }
 
     @Transactional
-    public void createTrackFail(Integer userId, TrackCreateFailDto trackCreateFailDto){
+    public void createTrackFail( TrackCreateFailDto trackCreateFailDto){
         // 유저 엔티티 불러오기
+        Integer userId = getCurrentUserId();
         String trackFilePath = "users/" + userId + "/track/"; //+ trackCreateFailDto.getTrackUUID() + ".wav";
         String recordFilePath = "users/" + userId + "/record/";// + trackCreateFailDto.getRecordUUID()+ ".wav";
 
@@ -204,8 +219,8 @@ public class WorkService {
     public RecordDto getRecordDto(Integer recordId){
         Optional<Record> optionalRecord = recordReposiotry.findById(recordId);
         Record record = checkElementException(optionalRecord, "Record not found");
-        int userId = 1;
-        String objectKey = "users/"+ Integer.toString(userId) +"/record/" + record.getId();
+        Integer userId = getCurrentUserId();
+        String objectKey = "users/"+ userId.toString() +"/record/" + record.getId();
         return new RecordDto( //dto에 담기
                 record.getId(),
                 s3Service.generatePresignedUrl(objectKey).toString()
@@ -215,8 +230,8 @@ public class WorkService {
     public TrackDto getTrackDto(Integer trackId){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
-        int userId = 1;
-        String objectKey = "users/"+ Integer.toString(userId) + "/track/" + track.getId();
+        Integer userId = getCurrentUserId();
+        String objectKey = "users/"+ userId.toString() + "/track/" + track.getId();
 
         return new TrackDto( //dto에 담기
                 track.getId(),

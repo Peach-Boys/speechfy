@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'SEBANG';
+  font-display: swap;
+  src: url('../fonts/SEBANG-Gothic-OTF.woff2');
+}
+
+@font-face {
+  font-family: 'Pretendard';
+  font-weight: 500;
+  font-display: swap;
+  src: url(../fonts/PretendardVariable.woff2);
+}
