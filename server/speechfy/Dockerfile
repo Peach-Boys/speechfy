@@ -14,8 +14,8 @@ RUN ./gradlew dependencies --no-daemon
 
 # 4. 프로젝트 코드 복사 및 빌드 실행
 COPY .env .env
-COPY keys/private.pem /app/resources/keys/private.pem
-COPY keys/public.pem /app/resources/keys/public.pem
+COPY keys /app/resources/keys
+RUN ls -l /app/resources/keys
 COPY src src
 RUN ./gradlew build --no-daemon
 
