@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .rememberMe(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                new AntPathRequestMatcher("/login", "POST")
+                                new AntPathRequestMatcher("/api/login", "POST")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -86,7 +86,7 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*"); // test
         configuration.addAllowedOrigin("http://localhost:5173"); // 허용할 도메인
-        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("https://localhost:3000");
         configuration.addAllowedOrigin("http://j12b105.p.ssafy.io"); // 허용할 도메인
         configuration.addAllowedOrigin("https://j12b105.p.ssafy.io");
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
