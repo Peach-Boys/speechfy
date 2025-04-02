@@ -97,7 +97,9 @@ public class SongService {
      */
     @Transactional
     public void deleteSongById(int songId, int userId) {
-        Song song = songRepository.findById(songId);
+        Song song = songRepository.findById(songId).orElseThrow(
+                () -> new NoSuchElementException("Song not found")
+        );;
         if (song.getUser().getId() != userId) {
             return;
         }

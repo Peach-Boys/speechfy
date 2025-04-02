@@ -1,11 +1,7 @@
 package com.ssafy.speechfy.controller;
 
 import com.nimbusds.jose.JOSEException;
-import com.ssafy.speechfy.dto.song.songListResponseDto;
 import com.ssafy.speechfy.dto.user.loginDto;
-import com.ssafy.speechfy.dto.user.userCreateDto;
-import com.ssafy.speechfy.dto.user.userResponseDto;
-import com.ssafy.speechfy.dto.user.userUpdateDto;
 import com.ssafy.speechfy.entity.User;
 import com.ssafy.speechfy.service.JwtService;
 import com.ssafy.speechfy.service.UserService;

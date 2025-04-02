@@ -4,6 +4,7 @@ import com.ssafy.speechfy.enums.GenreType;
 import com.ssafy.speechfy.enums.MoodType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
 @Entity
 @Setter
 @Getter
-@Builder
+@SuperBuilder
 @Table(name="song")
 @NoArgsConstructor
 @AllArgsConstructor
