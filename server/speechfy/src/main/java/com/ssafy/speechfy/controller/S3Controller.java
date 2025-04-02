@@ -2,6 +2,7 @@ package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.dto.work.studio.StudioListResponseDto;
 import com.ssafy.speechfy.dto.work.track.PresignedUrlDto;
+import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.repository.RecordReposiotry;
 import com.ssafy.speechfy.repository.SongRepository;
 import com.ssafy.speechfy.repository.TrackRepository;
@@ -22,9 +23,14 @@ public class S3Controller {
     private final RecordReposiotry recordReposiotry;
     private final SongRepository songRepository;
     private final TrackRepository trackRepository;
+
+    private Integer getCurrentUserId() {
+        return SecurityUtil.getCurrentUserId();
+    }
+
     @GetMapping("/presignedUrl/{studioId}")
     public ResponseEntity<PresignedUrlDto> getDdspUrl(@PathVariable Integer studioId) {
-        int userId = 1;
+        int userId = getCurrentUserId();
         String trackUUID =  UUID.randomUUID().toString();
         String recordUUID =  UUID.randomUUID().toString();
 
