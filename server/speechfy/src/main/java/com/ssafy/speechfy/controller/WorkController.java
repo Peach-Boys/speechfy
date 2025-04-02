@@ -17,7 +17,7 @@ public class WorkController {
     private final WorkService workService;
     private final S3Service s3Service;
 
-    // API : 작업실 리스트 조회
+    // API: 작업실 리스트 조회
     @GetMapping("/studio")
     public ResponseEntity<StudioListResponseDto> getStudioList(@CookieValue(name = "userId") Integer user) {
         int userId = user;
@@ -25,7 +25,7 @@ public class WorkController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //API: 작업실 생성
+    // API: 작업실 생성
     @PostMapping("/studio")
     public ResponseEntity<StudioResponseDto> createStudio(@CookieValue(name = "userId") Integer user, @RequestBody StudioCreateDto studioCreateDto) {
         int userId = user; // 추후 자바 시큐리티관련으로 바꿔야함
@@ -41,7 +41,7 @@ public class WorkController {
         return ResponseEntity.noContent().build();
     }
 
-    //API: 작업실 트랙 리스트 반환 (작업실 입장시 트랙반환 위한 것)
+    // API: 작업실 트랙 리스트 반환 (작업실 입장시 트랙반환 위한 것)
     @GetMapping("/studio/{studioId}")
     public ResponseEntity<StudioResponseDto> getStudio(@PathVariable Integer studioId){
         TrackListResponseDto trackListResponseDto = workService.getStudio(studioId);
@@ -49,7 +49,7 @@ public class WorkController {
         return ResponseEntity.ok(new StudioResponseDto(trackListResponseDto));
     }
 
-    //API: 작업실 트랙 리스트 수정 (작업실 내 트랙 순서 수정시 한번에 넘겨주는 용도)
+    // API: 작업실 트랙 리스트 수정 (작업실 내 트랙 순서 수정시 한번에 넘겨주는 용도)
     @PutMapping("/studio/{studioId}")
     public ResponseEntity<String> updateTrackList(
             @PathVariable Integer studioId ,@RequestBody TrackListUpdateDto trackListUpdateDto){
@@ -57,7 +57,7 @@ public class WorkController {
         return ResponseEntity.ok(null);
     }
 
-    //API: 작업실 트랙 초기화
+    // API: 작업실 트랙 초기화
     @DeleteMapping("/studio/{studioId}/reset")
     public ResponseEntity<String> deleteTrackList(@CookieValue(name = "userId") Integer user, @PathVariable Integer studioId){
         int userId = user;
@@ -98,14 +98,14 @@ public class WorkController {
         return ResponseEntity.ok(responseDto);
     }
 
-    //API: 트랙 삭제
+    // API: 트랙 삭제
     @DeleteMapping("/track/{trackId}")
     public ResponseEntity<String> deleteTrack(@PathVariable Integer trackId){
         workService.deleteTrack(trackId);
         return ResponseEntity.noContent().build();
     }
 
-    //API : 트랙 수정
+    // API: 트랙 수정
     @PutMapping("/track/{studioId}/{trackId}")
     public ResponseEntity<String> updateTrack(
             @PathVariable Integer studioId,@PathVariable Integer trackId,@RequestBody TrackUpdateDto trackUpdateDto ){

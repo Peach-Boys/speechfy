@@ -1,6 +1,5 @@
 package com.ssafy.speechfy.controller;
 
-import com.ssafy.speechfy.dto.song.songListResponseDto;
 import com.ssafy.speechfy.dto.user.userCreateDto;
 import com.ssafy.speechfy.dto.user.userResponseDto;
 import com.ssafy.speechfy.dto.user.userUpdateDto;
