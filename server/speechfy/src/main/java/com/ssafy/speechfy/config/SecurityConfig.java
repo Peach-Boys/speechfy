@@ -86,7 +86,9 @@ public class SecurityConfig {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin("*"); // test
         configuration.addAllowedOrigin("http://localhost:5173"); // 허용할 도메인
-        configuration.addAllowedOrigin("https://i12b208.p.ssafy.io"); // 허용할 도메인
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("http://j12b105.p.ssafy.io"); // 허용할 도메인
+        configuration.addAllowedOrigin("https://j12b105.p.ssafy.io");
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키 포함 허용
