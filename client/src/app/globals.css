@@ -5,6 +5,7 @@
   --background: #ffffff;
   --foreground: #171717;
   --jihyegra: linear-gradient(to right, #b73abb, #d0579a, #e46e80);
+  --watchapink: #ff0558;
 }
 
 @theme inline {
@@ -44,4 +45,12 @@ body {
 
 .bg-jihyegra {
   background-image: var(--jihyegra);
+}
+
+.text-watchapink {
+  color: var(--watchapink);
+}
+
+.text-jihyegra {
+  color: var(--jihyegra);
 }
