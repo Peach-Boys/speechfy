@@ -47,11 +47,17 @@ public class userController {
             accessTokenCookie.setMaxAge(AccessTokenTime);
             accessTokenCookie.setHttpOnly(true);
             accessTokenCookie.setPath("/");
+            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setAttribute("SameSite", "None");
+            accessTokenCookie.setHttpOnly(true);
 
             Cookie refreshTokenCookie = new Cookie("speechfyRefreshToken", refreshToken);
             refreshTokenCookie.setMaxAge(RefreshTokenTime);
             refreshTokenCookie.setHttpOnly(true);
             refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setSecure(true);
+            refreshTokenCookie.setAttribute("SameSite", "None");
+            refreshTokenCookie.setHttpOnly(true);
 
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
