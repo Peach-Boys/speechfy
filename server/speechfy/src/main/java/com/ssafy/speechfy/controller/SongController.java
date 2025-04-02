@@ -1,6 +1,7 @@
 package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.dto.song.*;
+import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.service.MusicGenService;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.SongService;
@@ -32,7 +33,7 @@ public class SongController {
 
     // 마이페이지 완성곡 리스트 반환
     @GetMapping("")
-    public ResponseEntity<songListResponseDto> getSongList() {
+    public ResponseEntity<SongListResponseDto> getSongList() {
         Integer userId = getCurrentUserId();
         Pageable pageable = PageRequest.of(0, 3);
         SongListResponseDto songListResponseDto = songService.getAllSongs(userId, pageable);
@@ -49,9 +50,9 @@ public class SongController {
 
     // 완성곡 다운로드 (사용하는 곳은 아직 없음. 일단 만들어둠)
     @GetMapping("/download/{songId}")
-    public ResponseEntity<songResponseDto> getSong(@PathVariable Integer songId) {
+    public ResponseEntity<SongResponseDto> getSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
-        songResponseDto dto = songService.getSongById(songId);
+        SongResponseDto dto = songService.getSongById(songId);
         return ResponseEntity.ok(dto);
     }
 

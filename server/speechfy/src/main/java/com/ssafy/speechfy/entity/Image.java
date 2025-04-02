@@ -5,10 +5,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Setter
 @Getter
+@SuperBuilder
 @Table(name="image")
 @NoArgsConstructor
 @AllArgsConstructor

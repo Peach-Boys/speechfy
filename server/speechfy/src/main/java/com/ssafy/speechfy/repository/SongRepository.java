@@ -14,5 +14,4 @@ public interface SongRepository extends JpaRepository<Song, Integer> {
     Page<Song> findPageByUser(@Param("user") User user, Pageable pageable);
     void deleteById(int id);
     List<Song> findByStudioId(int studioId);
-
 }
