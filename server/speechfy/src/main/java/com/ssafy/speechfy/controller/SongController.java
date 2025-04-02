@@ -1,14 +1,12 @@
 package com.ssafy.speechfy.controller;
 
-import com.ssafy.speechfy.dto.song.imageCreateDto;
-import com.ssafy.speechfy.dto.song.songListResponseDto;
-import com.ssafy.speechfy.dto.song.songResponseDto;
-import com.ssafy.speechfy.oauth.SecurityUtil;
+import com.ssafy.speechfy.dto.song.*;
 import com.ssafy.speechfy.service.MusicGenService;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.SongService;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -37,7 +35,7 @@ public class SongController {
     public ResponseEntity<songListResponseDto> getSongList() {
         Integer userId = getCurrentUserId();
         Pageable pageable = PageRequest.of(0, 3);
-        songListResponseDto songListResponseDto = songService.getAllSongs(userId, pageable);
+        SongListResponseDto songListResponseDto = songService.getAllSongs(userId, pageable);
 
         return ResponseEntity.ok(songListResponseDto);
     }
@@ -49,7 +47,7 @@ public class SongController {
         return ResponseEntity.ok(null);
     }
 
-    // 완성곡 다운로드
+    // 완성곡 다운로드 (사용하는 곳은 아직 없음. 일단 만들어둠)
     @GetMapping("/download/{songId}")
     public ResponseEntity<songResponseDto> getSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
@@ -66,12 +64,26 @@ public class SongController {
     }
 
     // 앨범 커버 생성
-    @GetMapping("cover/{studioId}")
-    public ResponseEntity<?> createCover(@PathVariable Integer studioId, @RequestBody imageCreateDto createDto) {
+    @GetMapping("/cover/{studioId}")
+    public ResponseEntity<?> createCover(@PathVariable Integer studioId, @RequestBody ImageCreateDto createDto) {
         return ResponseEntity.ok(null);
     }
 
+    // basicSong 저장
+    // presignedUrl 생성 및 반환
+    // Security 적용 전까지 일단 기존 방식으로 유저 인증
+    @GetMapping("/basic/presignedUrl")
+    public ResponseEntity<BasicSongPresignedUrlResponseDto> getPresignedUrl(@CookieValue(name = "userId") Integer userId) {
+        BasicSongPresignedUrlResponseDto basicSongPresignedUrlResponse = songService.generateBasicSongPresignedUrl(userId);
+        return ResponseEntity.ok(basicSongPresignedUrlResponse);
+    }
 
-
-
+    @PostMapping("/studios/{studioId}/basic")
+    public ResponseEntity<BasicSongRegisterResponseDto> registerBasicSong(
+            @PathVariable("studioId") String studioId,
+            @CookieValue(name = "userId") Integer userId,
+            @RequestBody BasicSongRegisterRequestDto requestDto) {
+        BasicSongRegisterResponseDto basicSongRegisterResponse = songService.registerBasicSong(userId, Integer.parseInt(studioId), requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(basicSongRegisterResponse);
+    }
 }

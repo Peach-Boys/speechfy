@@ -9,9 +9,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class imageCreateDto {
-    private String title;
-    private String mood;
-    private String genre;
-
+public class SongCreateDto {
+    private String name;
 }
