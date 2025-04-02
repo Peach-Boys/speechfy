@@ -15,7 +15,7 @@ import java.util.List;
 @Table(name="studio")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Studio {
+public class Studio extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

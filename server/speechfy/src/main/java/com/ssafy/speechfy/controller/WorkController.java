@@ -80,7 +80,18 @@ public class WorkController {
         return ResponseEntity.ok(responseDto);
     }
 
-    // API: 작업실 트랙 조회, 안쓰일 확률이 높거나 용도가 변경될 가능성이 높음
+    @DeleteMapping("/track/{studioId}/fail")
+    public ResponseEntity<String> createTrackFail(
+            @CookieValue(name = "userId") Integer userId,
+            @PathVariable Integer studioId,
+            @RequestBody TrackCreateFailDto workCreateFailDto ){
+
+       workService.createTrackFail(userId, workCreateFailDto);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    //API : 작업실 트랙 조회, 안쓰일 확률이 높거나 용도가 변경될 가능성이 높음
     @GetMapping("/track/{trackId}")
     public ResponseEntity<TrackResponseDto> getTrack(@PathVariable Integer trackId){
         TrackResponseDto responseDto = workService.getTrackResponseDto(trackId);

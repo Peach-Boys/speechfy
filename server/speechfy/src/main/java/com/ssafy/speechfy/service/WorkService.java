@@ -13,10 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @RequiredArgsConstructor
 @Service
@@ -28,8 +25,6 @@ public class WorkService {
     private final UserRepository userReposiotry;
     private final S3Service s3Service;
 
-
-    //리팩토링 클리어
     public StudioListResponseDto getStudioList(Integer userId) {
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
@@ -56,8 +51,8 @@ public class WorkService {
                 0,
                 user,
                 studioCreateDto.getStudioName()
-        );
-        studio = studioReposiotry.save(studio);
+                );
+       studio = studioReposiotry.save(studio);
         return new StudioResponseDto(getStudio(studio.getId()));
     }
 
@@ -99,8 +94,6 @@ public class WorkService {
 
     @Transactional
     public void deleteTrack(Integer trackId){ // 사운드뱅크 삭제 위해 userId필요
-        // 스튜디오 트랙 리스트 호출
-        // 스튜디오 트랙 리스트 삭제
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         List<Track> trackList = trackReposiotry.findByRecord(track.getRecord());
@@ -108,8 +101,6 @@ public class WorkService {
             recordReposiotry.delete(track.getRecord());
         }
         trackReposiotry.delete(track);
-
-
     }
 
     @Transactional
@@ -141,25 +132,23 @@ public class WorkService {
         InstrumentType instrumentType = InstrumentType.values()[instrumentId];
         System.out.println(instrumentType.name());
         // 트랙 이름 자동 생성 -> 어떻게 생성해야할지 모르겠음
-        String trackName = "Track_" + System.currentTimeMillis();
-        System.out.println(trackName);
+        String trackName = trackCreateDto.getTrackName();
         // 레코드 엔티티 불러오기
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record;
         if (optionalRecord.isPresent()) {
             record = optionalRecord.get();
         } else { // 해당 레코드가 없으면 새로운 레코드 만들기
+            String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
             record = new Record(
                     0,
-                    "저장할 파일에 대한 S3 경로 알고리즘 만들어야 함"
+                    recordFilePath
             );
             record = recordReposiotry.save(record);
         }
         //S3파일경로 만들기
-        String filePath = "저장할 파일에 대한 S3 경로 알고리즘 만들어얗ㅁ";
-        //s3Service.generatePresignedUrl("트랙이름 방식 어떻게 할 것인가요?");
-        //????
-        /// //////////
+
+        String trackFilePath = "users/" + userId + "/track/" + trackCreateDto.getTrackUUID() + ".wav";
 
         // 트랙 엔티티 생성하기
         Track track = new Track(
@@ -169,23 +158,36 @@ public class WorkService {
                 record,
                 studio,
                 trackName,   // dto에서 네임을 안받은듯, 먼저 백에서 네임 자동생성 방식인ㄷ ㅡㅅ
-                filePath,
+                trackFilePath,
                 trackCreateDto.getOrder()
         );
-        trackReposiotry.save(track);
+        track = trackReposiotry.save(track);
 
-        TrackResponseDto trackResponseDto = getTrackResponseDto(track.getId());
-
-        if(trackCreateDto.getRecordId() != 0){ // 새로만들어진게 아니면 굳이 presignedUrl을 보낼 필요 x
-            trackResponseDto.getRecordDto().setRecordPresignedUrl(null);
-            System.out.println(trackResponseDto.getRecordDto().getRecordId());
-        }
-
-        return trackResponseDto;
+        return getTrackResponseDto(track.getId());
     }
 
     @Transactional
-    public void updateTrack(Integer studioId, Integer trackId, TrackUpdateDto trackUpdateDto){
+    public void createTrackFail(Integer userId, TrackCreateFailDto trackCreateFailDto){
+        // 유저 엔티티 불러오기
+        String trackFilePath = "users/" + userId + "/track/"; //+ trackCreateFailDto.getTrackUUID() + ".wav";
+        String recordFilePath = "users/" + userId + "/record/";// + trackCreateFailDto.getRecordUUID()+ ".wav";
+
+
+        //s3내의 트랙파일 삭제하기
+        if(trackCreateFailDto.getTrackUUID() != null){
+            trackFilePath += trackCreateFailDto.getTrackUUID() + ".wav";
+            System.out.println(trackFilePath);
+        }
+        //s3내의 레코드파일 삭제하기
+        if(trackCreateFailDto.getRecordUUID() != null){
+            recordFilePath += trackCreateFailDto.getRecordUUID() + ".wav";
+            System.out.println(recordFilePath);
+        }
+
+
+    }
+    @Transactional
+    public void updateTrack(Integer studioId,Integer trackId, TrackUpdateDto trackUpdateDto){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
@@ -214,7 +216,7 @@ public class WorkService {
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
         int userId = 1;
-        String objectKey = "users/"+ Integer.toString(userId) +"/track/" + track.getId();
+        String objectKey = "users/"+ Integer.toString(userId) + "/track/" + track.getId();
 
         return new TrackDto( //dto에 담기
                 track.getId(),
@@ -255,11 +257,9 @@ public class WorkService {
                 studio.getUser().getId(),
                 studio.getName(),
                 instrumentList,
-                null    // 불러오는 방식 모르겠음
+                studio.getUpdatedAt().toString()  // 불러오는 방식 모르겠음
         );
     }
-
-
 
     public static <T> T checkElementException(Optional<T> optional, String message) {
         if (optional.isPresent()) {
