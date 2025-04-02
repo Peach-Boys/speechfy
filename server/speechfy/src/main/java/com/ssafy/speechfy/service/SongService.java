@@ -96,7 +96,11 @@ public class SongService {
      * 완성곡 삭제
      */
     @Transactional
-    public void deleteSongById(int songId) {
+    public void deleteSongById(int songId, int userId) {
+        Song song = songRepository.findById(songId);
+        if (song.getUser().getId() != userId) {
+            return;
+        }
         songRepository.deleteById(songId);
     }
 
