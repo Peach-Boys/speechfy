@@ -11,7 +11,7 @@ export function useLogin() {
       navigation.push('/my');
     },
     onError: () => {
-      navigation.push('/');
+      navigation.push('/error');
     },
   });
 }
