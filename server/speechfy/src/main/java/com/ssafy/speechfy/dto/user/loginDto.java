@@ -10,5 +10,5 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class loginDto {
-    private Integer id;
+    private String code;
 }
