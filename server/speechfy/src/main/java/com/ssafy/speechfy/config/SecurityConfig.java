@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .rememberMe(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                new AntPathRequestMatcher("/login", "POST")
+                                new AntPathRequestMatcher("/api/login", "POST")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
