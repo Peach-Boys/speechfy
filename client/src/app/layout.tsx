@@ -17,7 +17,7 @@ export default function RootLayout({
     <html lang='ko'>
       <body className={`antialiased flex justify-center`}>
         <Header />
-        <div className='relative w-[500px] h-[100dvh] overflow-hidden flex flex-col bg-black font-[Pretendard]'>
+        <div className='relative w-full h-[100dvh] overflow-hidden flex flex-col bg-black font-[Pretendard]'>
           <div className='h-[60px]' /> {/* Header space */}
           <div className='flex-1 overflow-y-auto'>{children}</div>
         </div>

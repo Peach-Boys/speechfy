@@ -18,7 +18,7 @@ function WorkroomTabs({ tab, setTab }: Props) {
     setTab(tabSrc);
   }
   return (
-    <ul className='sticky top-0 w-full max-w-[500px] h-fit flex mb-10 bg-gray-800'>
+    <ul className='sticky top-0 w-full  h-fit flex mb-10 bg-gray-800 z-10'>
       {ROUTE_TABS.map((t) => (
         <li
           key={t.tabSrc}

@@ -1,5 +1,6 @@
 'use client';
 
+import DrumBeatGenerator from '@/app/ddsp/DrumBeatGenerator';
 import CreateRecord from '@/components/features/CreateRecord';
 import Track from '@/components/features/Track';
 import IconAllPlay from '@/components/icons/IconAllPlay';
@@ -8,7 +9,6 @@ import { useDeleteAllTrack } from '@/service/queries/useDeleteAllTrack';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
-import DrumBeatGenerator from '@/app/ddsp/DrumBeatGenerator';
 
 function TrackTab() {
   const [isAllPlay, setIsAllPlay] = useState<boolean>(false);
@@ -36,7 +36,7 @@ function TrackTab() {
           <span>{isAllPlay ? '재생 중지' : '전체 재생'}</span>
         </button>
       </div>
-      <div className='w-full h-fit flex flex-col items-center gap-2 overflow-auto'>
+      <div className='w-full h-fit flex flex-col items-center gap-2'>
         {/* UI 테스트용 Track 여러 개 생성 */}
         {tracks.map((track) => (
           <Track key={track.trackId} track={track} isAllPlay={isAllPlay} />
