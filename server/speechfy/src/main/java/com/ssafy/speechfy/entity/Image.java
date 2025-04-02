@@ -5,11 +5,13 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 @Entity
 @Setter
 @Getter
-@Table(name="user")
+@SuperBuilder
+@Table(name="image")
 @NoArgsConstructor
 @AllArgsConstructor
 public class Image extends BaseEntity {

@@ -1,24 +1,19 @@
 package com.ssafy.speechfy.dto.song;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import java.util.List;
-
+@Builder
 @Getter
-@Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class songResponseDto {
+public class SongResponseDto {
     private Integer songId;
     private Integer userId;
     private String songPresignedUrl;
     private Integer viewCount;
-    private Integer likes;
+    private Integer likesCount;
     private String imagePresignedUrl;
     private String genre;
     private String mood;
-
+    private boolean isAIUsed;
 }

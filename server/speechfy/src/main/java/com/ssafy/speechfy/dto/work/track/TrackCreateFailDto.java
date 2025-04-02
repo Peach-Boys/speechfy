@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.dto.song;
+package com.ssafy.speechfy.dto.work.track;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class songDeleteDto {
-    private Integer id;
+public class TrackCreateFailDto {
+    private String trackUUID;
+    private String recordUUID;
 }

@@ -6,13 +6,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Setter
 @Getter
 @Table(name="studio")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Studio {
+public class Studio extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,4 +28,16 @@ public class Studio {
 
     @Column(name = "name")
     private String name;
+
+    @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Song> songs = new ArrayList<>();
+
+    @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Track> tracks = new ArrayList<>();
+
+    public Studio(int id, User user, String name) {
+        this.id = id;
+        this.user = user;
+        this.name = name;
+    }
 }
