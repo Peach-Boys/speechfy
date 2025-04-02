@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { NoteSequence } from '@magenta/music';
+import * as m from '@magenta/music';
+
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const WavEncoder = require('wav-encoder');
 const MUSIC_VAE_CHECKPOINT =
@@ -38,16 +39,16 @@ export function useMusicVaeGenerator(
   const [loading, setLoading] = useState<boolean>(false);
   const [audioURL, setAudioURL] = useState<string | null>(null);
   const [generatedSequence, setGeneratedSequence] =
-    useState<NoteSequence | null>(null);
+    useState<m.NoteSequence | null>(null);
 
-  function computeDurationSeconds(seq: NoteSequence, curBpm: number): number {
+  function computeDurationSeconds(seq: m.NoteSequence, curBpm: number): number {
     const steps = seq.totalQuantizedSteps || bars * 16;
     const secPerStep = 60 / curBpm / 4;
     return steps * secPerStep;
   }
 
   async function scheduleMelodySequence(
-    seq: NoteSequence,
+    seq: m.NoteSequence,
     offlineCtx: OfflineAudioContext
   ): Promise<void> {
     const qpm = (
@@ -96,12 +97,12 @@ export function useMusicVaeGenerator(
       await musicVAE.initialize();
       const audioSamples = [];
       for (let i = 0; i < 2; i++) {
-        const sampleSequences: NoteSequence[] = (
+        const sampleSequences: m.NoteSequence[] = (
           await musicVAE.sample(1, temperature, {
             chordProgression: ['C', 'G', 'Am', 'Fm'],
           })
-        ).map((seq) => NoteSequence.create(seq));
-        const seq: NoteSequence = sampleSequences[0];
+        ).map((seq) => m.NoteSequence.create(seq));
+        const seq: m.NoteSequence = sampleSequences[0];
         setGeneratedSequence(seq);
 
         const durationSeconds = computeDurationSeconds(seq, bpm);
