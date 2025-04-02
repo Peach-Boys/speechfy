@@ -36,7 +36,15 @@ function ClientMy() {
         </li>
       </ul>
       <div className='relative w-full h-full'>
-        <div className={tab === 'work' ? 'block' : 'hidden'}>
+        <div className={tab === 'work' ? 'flex flex-col gap-2' : 'hidden'}>
+          <div className='w-full flex justify-end'>
+            <a
+              href='/create'
+              className='p-2 bg-white text-black rounded-[10px]'
+            >
+              + 만들기
+            </a>
+          </div>
           <WorkroomTab />
         </div>
         <div className={tab === 'completed' ? 'block' : 'hidden'}>
