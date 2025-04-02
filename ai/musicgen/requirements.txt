@@ -3,7 +3,7 @@ fastapi
 uvicorn
 
 # MusicGen + 오디오 처리
-torch==2.1.0
+torch==2.1.0+cu121
 torchaudio==2.1.0
 audiocraft==1.3.0
 scipy
