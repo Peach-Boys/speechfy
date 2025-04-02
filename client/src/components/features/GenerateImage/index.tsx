@@ -16,9 +16,9 @@ function GenerateImage() {
         <span>AI가 어울리는 앨범 커버를</span>
         <span>만들어 줄거에요!</span>
       </div>
-      <div className='w-full px-3 flex items-center'>
-        <span className='w-1/10'>제목</span>
-        <Input title={title} setTitle={setTitle} />
+      <div className='w-full h-full px-3 flex items-center'>
+        <span className='w-[40px] h-full ext-center text-mb'>제목</span>
+        <Input title={title} setTitle={setTitle} maxLen={20} />
       </div>
       <button
         className={clsx(
