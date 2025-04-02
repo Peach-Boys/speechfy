@@ -1,3 +1,5 @@
+'use client';
+
 import Hamburger from '@/components/common/Hamburger';
 import IconPeachPeach from '@/components/icons/IconPeachPeach';
 
