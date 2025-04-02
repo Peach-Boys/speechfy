@@ -10,11 +10,14 @@ import { useDDSP } from '@/hooks/useDDSP';
 import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
-import InstrumentGenerator from '../InstrumentGenerator';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
-
+import dynamic from 'next/dynamic';
+const InstrumentGenerator = dynamic(
+  () => import('@/components/features/InstrumentGenerator'),
+  { ssr: false }
+);
 interface Props {
   setIsCreate: React.Dispatch<SetStateAction<boolean>>;
   addTrack: (track: ITrack) => void;
