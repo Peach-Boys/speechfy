@@ -10,11 +10,12 @@ export interface BaseCompletedSong {
   songId: number;
   userId: number;
   title: string;
-  completeUrl: string;
+  songPresignedUrl: string;
   viewCount: number;
   likes: number;
-  imagePath: string;
+  imagePresignedUrl: string;
   genre: string;
   mood: string;
   createdAt: string;
+  aiused: boolean;
 }

@@ -17,12 +17,12 @@ function CompletedSongBox({ song }: Props) {
     handleSeek,
     isPlaying,
     isReady,
-  } = useAudioPlayBar(song.completeUrl);
+  } = useAudioPlayBar(song.songPresignedUrl);
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
         <img
-          src={song.imagePath ?? '/images/defaultImage.png'}
+          src={song.imagePresignedUrl ?? '/images/defaultImage.png'}
           alt='음악 이미지'
           className='w-10 h-10 rounded-[10px]'
         />
@@ -54,14 +54,14 @@ function CompletedSongBox({ song }: Props) {
           {isPlaying ? '정지' : '재생'}
         </button>
         <a
-          href={song.completeUrl}
+          href={song.songPresignedUrl}
           className='w-full py-3 flex justify-center bg-gray-200 text-black rounded-[10px] cursor-pointer'
           download
         >
           다운로드
         </a>
       </div>
-      <audio ref={audioRef} src={song.completeUrl} />
+      <audio ref={audioRef} src={song.songPresignedUrl} />
     </article>
   );
 }
