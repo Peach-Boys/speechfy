@@ -73,7 +73,6 @@ public class JwtKeyService {
             return new ImmutableJWKSet<>(new JWKSet(jwk));
         } catch (JOSEException e) {
             log.error("Invalid PEM key: {}", e.getMessage(), e);
-            System.out.println("로드안됨 ");
             throw new IllegalArgumentException("Invalid PEM key", e);
         }
     }

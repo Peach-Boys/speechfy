@@ -17,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -77,11 +78,9 @@ public class JwtService {
         JWSHeader header = new JWSHeader.Builder(this.jwtKeyService.getJwsAlgorithm())
                 .type(JOSEObjectType.JWT)
                 .build();
-
         Instant expiresAt = Instant.now()
                 .plusSeconds(REFRESH_EXPIRES_IN_SECONDS)
                 .truncatedTo(ChronoUnit.SECONDS);
-
         Payload payload = new JWTClaimsSet.Builder()
                 .issuer(JWT_ISSUER)
                 .subject(String.valueOf(user.getId()))
@@ -89,7 +88,6 @@ public class JwtService {
                 .claim(CLAIM_TYPE, TYPE_REFRESH)
                 .build()
                 .toPayload();
-
         return this.jwsMinter.mint(header, payload, null).serialize();
     }
 }

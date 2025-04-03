@@ -39,6 +39,7 @@ public class userController {
 
         // JWT 토큰 생성 및 쿠키 설정
         try {
+            log.info("before_created");
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
             // 넣어주는 방법 여러가지 중에 쿠키에 넣는 것을 선택
