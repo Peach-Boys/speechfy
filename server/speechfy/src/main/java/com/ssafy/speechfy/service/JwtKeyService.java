@@ -32,7 +32,6 @@ public class JwtKeyService {
     private final JWSAlgorithm jwsAlgorithm = JWSAlgorithm.ES256;
     private JWSKeySelector<SecurityContext> publicJwsKeySelector;
     private JWKSource<SecurityContext> privateJwkSource;
-    public JWK tmpjwk;
 
     @Value("${spring.security.oauth2.key.private}")
     private String oauth2PrivateKeyPath;
@@ -72,8 +71,6 @@ public class JwtKeyService {
     private JWKSource<SecurityContext> parseKey(String keyString) {
         try {
             JWK jwk = ECKey.parseFromPEMEncodedObjects(keyString);
-            tmpjwk = jwk;
-            log.info("Private JWK loaded: {}", jwk.toJSONString());
             return new ImmutableJWKSet<>(new JWKSet(jwk));
         } catch (JOSEException e) {
             log.error("Invalid PEM key: {}", e.getMessage(), e);
