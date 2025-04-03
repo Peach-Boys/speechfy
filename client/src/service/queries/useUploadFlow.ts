@@ -6,24 +6,33 @@ import {
 } from '@/service/apis/Upload';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const useUploadFlow = (
-  workroomId: string,
-  audio: string,
-  instrumentId: number,
-  order: number
-) => {
+interface Props {
+  workroomId: string;
+  originalAudio: string;
+  transAudio: string;
+  instrument: string;
+  order: number;
+}
+
+export const useUploadFlow = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async () => {
+    mutationFn: async ({
+      workroomId,
+      originalAudio,
+      transAudio,
+      instrument,
+      order,
+    }: Props) => {
       const presignedUrl = await getRequestPresignedUrlTrack(workroomId);
       console.log('presi:', presignedUrl);
       const { trackPresignedUrl, recordPresignedUrl, trackUUID, recordUUID } =
         presignedUrl;
 
       const [trackResult, recordResult] = await Promise.allSettled([
-        putUploadTrack(trackPresignedUrl, audio),
-        putUploadTrack(recordPresignedUrl, audio),
+        putUploadTrack(trackPresignedUrl, transAudio),
+        putUploadTrack(recordPresignedUrl, originalAudio),
       ]);
 
       // 성공 여부 판단
@@ -39,7 +48,7 @@ export const useUploadFlow = (
         throw new Error('업로드 중 에러가 발생했습니다.');
       }
 
-      await postSuccess(workroomId, instrumentId, order, trackUUID, recordUUID);
+      await postSuccess(workroomId, instrument, order, trackUUID, recordUUID);
     },
     onSuccess: () => {
       console.log('모든 업로드 완료');
