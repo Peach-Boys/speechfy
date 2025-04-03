@@ -12,5 +12,5 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class StudioListResponseDto {
-    private List<StudioSimpleDto> workList;
+    private List<StudioSimpleDto> studioList;
 }
