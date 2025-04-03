@@ -40,7 +40,9 @@ spring:
 #      docker에선 redis-server로 변경
       host: localhost
       port: 6379
-
+  jackson:
+    serialization:
+      wrap-root-value: false
 
 logging:
   level:
