@@ -84,4 +84,10 @@ public class WebExceptionHandler {
                 .body(Map.of("error", "잘못된 enum 인덱스 접근입니다."));
     }
 
+    public static class UnauthorizedAccessException extends RuntimeException {
+        public UnauthorizedAccessException(String message) {
+            super(message);
+        }
+    }
+
 }

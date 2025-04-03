@@ -10,5 +10,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PresignedUrlDto {
-    String presignedUrl;
+    String trackPresignedUrl;
+    String recordPresignedUrl;
+    String trackUUID;
+    String recordUUID;
 }

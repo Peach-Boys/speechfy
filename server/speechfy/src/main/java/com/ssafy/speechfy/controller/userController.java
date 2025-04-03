@@ -1,42 +1,106 @@
 package com.ssafy.speechfy.controller;
 
-import com.ssafy.speechfy.dto.song.songListResponseDto;
-import com.ssafy.speechfy.dto.user.userCreateDto;
-import com.ssafy.speechfy.dto.user.userResponseDto;
-import com.ssafy.speechfy.dto.user.userUpdateDto;
+import com.nimbusds.jose.JOSEException;
+import com.ssafy.speechfy.dto.user.loginDto;
+import com.ssafy.speechfy.entity.User;
+import com.ssafy.speechfy.service.JwtService;
+import com.ssafy.speechfy.service.UserService;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.ssafy.speechfy.oauth.KakaoUtil;
 
+import java.util.HashMap;
+import java.util.Map;
+@Slf4j
 @RestController
-@RequestMapping("/api/users")
+@RequiredArgsConstructor
+@RequestMapping("/api")
 public class userController {
-    @PostMapping("/signup")
-    public ResponseEntity<?> createUser(@RequestBody userCreateDto userCreateDto) {
 
-        return null;
-    }
+    private final UserService userService;
+    private final JwtService jwtService;
+
+    @Value("${spring.security.oauth2.client.jwt.access-token-time}")
+    private int AccessTokenTime;
+
+    @Value("${spring.security.oauth2.client.jwt.refresh-token-time}")
+    private int RefreshTokenTime;
+
     @PostMapping("/login")
-    public ResponseEntity<?> login() {
-        return ResponseEntity.ok(null);
+    public ResponseEntity<?> login(@RequestBody loginDto loginDto, HttpServletResponse response) {
+        User user;
+        user = userService.signInForKakao(loginDto);
+
+
+        // JWT 토큰 생성 및 쿠키 설정
+        try {
+            log.info("before_created");
+            String accessToken = jwtService.generateAccessToken(user);
+            String refreshToken = jwtService.generateRefreshToken(user);
+            // 넣어주는 방법 여러가지 중에 쿠키에 넣는 것을 선택
+            Cookie accessTokenCookie = new Cookie("speechfyAccessToken", accessToken);
+            accessTokenCookie.setMaxAge(AccessTokenTime);
+            accessTokenCookie.setHttpOnly(true);
+            accessTokenCookie.setPath("/");
+            accessTokenCookie.setSecure(true);
+            accessTokenCookie.setAttribute("SameSite", "None");
+            accessTokenCookie.setHttpOnly(true);
+
+            Cookie refreshTokenCookie = new Cookie("speechfyRefreshToken", refreshToken);
+            refreshTokenCookie.setMaxAge(RefreshTokenTime);
+            refreshTokenCookie.setHttpOnly(true);
+            refreshTokenCookie.setPath("/");
+            refreshTokenCookie.setSecure(true);
+            refreshTokenCookie.setAttribute("SameSite", "None");
+            refreshTokenCookie.setHttpOnly(true);
+
+            response.addCookie(accessTokenCookie);
+            response.addCookie(refreshTokenCookie);
+
+        } catch (JOSEException e){
+            log.error("Failed to read key files. Error: {}", e.getMessage(), e);
+            throw new IllegalStateException("Failed to mint JWS", e);
+        }
+
+        return ResponseEntity.ok("Login successful");
     }
+
     @PostMapping("/logout")
-    public ResponseEntity<?> logout() {
+    public ResponseEntity<?> logout(HttpServletResponse response) {
+        Cookie accessTokenCookie = new Cookie("speechfyAccessToken", null);
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setHttpOnly(true);
+        accessTokenCookie.setMaxAge(0);  // 쿠키 삭제
 
-        return ResponseEntity.ok(null);
-    }
-    @GetMapping
-    public ResponseEntity<userResponseDto> getUser() {
+        Cookie refreshTokenCookie = new Cookie("speechfyRefreshToken", null);
+        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setHttpOnly(true);
+        refreshTokenCookie.setMaxAge(0);  // 쿠키 삭제
 
-        return ResponseEntity.ok(null);
-    }
-    @PatchMapping
-    public ResponseEntity<?> updateUser(@RequestBody userUpdateDto userUpdateDto) {
+        response.addCookie(accessTokenCookie);
+        response.addCookie(refreshTokenCookie);
 
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok("로그아웃 성공");
     }
-    @DeleteMapping
-    public ResponseEntity<?> deleteUser() {
 
-        return ResponseEntity.ok(null);
-    }
+//    @GetMapping
+//    public ResponseEntity<userResponseDto> getUser() {
+//
+//        return ResponseEntity.ok(null);
+//    }
+//    @PatchMapping
+//    public ResponseEntity<?> updateUser(@RequestBody userUpdateDto userUpdateDto) {
+//
+//        return ResponseEntity.ok(null);
+//    }
+//    @DeleteMapping
+//    public ResponseEntity<?> deleteUser() {
+//
+//        return ResponseEntity.ok(null);
+//    }
 }

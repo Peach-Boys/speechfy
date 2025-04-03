@@ -1,4 +1,4 @@
-import pluginJs from '@eslint/js';
+import { default as pluginJs } from '@eslint/js';
 import tanstackQuery from '@tanstack/eslint-plugin-query';
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsParser from '@typescript-eslint/parser';
@@ -10,7 +10,10 @@ import globals from 'globals';
 
 const baseConfig = {
   languageOptions: {
-    globals: globals.browser,
+    globals: {
+      ...globals.browser,
+      ...globals.node,
+    },
     parser: tsParser,
     parserOptions: {
       ecmaVersion: 'latest',

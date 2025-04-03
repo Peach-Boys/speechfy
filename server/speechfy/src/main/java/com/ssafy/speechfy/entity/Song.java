@@ -3,16 +3,16 @@ package com.ssafy.speechfy.entity;
 import com.ssafy.speechfy.enums.GenreType;
 import com.ssafy.speechfy.enums.MoodType;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Setter @Getter
+@Setter
+@Getter
+@SuperBuilder
 @Table(name="song")
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,7 +21,7 @@ public class Song extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -55,7 +55,6 @@ public class Song extends BaseEntity {
     @OneToMany(mappedBy = "song", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Like> likes;
 
-    @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
-
+    @Column(name = "is_ai_used")
+    private Boolean isAIUsed;
 }

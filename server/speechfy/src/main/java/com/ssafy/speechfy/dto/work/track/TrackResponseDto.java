@@ -11,6 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrackResponseDto { // 프라사인드 반환을 위한 DTO
-    private TrackDto trackDto;
-    private RecordDto recordDto;
+    private TrackDto track;
+    private RecordDto record;
 }

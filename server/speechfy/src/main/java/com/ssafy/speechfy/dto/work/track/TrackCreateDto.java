@@ -11,6 +11,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TrackCreateDto {
     private Integer instrumentId;
-    private Integer recordId;
     private Integer order;
+    private Integer recordId;
+    private String trackName;
+    private String trackUUID;
+    private String recordUUID;
 }
