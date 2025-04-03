@@ -67,7 +67,14 @@ public class JwtService {
                 .build()
                 .toPayload();
         log.info("Generate access token4");
-        return this.jwsMinter.mint(header, payload, null).serialize();
+        try {
+            String token = this.jwsMinter.mint(header, payload, null).serialize();
+            log.info("JWS token 생성 성공: {}", token);
+            return token;
+        } catch (Exception e) {
+            log.error("JWS 토큰 생성 중 예외 발생: {}", e.getMessage(), e);
+            throw e;  // 또는 적절한 예외 처리
+        }
     }
 
     public String generateRefreshToken(User user) throws JOSEException {
