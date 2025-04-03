@@ -18,6 +18,19 @@ function CompletedSongBox({ song }: Props) {
     isPlaying,
     isReady,
   } = useAudioPlayBar(song.completeUrl);
+
+  async function handleClick() {
+    try {
+      await navigator.share({
+        title: document.title,
+        text: song.title,
+        url: song.completeUrl,
+      });
+    } catch (err) {
+      console.error('err:', err);
+    }
+  }
+
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
@@ -30,7 +43,7 @@ function CompletedSongBox({ song }: Props) {
           <div>{song.title}</div>
           <div>{song.createdAt}</div>
         </div>
-        <div className='h-fit cursor-pointer'>
+        <div className='h-fit cursor-pointer' onClick={handleClick}>
           <IconTripleDots color='#ffffff' />
         </div>
       </div>
