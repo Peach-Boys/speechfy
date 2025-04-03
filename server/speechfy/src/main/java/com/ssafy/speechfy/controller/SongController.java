@@ -35,6 +35,16 @@ public class SongController {
         return ResponseEntity.ok(songListResponseDto);
     }
 
+    // 스튜디오의 모든 완성곡 리스트 반환
+    @GetMapping("/{studioId}")
+    public ResponseEntity<SongListResponseDto> getStudioSongList(@PathVariable Integer studioId) {
+        Integer userId = getCurrentUserId();
+        Pageable pageable = PageRequest.of(0, 3);
+        SongListResponseDto songListResponseDto = songService.getStudioSongs(studioId);
+
+        return ResponseEntity.ok(songListResponseDto);
+    }
+
     // 완성곡 변환 저장
     @PostMapping("/{studioId}")
     public ResponseEntity<?> createSongList(@PathVariable Integer studioId, @RequestBody TrackListRequestDto trackListRequestDto) {
@@ -44,7 +54,7 @@ public class SongController {
     }
 
     // 완성곡 다운로드 (사용하는 곳은 아직 없음. 일단 만들어둠)
-    @GetMapping("/{songId}")
+    @GetMapping("/download/{songId}")
     public ResponseEntity<SongResponseDto> getSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
         SongResponseDto dto = songService.getSongById(songId);
@@ -52,7 +62,7 @@ public class SongController {
     }
 
     // 완성곡 삭제
-    @DeleteMapping("/{songId}")
+    @DeleteMapping("/download/{songId}")
     public ResponseEntity<String> deleteSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
         songService.deleteSongById(songId, userId);
