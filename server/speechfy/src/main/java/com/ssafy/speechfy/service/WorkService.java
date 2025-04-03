@@ -154,7 +154,6 @@ public class WorkService {
         } else { // 해당 레코드가 없으면 새로운 레코드 만들기
             String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
             record = new Record(
-                    0,
                     recordFilePath
             );
             record = recordReposiotry.save(record);
@@ -165,7 +164,6 @@ public class WorkService {
 
         // 트랙 엔티티 생성하기
         Track track = new Track(
-                0,
                 user,
                 instrumentType, //인스트러먼트 이넘이라 모르겠으
                 record,
