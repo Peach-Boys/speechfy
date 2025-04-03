@@ -17,14 +17,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ClassPathResource;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StreamUtils;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 
 @Service
@@ -43,34 +39,43 @@ public class JwtKeyService {
     @Value("${spring.security.oauth2.key.public}")
     private String oauth2PublicKeyPath;
 
-    public void loadKey() throws IOException {
-        String privateKeyString = readFile(oauth2PrivateKeyPath);
-        String publicKeyString = readFile(oauth2PublicKeyPath);
+    public void loadKey() {
+        try {
+            String privateKeyString = readFile(oauth2PrivateKeyPath);
+            String publicKeyString = readFile(oauth2PublicKeyPath);
+            JWKSource<SecurityContext> privateJwkSource = parseKey(privateKeyString);
+            JWKSource<SecurityContext> publicJwkSource = parseKey(publicKeyString);
 
-        JWKSource<SecurityContext> privateJwkSource = parseKey(privateKeyString);
-        JWKSource<SecurityContext> publicJwkSource = parseKey(publicKeyString);
-
-        this.privateJwkSource = privateJwkSource;
-        this.publicJwsKeySelector = createJWSKeySelector(publicJwkSource);
+            this.privateJwkSource = privateJwkSource;
+            this.publicJwsKeySelector = createJWSKeySelector(publicJwkSource);
+        } catch (IOException e) {
+            log.error("Failed to read key files. Private: {}, Public: {}, Error: {}", 
+                      oauth2PrivateKeyPath, oauth2PublicKeyPath, e.getMessage(), e);
+        } catch (IllegalArgumentException e) {
+            log.error("Invalid key format: {}", e.getMessage(), e);
+        } catch (Exception e) {
+            log.error("Unexpected error while loading JWT keys: {}", e.getMessage(), e);
+        }
     }
 
     private JWSKeySelector<SecurityContext> createJWSKeySelector(JWKSource<SecurityContext> jwkSource) {
         try {
             return JWSAlgorithmFamilyJWSKeySelector.fromJWKSource(jwkSource);
         } catch (KeySourceException e) {
+            log.error("Failed to create JWSKeySelector: {}", e.getMessage(), e);
             throw new IllegalArgumentException("Failed to create JWSKeySelector.", e);
         }
     }
 
     private JWKSource<SecurityContext> parseKey(String keyString) {
-        JWK jwk;
         try {
-            jwk = ECKey.parseFromPEMEncodedObjects(keyString);
+            JWK jwk = ECKey.parseFromPEMEncodedObjects(keyString);
+            return new ImmutableJWKSet<>(new JWKSet(jwk));
         } catch (JOSEException e) {
+            log.error("Invalid PEM key: {}", e.getMessage(), e);
+            System.out.println("로드안됨 ");
             throw new IllegalArgumentException("Invalid PEM key", e);
         }
-
-        return new ImmutableJWKSet<>(new JWKSet(jwk));
     }
 
     private String readFile(String path) throws IOException {

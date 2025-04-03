@@ -58,7 +58,6 @@ public class WorkService {
                 () -> new NoSuchElementException("User not found"));
 
         Studio studio = new Studio(
-                0,
                 user,
                 studioCreateDto.getStudioName()
                 );
@@ -158,7 +157,6 @@ public class WorkService {
 
         // 트랙 엔티티 생성하기
         Track track = new Track(
-                0,
                 user,
                 instrumentType, //인스트러먼트 이넘이라 모르겠으
                 record,
