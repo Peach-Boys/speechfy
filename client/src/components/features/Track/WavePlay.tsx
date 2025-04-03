@@ -21,7 +21,7 @@ function WavePlay({ isPlay }: Props) {
   }, []);
 
   return (
-    <div className='h-12 flex justify-around items-center'>
+    <div className='h-10 flex justify-around items-center'>
       {Array.from({ length: 20 }).map((_, idx) => {
         const distance = Math.abs(longIdx - idx);
         const baseScale = 0.5;
@@ -32,7 +32,7 @@ function WavePlay({ isPlay }: Props) {
           <div
             key={idx}
             className={clsx(
-              'bg-[#bcbcbc] w-1 h-2 rounded-full transition-transform ease-in-out'
+              'bg-[#ffffff] w-1 h-2 rounded-full transition-transform ease-in-out'
             )}
             style={{
               transform: `scaleY(${waveEffect})`,
