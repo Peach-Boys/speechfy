@@ -1,4 +1,4 @@
-// lib/msw/index.ts
+// SSR용
 let isMockingStarted = false;
 
 export const initializeMSW = async () => {
@@ -11,10 +11,8 @@ export const initializeMSW = async () => {
   }
 
   if (typeof window === 'undefined') {
-    console.log('in!!');
     const { server } = await import('@/service/mocks/server');
     server.listen();
-    console.log('msw 실행');
   }
 
   isMockingStarted = true;
