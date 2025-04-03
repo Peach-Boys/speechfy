@@ -44,7 +44,7 @@ public class SongController {
     }
 
     // 완성곡 다운로드 (사용하는 곳은 아직 없음. 일단 만들어둠)
-    @GetMapping("/download/{songId}")
+    @GetMapping("/{songId}")
     public ResponseEntity<SongResponseDto> getSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
         SongResponseDto dto = songService.getSongById(songId);
@@ -52,7 +52,7 @@ public class SongController {
     }
 
     // 완성곡 삭제
-    @DeleteMapping("/download/{songId}")
+    @DeleteMapping("/{songId}")
     public ResponseEntity<String> deleteSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
         songService.deleteSongById(songId, userId);
