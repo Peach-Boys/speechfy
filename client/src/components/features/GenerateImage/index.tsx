@@ -10,7 +10,9 @@ function GenerateImage() {
 
   return (
     <div className='w-full flex flex-col justify-between items-center gap-5'>
-      <div className='w-full flex text-xl'>앨범 이미지</div>
+      <div className='w-full flex text-xl'>
+        앨범 이미지 {'('}선택{')'}
+      </div>
       <div className='w-full py-30 flex flex-col items-center bg-gray-900 rounded-[10px] text-m'>
         <span>제목을 입력하고 버튼을 누르면</span>
         <span>AI가 어울리는 앨범 커버를</span>
