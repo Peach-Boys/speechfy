@@ -1,8 +1,10 @@
 export interface IWorkroom {
-  studioId: number;
-  name: string;
-  trackInfo: string[];
-  modifiedAt: string;
+  studioList: {
+    studioId: number;
+    name: string;
+    trackInfo: string[];
+    modifiedAt: string;
+  }[];
 }
 
 export interface ICompletedSong {
@@ -16,4 +18,8 @@ export interface ICompletedSong {
   genre: string;
   mood: string;
   createdAt: string;
+}
+
+export interface ICompletedSongList {
+  songList: ICompletedSong[];
 }
