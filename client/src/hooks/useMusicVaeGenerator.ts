@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import * as m from '@magenta/music';
 
 // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -37,7 +37,6 @@ export function useMusicVaeGenerator(
   temperature: number = 1.3
 ) {
   const [loading, setLoading] = useState<boolean>(false);
-  const [audioURL, setAudioURL] = useState<string | null>(null);
   const [generatedSequence, setGeneratedSequence] =
     useState<m.NoteSequence | null>(null);
 
@@ -86,10 +85,9 @@ export function useMusicVaeGenerator(
     }
   }
 
-  const generateMelody = async (): Promise<void> => {
-    if (typeof window === 'undefined') return;
+  const generateMelody = useCallback(async (): Promise<string | undefined> => {
+    if (typeof window === 'undefined') return '';
     setLoading(true);
-    setAudioURL(null);
     setGeneratedSequence(null);
     try {
       const mm = await import('@magenta/music');
@@ -115,7 +113,6 @@ export function useMusicVaeGenerator(
         await scheduleMelodySequence(seq, offlineCtx);
 
         const renderedBuffer = await offlineCtx.startRendering();
-
         const wavData = await WavEncoder.encode({
           sampleRate: renderedBuffer.sampleRate,
           channelData: [renderedBuffer.getChannelData(0)],
@@ -131,23 +128,22 @@ export function useMusicVaeGenerator(
         buffers.push(buffer);
       }
       const mergedBuffer = await mergeAudioBuffers(buffers, 16000);
-
       const finalWavData = await WavEncoder.encode({
         sampleRate: mergedBuffer.sampleRate,
         channelData: [mergedBuffer.getChannelData(0)],
       });
       const finalBlob = new Blob([finalWavData], { type: 'audio/wav' });
       const finalWavURL = URL.createObjectURL(finalBlob);
-      setAudioURL(finalWavURL);
+      return finalWavURL;
     } catch (err) {
       console.error('Error generating melody:', err);
     }
     setLoading(false);
-  };
+    return undefined;
+  }, [bpm, bars, temperature]); // 필요한 의존성만 포함
 
   return {
     loading,
-    audioURL,
     generatedSequence,
     generateMelody,
   };

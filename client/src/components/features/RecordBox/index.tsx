@@ -28,7 +28,9 @@ const label = ['악기 선택', '녹음', '녹음 중'];
 function RecordBox({ setIsCreate, addTrack }: Props) {
   const { workroom_id } = useParams();
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
+  const [hasProcessed, setHasProcessed] = useState(false);
   const [level, setLevel] = useState<number>(0); // 녹음 절차
+  const [genAudio, setGenAudio] = useState<string | null>(null);
   const [instrument, setInstrument] = useState<string | null>(null);
   const { initialized, toneTransfer, loading } = useDDSP();
   const [isAutoComplete, setAutoComplete] = useState<boolean>();
@@ -59,16 +61,34 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   useEffect(() => {
     console.log(audio, initialized);
     async function processRecording() {
-      if (!isRecording && audio !== '' && initialized) {
+      if (!hasProcessed && !isRecording && audio !== '' && initialized) {
         if (!instrument) return;
         const convertedUrl = await toneTransfer(instrument, audio);
         console.log(convertedUrl);
         handleAddTrack(convertedUrl);
         setIsCreate(false);
+        setHasProcessed(true);
       }
     }
     processRecording();
-  }, [audio, instrument, initialized]);
+  }, [audio, instrument, initialized, hasProcessed]);
+
+  useEffect(() => {
+    if (genAudio) {
+      console.log(genAudio);
+      async function processRecording() {
+        if (!hasProcessed && genAudio && initialized) {
+          if (!instrument) return;
+          const convertedUrl = await toneTransfer(instrument, genAudio);
+          console.log(convertedUrl);
+          handleAddTrack(convertedUrl);
+          setIsCreate(false);
+          setHasProcessed(true);
+        }
+      }
+      processRecording();
+    }
+  }, [genAudio]);
 
   return (
     <Box borderStyle='solid'>
@@ -102,7 +122,10 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
           />
         )}
         {level == 2 && isAutoComplete && (
-          <InstrumentGenerator selectedInst={instrument} />
+          <InstrumentGenerator
+            selectedInst={instrument}
+            setGenAudio={setGenAudio}
+          />
         )}
       </div>
     </Box>
