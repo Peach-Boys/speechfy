@@ -3,7 +3,7 @@ import { INSTRUMENT_TYPE, StudioData } from '@/service/types/Workspace';
 
 export const postCreateWorkroom = async (studioName: string): Promise<void> => {
   try {
-    await client.post('/work/studio', studioName);
+    await client.post('/work/studio', { studioName: studioName });
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }

@@ -1,8 +1,9 @@
 export interface BaseWorkroom {
   studioId: number;
-  name: string;
+  studioName: string;
   trackInfo: string[];
   modifiedAt: string;
+  userId: number;
 }
 
 export interface BaseCompletedSong {
