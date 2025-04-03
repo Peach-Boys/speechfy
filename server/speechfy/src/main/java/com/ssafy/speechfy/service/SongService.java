@@ -6,16 +6,19 @@ import com.ssafy.speechfy.entity.Studio;
 import com.ssafy.speechfy.entity.User;
 import com.ssafy.speechfy.enums.GenreType;
 import com.ssafy.speechfy.enums.MoodType;
+import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.repository.SongRepository;
 import com.ssafy.speechfy.repository.StudioRepository;
 import com.ssafy.speechfy.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -30,27 +33,35 @@ public class SongService {
     private final StudioRepository studioRepository;
     private final S3Service s3Service;
 
+    private Integer getCurrentUserId() {
+        return SecurityUtil.getCurrentUserId();
+    }
+
     /**
      * 마이페이지 완성곡 리스트 반환
      * songListResponseDto
      * 페이지네이션 기능 추가
      */
-    public SongListResponseDto getAllSongs(Integer userId, Pageable pageable) {
+    public SongListResponseDto getAllSongs() {
+        Integer userId = getCurrentUserId();
+        Pageable pageable = PageRequest.of(0, 3);
+
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         Page<Song> songList = songRepository.findPageByUser(user, pageable);
 
         List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
-            URL songPresignedUrl = s3Service.generatePresignedUrl(song.getFilePath());
-            URL imagePresignedUrl = s3Service.generatePresignedUrl(song.getImagePath());
+            URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+            URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
+
 
             return SongResponseDto.builder()
                     .songId(song.getId())
                     .userId(song.getUser().getId())
-                    .songPresignedUrl(songPresignedUrl.toString())
+                    .songPresignedUrl(songCloudFrontUrl.toString())
                     .viewCount(song.getViewCount())
                     .likesCount(song.getLikesCount())
-                    .imagePresignedUrl(imagePresignedUrl.toString())
+                    .imagePresignedUrl(imageCloudFrontUrl.toString())
                     .genre(song.getGenreType().toString())
                     .mood(song.getMoodType().toString())
                     .build();
@@ -69,16 +80,16 @@ public class SongService {
                 () -> new NoSuchElementException("Song not found")
         );
 
-        URL songPresignedUrl = s3Service.generatePresignedUrl(song.getFilePath());
-        URL imagePresignedUrl = s3Service.generatePresignedUrl(song.getImagePath());
+        URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+        URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
 
         return SongResponseDto.builder()
                 .songId(song.getId())
                 .userId(song.getUser().getId())
-                .songPresignedUrl(songPresignedUrl.toString())
+                .songPresignedUrl(songCloudFrontUrl.toString())
                 .viewCount(song.getViewCount())
                 .likesCount(song.getLikesCount())
-                .imagePresignedUrl(imagePresignedUrl.toString())
+                .imagePresignedUrl(imageCloudFrontUrl.toString())
                 .genre(song.getGenreType().toString())
                 .mood(song.getMoodType().toString())
                 .build();
@@ -169,6 +180,14 @@ public class SongService {
                 .name(savedSong.getName())
                 .isAIUsed(savedSong.isAIUsed())
                 .build();
+    }
+
+    public URL  checkMalformedUrlException(String filePath) {
+        try {
+            return s3Service.getCloudFrontUrl(filePath);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("잘못된 파일 경로입니다.");
+        }
     }
 
 }
