@@ -21,22 +21,18 @@ public class WorkController {
     private final WorkService workService;
     private final S3Service s3Service;
 
-    private Integer getCurrentUserId() {
-        return SecurityUtil.getCurrentUserId();
-    }
+
 
     // API : 작업실 리스트 조회
     @GetMapping("/studio")
     public ResponseEntity<StudioListResponseDto> getStudioList() {
-        Integer userId = getCurrentUserId();
-        StudioListResponseDto responseDto = workService.getStudioList(userId);
+        StudioListResponseDto responseDto = workService.getStudioList();
         return ResponseEntity.ok(responseDto);
     }
 
     // API: 작업실 생성
     @PostMapping("/studio")
     public ResponseEntity<StudioResponseDto> createStudio(@RequestBody StudioCreateDto studioCreateDto) {
-
         StudioResponseDto responseDto = workService.createStudio(studioCreateDto);
         return ResponseEntity.ok(responseDto);
     }
@@ -52,7 +48,6 @@ public class WorkController {
     @GetMapping("/studio/{studioId}")
     public ResponseEntity<StudioResponseDto> getStudio(@PathVariable Integer studioId){
         TrackListResponseDto trackListResponseDto = workService.getStudio(studioId);
-
         return ResponseEntity.ok(new StudioResponseDto(trackListResponseDto));
     }
 
