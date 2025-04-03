@@ -62,7 +62,7 @@ public class WorkService {
                 studioCreateDto.getStudioName()
                 );
        studio = studioReposiotry.save(studio);
-        return new StudioResponseDto(getStudio(studio.getId()));
+        return getStudio(studio.getId());
     }
 
     @Transactional
@@ -72,7 +72,7 @@ public class WorkService {
     }
 
 
-    public TrackListResponseDto getStudio(Integer studioId) {
+    public StudioResponseDto getStudio(Integer studioId) {
         // 1. studioId를 통해 해당하는 트랙을 찾는다. -> 스튜디오트랙테이블이용
         Optional<Studio> optionalStudio = studioReposiotry.findById(studioId);
         Studio studio = checkElementException(optionalStudio, "Studio not found");
@@ -86,7 +86,7 @@ public class WorkService {
             }
         }
 
-        return new TrackListResponseDto(studio.getId(), studio.getName(), trackResponseDtoList);
+        return new StudioResponseDto(studio.getId(), studio.getName(), trackResponseDtoList);
     }
 
     @Transactional

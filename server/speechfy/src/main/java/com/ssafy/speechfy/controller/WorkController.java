@@ -47,8 +47,8 @@ public class WorkController {
     // API: 작업실 트랙 리스트 반환 (작업실 입장시 트랙반환 위한 것)
     @GetMapping("/studio/{studioId}")
     public ResponseEntity<StudioResponseDto> getStudio(@PathVariable Integer studioId){
-        TrackListResponseDto trackListResponseDto = workService.getStudio(studioId);
-        return ResponseEntity.ok(new StudioResponseDto(trackListResponseDto));
+        StudioResponseDto studioResponseDto = workService.getStudio(studioId);
+        return ResponseEntity.ok(studioResponseDto);
     }
 
     // API: 작업실 트랙 리스트 수정 (작업실 내 트랙 순서 수정시 한번에 넘겨주는 용도)
