@@ -223,7 +223,6 @@ public class WorkService {
         } else { // 해당 레코드가 없으면 새로운 레코드 만들기
             String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
             Record record = new Record(
-                    0,
                     recordFilePath
             );
             record = recordReposiotry.save(record);
