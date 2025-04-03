@@ -75,6 +75,7 @@ public class SongService {
     /**
      * id 기반 완성곡 반환
      */
+
     public SongResponseDto getSongById(int songId) {
         Song song = songRepository.findById(songId).orElseThrow(
                 () -> new NoSuchElementException("Song not found")
@@ -92,6 +93,22 @@ public class SongService {
                 .imagePresignedUrl(imageCloudFrontUrl.toString())
                 .genre(song.getGenreType().toString())
                 .mood(song.getMoodType().toString())
+                .build();
+    }
+
+    public SongShareResponseDto getSongShareById(int songId) {
+        System.out.println("반가워요");
+        Song song = songRepository.findById(songId).orElseThrow(
+                () -> new NoSuchElementException("Song not found")
+        );
+        System.out.println("이게 뭐임");
+        URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+        URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
+
+        return SongShareResponseDto.builder()
+                .songName(song.getName())
+                .imageCloudFrontUrl(imageCloudFrontUrl.toString())
+                .songCloudFrontUrl(songCloudFrontUrl.toString())
                 .build();
     }
 
