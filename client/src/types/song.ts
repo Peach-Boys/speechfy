@@ -12,5 +12,5 @@ export interface IPreviewSong {
 }
 
 export interface IPreviewSongList {
-  songs: IPreviewSong[];
+  songList: IPreviewSong[];
 }

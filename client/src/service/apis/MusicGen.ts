@@ -1,9 +1,10 @@
 import { client } from '@/service/clients';
 import { IPreviewSong } from '@/service/types/MusicGen';
+import { IPreviewSongList } from '@/types/song';
 
 export const getPreviewSongList = async (
   workroomId: string
-): Promise<IPreviewSong[]> => {
+): Promise<IPreviewSongList> => {
   try {
     const res = await client.get(`/song/${workroomId}`);
     return res.data;

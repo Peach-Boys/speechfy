@@ -1,12 +1,14 @@
 import { client } from '@/service/clients';
 import { IPresignedURL } from '@/service/types/Upload';
 import { TrackListItem } from '@/service/types/Workspace';
+import axios from 'axios';
 
 export const getRequestPresignedUrlTrack = async (
   workroomId: string
 ): Promise<IPresignedURL> => {
   try {
-    return await client.post(`/S3/presignedUrl/${workroomId}`);
+    const res = await client.get(`/S3/presignedUrl/${workroomId}`);
+    return res.data;
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
@@ -17,7 +19,11 @@ export const putUploadTrack = async (
   audio: string
 ): Promise<string> => {
   try {
-    return await client.put(`/${presignedUrl}`, audio);
+    const instance = axios.create({
+      baseURL: presignedUrl,
+      withCredentials: true,
+    });
+    return await instance.put(audio);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
