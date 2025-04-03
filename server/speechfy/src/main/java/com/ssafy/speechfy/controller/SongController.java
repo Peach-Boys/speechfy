@@ -55,12 +55,11 @@ public class SongController {
     }
 
     // 앨범 커버 생성
-    @GetMapping("cover/{studioId}")
-    public ResponseEntity<?> createCover(@PathVariable Integer studioId, @RequestBody imageCreateDto createDto) {
-        return ResponseEntity.ok(null);
+    @GetMapping("/cover")
+    public ResponseEntity<?> createCover(@RequestBody imageCreateDto createDto) {
+        String response = songService.createCover(createDto);
+        return ResponseEntity.ok(response);
     }
-
-
 
 
 }

@@ -1,29 +1,38 @@
 package com.ssafy.speechfy.service;
 
-import com.ssafy.speechfy.dto.song.songResponseDto;
+import com.ssafy.speechfy.dto.song.*;
 import com.ssafy.speechfy.entity.Song;
 import com.ssafy.speechfy.entity.User;
 import com.ssafy.speechfy.repository.SongRepository;
 import com.ssafy.speechfy.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-import com.ssafy.speechfy.dto.song.songListResponseDto;
-import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class SongService {
+
+    @Value("${openai.api.key}")
+    private String apiKey;
+    private final String OPENAI_URL = "https://api.openai.com/v1/images/generations";
+
+    @Autowired
+    private S3Service s3Service;
+
     private final SongRepository songRepository;
     private final UserRepository userRepository;
-
-    public SongService(SongRepository songRepository, UserRepository userRepository) {
-        this.songRepository = songRepository;
-        this.userRepository = userRepository;
-    }
 
     /**
      * 마이페이지 완성곡 리스트 반환
@@ -93,8 +102,41 @@ public class SongService {
      * 앨범커버 생성
      */
     @Transactional
-    public void createCoverById(int id) {}
+    public String createCover(imageCreateDto createDto) {
+        String genre = createDto.getGenre();
+        String mood = createDto.getMood();
+        String title = createDto.getTitle();
+        String prompt = "A stunning album cover for a " + genre + " music album, evoking a " + mood + " atmosphere. The title '" + title + "' is featured in a stylish font. The artwork is visually captivating, with a blend of cinematic lighting, rich colors, and artistic composition.";
+        // 이미지 생성
+        String imageUrl = generateImage(prompt);
+        String objeckKey = "images/" + UUID.randomUUID();
+        // 이미지 S3에 업로드
+        s3Service.uploadImageFromUrl(imageUrl, objeckKey);
+        return objeckKey;
+    }
 
+    public String generateImage(String prompt) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 생성
+        OpenAIRequestDto request = new OpenAIRequestDto(prompt, 1, "1024x1024");
+
+        // HTTP 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<OpenAIRequestDto> entity = new HttpEntity<>(request, headers);
+
+        // API 요청
+        ResponseEntity<OpenAIResponseDto> response = restTemplate.exchange(
+                OPENAI_URL, HttpMethod.POST, entity, OpenAIResponseDto.class);
+
+        if (response.getBody() != null && !response.getBody().getData().isEmpty()) {
+            return response.getBody().getData().get(0).getUrl();
+        }
+        return null;
+    }
     /**
     * 완성곡 리스트 수정
     */

@@ -13,5 +13,4 @@ public class imageCreateDto {
     private String title;
     private String mood;
     private String genre;
-
 }

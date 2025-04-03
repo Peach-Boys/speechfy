@@ -6,7 +6,7 @@ spring:
     driver-class-name: ${SPRING_DATASOURCE_DRIVER_CLASS_NAME}
   jpa:
     hibernate:
-      ddl-auto:  create
+      ddl-auto: none
     properties:
       hibernate.dialect: org.hibernate.dialect.MySQL8Dialect
 
@@ -19,6 +19,10 @@ logging:
     #    org.hibernate.type: trace
     org.springframework.security: debug
     com.ssafy.wevi: debug
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
 
 aws:
   s3:
