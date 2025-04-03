@@ -70,7 +70,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .exceptionHandling(exception -> exception
-                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.FORBIDDEN))
+                                .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
                         // 필요하다면 accessDeniedHandler도 커스텀 처리
                 )
                 // 로깅 필터 추가 (HeaderWriterFilter 이전에 실행)

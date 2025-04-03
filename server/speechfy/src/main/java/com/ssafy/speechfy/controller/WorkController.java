@@ -36,23 +36,21 @@ public class WorkController {
     // API: 작업실 생성
     @PostMapping("/studio")
     public ResponseEntity<StudioResponseDto> createStudio(@RequestBody StudioCreateDto studioCreateDto) {
-        Integer userId = getCurrentUserId();
-        StudioResponseDto responseDto = workService.createStudio(userId, studioCreateDto);
+
+        StudioResponseDto responseDto = workService.createStudio(studioCreateDto);
         return ResponseEntity.ok(responseDto);
     }
 
     // API: 작업실 삭제
     @DeleteMapping("/studio/{studioId}")
     public ResponseEntity<String> deleteStudio(@PathVariable Integer studioId){
-        Integer userId = getCurrentUserId();
-        workService.deleteStudio(userId, studioId);
+        workService.deleteStudio(studioId);
         return ResponseEntity.noContent().build();
     }
 
     // API: 작업실 트랙 리스트 반환 (작업실 입장시 트랙반환 위한 것)
     @GetMapping("/studio/{studioId}")
     public ResponseEntity<StudioResponseDto> getStudio(@PathVariable Integer studioId){
-        Integer userId = getCurrentUserId();
         TrackListResponseDto trackListResponseDto = workService.getStudio(studioId);
 
         return ResponseEntity.ok(new StudioResponseDto(trackListResponseDto));
@@ -69,8 +67,7 @@ public class WorkController {
     // API: 작업실 트랙 초기화
     @DeleteMapping("/studio/{studioId}/reset")
     public ResponseEntity<String> deleteTrackList(@PathVariable Integer studioId){
-        Integer userId = getCurrentUserId();
-        workService.deleteTrackList(userId, studioId);
+        workService.deleteTrackList(studioId);
         return ResponseEntity.noContent().build();
     }
 
@@ -82,19 +79,18 @@ public class WorkController {
     public ResponseEntity<TrackResponseDto> createTrack(
             @PathVariable Integer studioId,
             @RequestBody TrackCreateDto workCreateDto ){
-        Integer userId = getCurrentUserId();
-        TrackResponseDto responseDto = workService.createTrack(userId,studioId, workCreateDto);
+
+        TrackResponseDto responseDto = workService.createTrack(studioId, workCreateDto);
 
         return ResponseEntity.ok(responseDto);
     }
 
     @DeleteMapping("/track/{studioId}/fail")
     public ResponseEntity<String> createTrackFail(
-            @CookieValue(name = "userId") Integer userId,
             @PathVariable Integer studioId,
             @RequestBody TrackCreateFailDto workCreateFailDto ){
 
-       workService.createTrackFail(userId, workCreateFailDto);
+       workService.createTrackFail(workCreateFailDto);
 
         return ResponseEntity.noContent().build();
     }
