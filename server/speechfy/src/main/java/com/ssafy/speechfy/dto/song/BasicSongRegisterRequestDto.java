@@ -11,5 +11,5 @@ public class BasicSongRegisterRequestDto {
     private String basicSongFilePath;
     private String mood;
     private String genre;
-    private String name;
+    private String title;
 }

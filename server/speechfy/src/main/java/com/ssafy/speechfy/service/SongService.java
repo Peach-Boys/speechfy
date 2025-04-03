@@ -58,6 +58,8 @@ public class SongService {
 
             return SongResponseDto.builder()
                     .songId(song.getId())
+                    .title(song.getName())
+                    .AIUsed(song.getIsAIUsed())
                     .userId(song.getUser().getId())
                     .songPresignedUrl(songCloudFrontUrl.toString())
                     .viewCount(song.getViewCount())
@@ -86,6 +88,8 @@ public class SongService {
 
         return SongResponseDto.builder()
                 .songId(song.getId())
+                .title(song.getName())
+                .AIUsed(song.getIsAIUsed())
                 .userId(song.getUser().getId())
                 .songPresignedUrl(songCloudFrontUrl.toString())
                 .viewCount(song.getViewCount())
@@ -163,7 +167,7 @@ public class SongService {
                 .genreType(GenreType.valueOf(requestDto.getGenre()))
                 .viewCount(0)
                 .likesCount(0)
-                .name(requestDto.getName())
+                .name(requestDto.getTitle())
                 .filePath(requestDto.getBasicSongFilePath())
                 .isAIUsed(false)
                 .build();
@@ -178,8 +182,8 @@ public class SongService {
                 .likesCount(savedSong.getLikesCount())
                 .mood(savedSong.getMoodType().toString())
                 .genre(savedSong.getGenreType().toString())
-                .name(savedSong.getName())
-                .isAIUsed(savedSong.getIsAIUsed())
+                .title(savedSong.getName())
+                .AIUsed(savedSong.getIsAIUsed())
                 .build();
     }
 

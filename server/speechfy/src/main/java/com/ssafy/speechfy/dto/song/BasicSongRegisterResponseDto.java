@@ -17,6 +17,6 @@ public class BasicSongRegisterResponseDto {
     private Integer likesCount;
     private String mood;
     private String genre;
-    private String name;
-    private boolean isAIUsed;
+    private String title;
+    private boolean AIUsed;
 }
