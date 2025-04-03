@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class WorkService {
         return SecurityUtil.getCurrentUserId();
     }
 
-    public StudioListResponseDto getStudioList(Integer userId) {
+    public StudioListResponseDto getStudioList() {
+        Integer userId = getCurrentUserId();
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
 
@@ -227,6 +230,10 @@ public class WorkService {
         );
     }
 
+    public Record createRecord(){
+        
+    }
+
     public TrackDto getTrackDto(Integer trackId){
         Optional<Track> optionalTrack = trackReposiotry.findById(trackId);
         Track track = checkElementException(optionalTrack, "Track not found");
@@ -281,6 +288,13 @@ public class WorkService {
             return optional.get();
         } else {
             throw new NoSuchElementException(message);
+        }
+    }
+    public URL checkMalformedUrlException(String filePath) {
+        try {
+            return s3Service.getCloudFrontUrl(filePath);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("잘못된 파일 경로입니다.");
         }
     }
 

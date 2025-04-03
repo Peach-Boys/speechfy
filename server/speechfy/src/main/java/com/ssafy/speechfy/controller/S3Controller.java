@@ -29,7 +29,7 @@ public class S3Controller {
     }
 
     @GetMapping("/presignedUrl/{studioId}")
-    public ResponseEntity<PresignedUrlDto> getDdspUrl(@PathVariable Integer studioId) {
+    public ResponseEntity<PresignedUrlDto> getDDSPUrl(@PathVariable Integer studioId) {
         int userId = getCurrentUserId();
         String trackUUID =  UUID.randomUUID().toString();
         String recordUUID =  UUID.randomUUID().toString();
