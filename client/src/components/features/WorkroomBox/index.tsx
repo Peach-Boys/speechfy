@@ -1,12 +1,27 @@
+'use client';
+
+import Menu from '@/components/common/Menu';
 import Tag from '@/components/common/Tag';
 import IconTripleDots from '@/components/icons/IconTripleDots';
+import useOutSideClick from '@/hooks/useOutSideClick';
+import { useDeleteWorkroom } from '@/service/queries/useDeleteWorkroom';
 import { BaseWorkroom } from '@/types/workroom';
+import { useRef, useState } from 'react';
 
 interface Props {
   workroom: BaseWorkroom;
 }
 
 function WorkroomBox({ workroom }: Props) {
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  useOutSideClick(menuRef, () => setIsMenuOpen(false));
+  const deleteMutation = useDeleteWorkroom(workroom.studioId);
+
+  function handleDelete() {
+    deleteMutation.mutate();
+  }
+
   return (
     <section className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
@@ -17,7 +32,19 @@ function WorkroomBox({ workroom }: Props) {
           <div className='w-full'>{workroom.name}</div>
           <div className='w-full'>{workroom.modifiedAt}</div>
         </div>
-        <IconTripleDots color='#ffffff' />
+        <div
+          className='relative h-fit cursor-pointer'
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
+          <IconTripleDots color='#ffffff' />
+          {isMenuOpen && (
+            <div ref={menuRef} className='absolute z-10 top-3 right-0'>
+              <Menu
+                items={[{ label: '삭제', onClick: () => handleDelete() }]}
+              />
+            </div>
+          )}
+        </div>
       </div>
       <div className='w-full flex flex-wrap gap-2'>
         {workroom.trackInfo.map((t) => (
