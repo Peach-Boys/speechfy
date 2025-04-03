@@ -29,7 +29,7 @@ public class SongController {
     public ResponseEntity<SongListResponseDto> getSongList() {
         Integer userId = getCurrentUserId();
         Pageable pageable = PageRequest.of(0, 3);
-        SongListResponseDto songListResponseDto = songService.getAllSongs(userId, pageable);
+        SongListResponseDto songListResponseDto = songService.getAllSongs();
 
         return ResponseEntity.ok(songListResponseDto);
     }
