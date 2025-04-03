@@ -36,8 +36,9 @@ public class SongController {
 
     // 완성곡 변환 저장
     @PostMapping("/{studioId}")
-    public ResponseEntity<?> createSongList(@PathVariable Integer studioId) {
+    public ResponseEntity<?> createSongList(@PathVariable Integer studioId, @RequestBody String s) {
         Integer userId = getCurrentUserId();
+//        songService.saveSong();
         return ResponseEntity.ok(null);
     }
 
