@@ -19,3 +19,8 @@ export interface BaseCompletedSong {
   createdAt: string;
   aiused: boolean;
 }
+
+export interface CreateResponse {
+  studioId: number;
+  studioName: string;
+}

@@ -1,9 +1,13 @@
 import { client } from '@/service/clients';
 import { INSTRUMENT_TYPE, StudioData } from '@/service/types/Workspace';
+import { CreateResponse } from '@/types/workroom';
 
-export const postCreateWorkroom = async (studioName: string): Promise<void> => {
+export const postCreateWorkroom = async (
+  studioName: string
+): Promise<CreateResponse> => {
   try {
-    await client.post('/work/studio', { studioName: studioName });
+    const res = await client.post('/work/studio', { studioName: studioName });
+    return res.data;
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }

@@ -45,7 +45,7 @@ function ClientWorkroom() {
     <div className='w-full h-full flex flex-col'>
       <WorkroomTabs tab={tab} setTab={setTab} />
       <div className='w-full flex justify-center text-2xl h-fit'>
-        당근할아버지 프로젝트 {workroom_id}
+        {workroom_id}
       </div>
       <div className='relative w-full h-full'>
         <div className={tab === 'work' ? 'block' : 'hidden'}>
