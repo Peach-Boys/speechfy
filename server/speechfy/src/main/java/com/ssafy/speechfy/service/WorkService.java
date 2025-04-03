@@ -55,7 +55,6 @@ public class WorkService {
         User user = checkElementException(optionalUser, "User not found");
 
         Studio studio = new Studio(
-                0,
                 user,
                 studioCreateDto.getStudioName()
                 );

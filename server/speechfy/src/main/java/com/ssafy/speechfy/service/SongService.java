@@ -1,6 +1,7 @@
 package com.ssafy.speechfy.service;
 
 import com.ssafy.speechfy.dto.song.*;
+import com.ssafy.speechfy.dto.work.track.TrackListRequestDto;
 import com.ssafy.speechfy.entity.Song;
 import com.ssafy.speechfy.entity.Studio;
 import com.ssafy.speechfy.entity.User;
@@ -178,7 +179,7 @@ public class SongService {
                 .mood(savedSong.getMoodType().toString())
                 .genre(savedSong.getGenreType().toString())
                 .name(savedSong.getName())
-                .isAIUsed(savedSong.isAIUsed())
+                .isAIUsed(savedSong.getIsAIUsed())
                 .build();
     }
 
@@ -190,4 +191,7 @@ public class SongService {
         }
     }
 
+    public void saveSong(TrackListRequestDto trackListRequestDto) {
+
+    }
 }
