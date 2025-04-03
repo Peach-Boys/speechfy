@@ -71,6 +71,7 @@ public class JwtKeyService {
     private JWKSource<SecurityContext> parseKey(String keyString) {
         try {
             JWK jwk = ECKey.parseFromPEMEncodedObjects(keyString);
+            log.info("Private JWK loaded: {}", jwk.toJSONString());
             return new ImmutableJWKSet<>(new JWKSet(jwk));
         } catch (JOSEException e) {
             log.error("Invalid PEM key: {}", e.getMessage(), e);
