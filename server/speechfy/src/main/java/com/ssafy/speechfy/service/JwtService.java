@@ -55,6 +55,7 @@ public class JwtService {
                 .type(JOSEObjectType.JWT)
                 .build();
         log.info("Generate access token2");
+        log.info("jwtKeyServiece: {}", jwtKeyService.getTmpjwk());
         Instant expiresAt = Instant.now()
                 .plusSeconds(ACCESS_EXPIRES_IN_SECONDS)
                 .truncatedTo(ChronoUnit.SECONDS);
