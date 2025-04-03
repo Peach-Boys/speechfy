@@ -14,6 +14,7 @@ import com.ssafy.speechfy.entity.User;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class JwtService {
@@ -51,11 +53,9 @@ public class JwtService {
         JWSHeader header = new JWSHeader.Builder(this.jwtKeyService.getJwsAlgorithm())
                 .type(JOSEObjectType.JWT)
                 .build();
-
         Instant expiresAt = Instant.now()
                 .plusSeconds(ACCESS_EXPIRES_IN_SECONDS)
                 .truncatedTo(ChronoUnit.SECONDS);
-
         Payload payload = new JWTClaimsSet.Builder()
                 .issuer(JWT_ISSUER)
                 .subject(String.valueOf(user.getId()))
@@ -63,11 +63,17 @@ public class JwtService {
                 .claim(CLAIM_TYPE, TYPE_ACCESS)
                 .build()
                 .toPayload();
-
-        return this.jwsMinter.mint(header, payload, null).serialize();
+        try {
+            String token = this.jwsMinter.mint(header, payload, null).serialize();
+            return token;
+        } catch (Exception e) {
+            log.error("JWS 토큰 생성 중 예외 발생: {}", e.getMessage(), e);
+            throw e;  // 또는 적절한 예외 처리
+        }
     }
 
     public String generateRefreshToken(User user) throws JOSEException {
+        log.info("Generate refresh token1");
         JWSHeader header = new JWSHeader.Builder(this.jwtKeyService.getJwsAlgorithm())
                 .type(JOSEObjectType.JWT)
                 .build();

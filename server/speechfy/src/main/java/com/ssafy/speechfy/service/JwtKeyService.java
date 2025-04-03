@@ -43,7 +43,6 @@ public class JwtKeyService {
         try {
             String privateKeyString = readFile(oauth2PrivateKeyPath);
             String publicKeyString = readFile(oauth2PublicKeyPath);
-
             JWKSource<SecurityContext> privateJwkSource = parseKey(privateKeyString);
             JWKSource<SecurityContext> publicJwkSource = parseKey(publicKeyString);
 
@@ -74,6 +73,7 @@ public class JwtKeyService {
             return new ImmutableJWKSet<>(new JWKSet(jwk));
         } catch (JOSEException e) {
             log.error("Invalid PEM key: {}", e.getMessage(), e);
+            System.out.println("로드안됨 ");
             throw new IllegalArgumentException("Invalid PEM key", e);
         }
     }

@@ -41,7 +41,6 @@ public class userController {
         try {
             String accessToken = jwtService.generateAccessToken(user);
             String refreshToken = jwtService.generateRefreshToken(user);
-
             // 넣어주는 방법 여러가지 중에 쿠키에 넣는 것을 선택
             Cookie accessTokenCookie = new Cookie("speechfyAccessToken", accessToken);
             accessTokenCookie.setMaxAge(AccessTokenTime);
@@ -62,8 +61,8 @@ public class userController {
             response.addCookie(accessTokenCookie);
             response.addCookie(refreshTokenCookie);
 
-            log.info("Access token = {}, Refresh token = {}", accessToken, refreshToken);
         } catch (JOSEException e){
+            log.error("Failed to read key files. Error: {}", e.getMessage(), e);
             throw new IllegalStateException("Failed to mint JWS", e);
         }
 

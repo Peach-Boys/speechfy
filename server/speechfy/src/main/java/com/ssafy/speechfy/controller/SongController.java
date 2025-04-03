@@ -65,7 +65,6 @@ public class SongController {
 
     // basicSong 저장
     // presignedUrl 생성 및 반환
-    // Security 적용 전까지 일단 기존 방식으로 유저 인증
     @GetMapping("/basic/presignedUrl")
     public ResponseEntity<BasicSongPresignedUrlResponseDto> getPresignedUrl() {
         Integer userId = getCurrentUserId();
