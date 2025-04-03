@@ -9,11 +9,12 @@ import lombok.*;
 public class SongResponseDto {
     private Integer songId;
     private Integer userId;
+    private String title;
     private String songPresignedUrl;
     private Integer viewCount;
     private Integer likesCount;
     private String imagePresignedUrl;
     private String genre;
     private String mood;
-    private boolean isAIUsed;
+    private boolean AIUsed;
 }
