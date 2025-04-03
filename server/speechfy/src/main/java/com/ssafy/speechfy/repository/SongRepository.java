@@ -1,6 +1,7 @@
 package com.ssafy.speechfy.repository;
 
 import com.ssafy.speechfy.entity.Song;
+import com.ssafy.speechfy.entity.Studio;
 import com.ssafy.speechfy.entity.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,6 +13,7 @@ import java.util.Optional;
 
 public interface SongRepository extends JpaRepository<Song, Integer> {
     Page<Song> findPageByUser(@Param("user") User user, Pageable pageable);
+    Page<Song> findPageByStudio(@Param("studio") Studio studio, Pageable pageable);
     void deleteById(int id);
     List<Song> findByStudioId(int studioId);
 }

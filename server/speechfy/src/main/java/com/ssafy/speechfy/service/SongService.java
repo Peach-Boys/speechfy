@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -50,6 +51,43 @@ public class SongService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         Page<Song> songList = songRepository.findPageByUser(user, pageable);
+
+        List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
+            URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+            URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
+
+
+            return SongResponseDto.builder()
+                    .songId(song.getId())
+                    .title(song.getName())
+                    .AIUsed(song.getIsAIUsed())
+                    .userId(song.getUser().getId())
+                    .songPresignedUrl(songCloudFrontUrl.toString())
+                    .viewCount(song.getViewCount())
+                    .likesCount(song.getLikesCount())
+                    .imagePresignedUrl(imageCloudFrontUrl.toString())
+                    .genre(song.getGenreType().toString())
+                    .mood(song.getMoodType().toString())
+                    .build();
+        }).collect(Collectors.toList());
+
+        return SongListResponseDto.builder()
+                .songList(songResponseDtoList)
+                .build();
+    }
+
+    // 스튜디오의 모든 곡 리스트 반환
+    public SongListResponseDto getStudioSongs(Integer studioId) {
+        Pageable pageable = PageRequest.of(0, 3);
+
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new NoSuchElementException("User not found"));
+//        Page<Song> songList = songRepository.findPageByUser(user, pageable);
+        Studio studio = studioRepository.findById(studioId)
+                .orElseThrow(() -> new EntityNotFoundException("Studio not found with id: " + studioId));
+
+        Page<Song> songList = songRepository.findPageByStudio(studio, pageable);
+
 
         List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
             URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
