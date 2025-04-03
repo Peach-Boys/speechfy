@@ -11,5 +11,4 @@ import java.util.Optional;
 @Repository
 public interface StudioRepository extends JpaRepository<Studio, Integer>  {
     List<Studio> findByUser(User user);
-
 }
