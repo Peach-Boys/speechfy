@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 function ClientWorkroom() {
   const { workroom_id } = useParams();
   const [tab, setTab] = useState<string>('work');
-  const [selectTag, setSelectTag] = useState<(number | null)[]>([null, null]);
+  const [selectTag, setSelectTag] = useState<(string | null)[]>([null, null]);
   const { setTracks } = useWorkRoomStore();
   const { data, isLoading, isError } = useGetTracks(workroom_id as string);
 
