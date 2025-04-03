@@ -247,6 +247,7 @@ public class WorkService {
         try {
             return s3Service.getCloudFrontUrl(filePath);
         } catch (MalformedURLException e) {
+
             throw new RuntimeException("잘못된 파일 경로입니다.");
         }
     }
