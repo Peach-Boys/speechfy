@@ -27,12 +27,16 @@ export const useUploadFlow = () => {
     }: Props) => {
       const presignedUrl = await getRequestPresignedUrlTrack(workroomId);
       console.log('presi:', presignedUrl);
+      const originalAudioData = await fetch(originalAudio);
+      const originalAudioBuffer = await originalAudioData.arrayBuffer();
+      const transAudioData = await fetch(transAudio);
+      const transAudioBuffer = await transAudioData.arrayBuffer();
       const { trackPresignedUrl, recordPresignedUrl, trackUUID, recordUUID } =
         presignedUrl;
 
       const [trackResult, recordResult] = await Promise.allSettled([
-        putUploadTrack(trackPresignedUrl, transAudio),
-        putUploadTrack(recordPresignedUrl, originalAudio),
+        putUploadTrack(trackPresignedUrl, transAudioBuffer),
+        putUploadTrack(recordPresignedUrl, originalAudioBuffer),
       ]);
 
       // 성공 여부 판단

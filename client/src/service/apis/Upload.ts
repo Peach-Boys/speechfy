@@ -16,14 +16,17 @@ export const getRequestPresignedUrlTrack = async (
 
 export const putUploadTrack = async (
   presignedUrl: string,
-  audio: string
+  audio: ArrayBuffer
 ): Promise<string> => {
   try {
     const instance = axios.create({
       baseURL: presignedUrl,
       withCredentials: true,
+      headers: {
+        'Content-Type': 'audio/mpeg',
+      },
     });
-    return await instance.put(audio);
+    return await instance.put('', audio);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
