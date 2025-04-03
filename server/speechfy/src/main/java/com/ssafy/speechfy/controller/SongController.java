@@ -1,6 +1,7 @@
 package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.dto.song.*;
+import com.ssafy.speechfy.dto.work.track.TrackListRequestDto;
 import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.service.MusicGenService;
 import com.ssafy.speechfy.service.S3Service;
@@ -36,8 +37,9 @@ public class SongController {
 
     // 완성곡 변환 저장
     @PostMapping("/{studioId}")
-    public ResponseEntity<?> createSongList(@PathVariable Integer studioId) {
+    public ResponseEntity<?> createSongList(@PathVariable Integer studioId, @RequestBody TrackListRequestDto trackListRequestDto) {
         Integer userId = getCurrentUserId();
+        songService.saveSong(trackListRequestDto);
         return ResponseEntity.ok(null);
     }
 
@@ -65,7 +67,6 @@ public class SongController {
 
     // basicSong 저장
     // presignedUrl 생성 및 반환
-    // Security 적용 전까지 일단 기존 방식으로 유저 인증
     @GetMapping("/basic/presignedUrl")
     public ResponseEntity<BasicSongPresignedUrlResponseDto> getPresignedUrl() {
         Integer userId = getCurrentUserId();

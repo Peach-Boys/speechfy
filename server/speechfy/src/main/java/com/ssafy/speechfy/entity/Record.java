@@ -20,7 +20,7 @@ public class Record extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @Column(name = "file_path")
     private String filePath;
@@ -28,8 +28,7 @@ public class Record extends BaseEntity{
     @OneToMany(mappedBy = "record", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Track> tracks = new ArrayList<>();
 
-    public Record(int id, String filePath) {
-        this.id = id;
+    public Record(String filePath) {
         this.filePath = filePath;
     }
 }

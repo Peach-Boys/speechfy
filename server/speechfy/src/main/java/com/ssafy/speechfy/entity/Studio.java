@@ -20,7 +20,7 @@ public class Studio extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -35,8 +35,7 @@ public class Studio extends BaseEntity {
     @OneToMany(mappedBy = "studio", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Track> tracks = new ArrayList<>();
 
-    public Studio(int id, User user, String name) {
-        this.id = id;
+    public Studio(User user, String name) {
         this.user = user;
         this.name = name;
     }

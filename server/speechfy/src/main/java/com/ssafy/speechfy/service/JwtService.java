@@ -14,6 +14,7 @@ import com.ssafy.speechfy.entity.User;
 import jakarta.annotation.PostConstruct;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
@@ -73,6 +74,7 @@ public class JwtService {
     }
 
     public String generateRefreshToken(User user) throws JOSEException {
+        log.info("Generate refresh token1");
         JWSHeader header = new JWSHeader.Builder(this.jwtKeyService.getJwsAlgorithm())
                 .type(JOSEObjectType.JWT)
                 .build();

@@ -43,7 +43,6 @@ public class JwtKeyService {
         try {
             String privateKeyString = readFile(oauth2PrivateKeyPath);
             String publicKeyString = readFile(oauth2PublicKeyPath);
-
             JWKSource<SecurityContext> privateJwkSource = parseKey(privateKeyString);
             JWKSource<SecurityContext> publicJwkSource = parseKey(publicKeyString);
 

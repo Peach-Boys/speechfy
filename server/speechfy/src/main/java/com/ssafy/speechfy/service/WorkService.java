@@ -15,6 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.*;
 
 @RequiredArgsConstructor
@@ -31,7 +33,8 @@ public class WorkService {
         return SecurityUtil.getCurrentUserId();
     }
 
-    public StudioListResponseDto getStudioList(Integer userId) {
+    public StudioListResponseDto getStudioList() {
+        Integer userId = getCurrentUserId();
         Optional<User> optionalUser = userReposiotry.findById(userId);
         User user = checkElementException(optionalUser, "User not found");
 
@@ -51,11 +54,10 @@ public class WorkService {
     @Transactional
     public StudioResponseDto createStudio(StudioCreateDto studioCreateDto){
         Integer userId = getCurrentUserId();
-        Optional<User> optionalUser = userReposiotry.findById(userId);
-        User user = checkElementException(optionalUser, "User not found");
+        User user = userReposiotry.findById(userId).orElseThrow(
+                () -> new NoSuchElementException("User not found"));
 
         Studio studio = new Studio(
-                0,
                 user,
                 studioCreateDto.getStudioName()
                 );
@@ -149,24 +151,12 @@ public class WorkService {
         String trackName = trackCreateDto.getTrackName();
         // 레코드 엔티티 불러오기
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
-        Record record;
-        if (optionalRecord.isPresent()) {
-            record = optionalRecord.get();
-        } else { // 해당 레코드가 없으면 새로운 레코드 만들기
-            String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
-            record = new Record(
-                    0,
-                    recordFilePath
-            );
-            record = recordReposiotry.save(record);
-        }
-        //S3파일경로 만들기
+        Record record = createRecord( optionalRecord, userId, trackCreateDto);
 
         String trackFilePath = "users/" + userId + "/track/" + trackCreateDto.getTrackUUID() + ".wav";
 
         // 트랙 엔티티 생성하기
         Track track = new Track(
-                0,
                 user,
                 instrumentType, //인스트러먼트 이넘이라 모르겠으
                 record,
@@ -223,8 +213,19 @@ public class WorkService {
         String objectKey = "users/"+ userId.toString() +"/record/" + record.getId();
         return new RecordDto( //dto에 담기
                 record.getId(),
-                s3Service.generatePresignedUrl(objectKey).toString()
+                checkMalformedUrlException(objectKey).toString()
         );
+    }
+
+    public Record createRecord(Optional<Record> optionalRecord,  Integer userId, TrackCreateDto trackCreateDto){
+        if (optionalRecord.isPresent()) {
+            return  optionalRecord.get();
+        } else { // 해당 레코드가 없으면 새로운 레코드 만들기
+            String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
+            Record record = new Record(recordFilePath);
+            record = recordReposiotry.save(record);
+            return record;
+        }
     }
 
     public TrackDto getTrackDto(Integer trackId){
@@ -236,7 +237,7 @@ public class WorkService {
         return new TrackDto( //dto에 담기
                 track.getId(),
                 track.getInstrumentType().name(),// 이거 이넘으롱 어떻게 받음 ?
-                s3Service.generatePresignedUrl(objectKey).toString(),
+                checkMalformedUrlException(objectKey).toString(),
                 track.getName(),
                 track.getRecord().getId(),
                 track.getOrder()
@@ -281,6 +282,13 @@ public class WorkService {
             return optional.get();
         } else {
             throw new NoSuchElementException(message);
+        }
+    }
+    public URL checkMalformedUrlException(String filePath) {
+        try {
+            return s3Service.getCloudFrontUrl(filePath);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("잘못된 파일 경로입니다.");
         }
     }
 
