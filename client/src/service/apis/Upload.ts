@@ -39,14 +39,14 @@ export const deleteFail = async (
 
 export const postSuccess = async (
   workroomId: string,
-  instrumentId: number,
+  instrument: string,
   order: number,
   trackUUID: string,
   recordUUID: string
 ): Promise<TrackListItem> => {
   try {
     return await client.post(`/work/track/${workroomId}`, {
-      data: { instrumentId, order, trackUUID, recordUUID },
+      data: { instrument, order, trackUUID, recordUUID },
     });
   } catch (err: unknown) {
     throw new Error((err as Error).message);

@@ -7,6 +7,7 @@ import { useUploadFlow } from '@/service/queries/useUploadFlow';
 // import { INSTRUMENT_TYPE } from '@/service/types/Workspace';
 import Skeleton from '@/components/common/Skeleton';
 import { useDDSP } from '@/hooks/useDDSP';
+import { useWorkRoomStore } from '@/stores/workroomStore';
 import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
@@ -29,7 +30,8 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   const [instrument, setInstrument] = useState<string | null>(null);
   const { initialized, toneTransfer, loading } = useDDSP();
   const [isAutoComplete, setAutoComplete] = useState<boolean>();
-  const mutation = useUploadFlow(workroom_id as string, audio, 1, 0);
+  const { tracks } = useWorkRoomStore();
+  const mutation = useUploadFlow();
 
   function handleNextLevel() {
     setLevel(level + 1);
@@ -41,7 +43,15 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
   }
 
   function handleAddTrack(convertedUrl: string) {
-    mutation.mutate();
+    if (!instrument) return;
+
+    mutation.mutate({
+      workroomId: workroom_id as string,
+      originalAudio: audio,
+      transAudio: convertedUrl,
+      instrument: instrument,
+      order: tracks.length + 1,
+    });
     addTrack({
       order: 0,
       trackId: 1,
