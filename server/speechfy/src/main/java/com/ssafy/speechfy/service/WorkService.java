@@ -128,7 +128,6 @@ public class WorkService {
 
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record = createRecord( optionalRecord, userId, trackCreateDto);
-
         String trackFilePath = "users/" + userId + "/track/" + trackCreateDto.getTrackUUID() + ".wav";
         Track track = new Track(
                 user,
