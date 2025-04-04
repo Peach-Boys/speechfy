@@ -36,7 +36,6 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
 @RequiredArgsConstructor
 public class SongService {
@@ -51,7 +50,6 @@ public class SongService {
     private final SongRepository songRepository;
     private final UserRepository userRepository;
     private final StudioRepository studioRepository;
-    private final S3Service s3Service;
 
     private Integer getCurrentUserId() {
         return SecurityUtil.getCurrentUserId();
@@ -182,7 +180,7 @@ public class SongService {
      * 앨범커버 생성
      */
     @Transactional
-    public String createCover(imageCreateDto createDto) {
+    public String createCover(ImageCreateDto createDto) {
         String genre = createDto.getGenre();
         String mood = createDto.getMood();
         String title = createDto.getTitle();
