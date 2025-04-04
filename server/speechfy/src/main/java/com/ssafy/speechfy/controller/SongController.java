@@ -93,4 +93,11 @@ public class SongController {
         BasicSongRegisterResponseDto basicSongRegisterResponse = songService.registerBasicSong(userId, Integer.parseInt(studioId), requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(basicSongRegisterResponse);
     }
+
+    @GetMapping("/share/{songId}")
+    public ResponseEntity<SongShareResponseDto> getShareSong(@PathVariable Integer songId) {
+        System.out.println("안녕하세요");
+        SongShareResponseDto songShareResponseDto = songService.getSongShareById(songId);
+        return ResponseEntity.ok(songShareResponseDto);
+    }
 }
