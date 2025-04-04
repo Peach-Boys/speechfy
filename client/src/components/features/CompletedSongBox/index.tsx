@@ -44,18 +44,23 @@ function CompletedSongBox({ song }: Props) {
   }
 
   async function handleDownload() {
-    const response = await fetch(song.completeUrl);
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
+    try {
+      console.log('song.songPresignedUrl:', song.songPresignedUrl);
+      // const response = await fetch(song.songPresignedUrl);
+      // const blob = await song.songPresignedUrl.blob();
+      // const url = window.URL.createObjectURL(blob);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `${song.title}.wav`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    window.URL.revokeObjectURL(url);
+      // console.log('url:', url);
+      const a = document.createElement('a');
+      a.href = song.songPresignedUrl;
+      a.download = `${song.title}.wav`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(song.songPresignedUrl);
+    } catch (error) {
+      console.error('Download error:', error);
+    }
   }
 
   return (
