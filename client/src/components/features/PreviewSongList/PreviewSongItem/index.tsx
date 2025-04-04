@@ -7,11 +7,11 @@ import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
 import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
-import { IPreviewSong } from '@/types/song';
+import { BaseCompletedSong } from '@/types/workroom';
 import clsx from 'clsx';
 
 interface Props {
-  song: IPreviewSong;
+  song: BaseCompletedSong;
   selected: boolean;
   onSelect: () => void;
 }
@@ -25,7 +25,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
     handleSeek,
     isPlaying,
     isReady,
-  } = useAudioPlayBar(song.songSrc);
+  } = useAudioPlayBar(song.songPresignedUrl);
 
   return (
     <div
@@ -61,10 +61,10 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
       </div>
       <div className='w-full flex flex-col gap-1'>
         <div className='flex flex-wrap gap-1'>
-          {song.instruments.map((instrument) => (
+          {/* {song.map((instrument) => (
             <Tag key={instrument.id} label={instrument.label} isSelect />
-          ))}
-          <Tag label={song.gerne} isSelect />
+          ))} */}
+          <Tag label={song.genre} isSelect />
           <Tag label={song.mood} isSelect />
         </div>
         <PlayBar
@@ -77,7 +77,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
       <div className='w-fit h-full flex items-center cursor-pointer hover:scale-110 transition-transform active:scale-95'>
         <IconTrash width={20} height={25} color='#ff2222' />
       </div>
-      <audio ref={audioRef} src={song.songSrc} />
+      <audio ref={audioRef} src={song.songPresignedUrl} />
     </div>
   );
 }

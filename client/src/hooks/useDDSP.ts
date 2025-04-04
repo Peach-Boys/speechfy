@@ -68,7 +68,7 @@ export function useDDSP() {
       if (!mm) {
         throw new Error('Magenta Music 모듈을 로드하지 못했습니다.');
       }
-      const ddsp = ddspModels.current.get(modelType);
+      const ddsp = ddspModels.current.get(modelType.toLowerCase());
       if (!ddsp) {
         throw new Error(`DDSP 모델(${modelType})이 초기화되지 않았습니다.`);
       }

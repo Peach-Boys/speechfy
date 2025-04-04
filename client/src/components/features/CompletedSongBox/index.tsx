@@ -21,7 +21,7 @@ function CompletedSongBox({ song }: Props) {
     handleSeek,
     isPlaying,
     isReady,
-  } = useAudioPlayBar(song.completeUrl);
+  } = useAudioPlayBar(song.songPresignedUrl);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   useOutSideClick(menuRef, () => setIsMenuOpen(false));
@@ -36,7 +36,7 @@ function CompletedSongBox({ song }: Props) {
       await navigator.share({
         title: document.title,
         text: song.title,
-        url: song.completeUrl,
+        url: song.songPresignedUrl,
       });
     } catch (err) {
       console.error('err:', err);
@@ -62,7 +62,7 @@ function CompletedSongBox({ song }: Props) {
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
         <img
-          src={song.imagePath ?? '/images/defaultImage.png'}
+          src={song.imagePresignedUrl ?? '/images/defaultImage.png'}
           alt='음악 이미지'
           className='w-10 h-10 rounded-[10px]'
         />
@@ -113,7 +113,7 @@ function CompletedSongBox({ song }: Props) {
           다운로드
         </button>
       </div>
-      <audio ref={audioRef} src={song.completeUrl} />
+      <audio ref={audioRef} src={song.songPresignedUrl} />
     </article>
   );
 }

@@ -7,7 +7,7 @@ export const usePostCreateWorkroom = (studioName: string) => {
   return useMutation({
     mutationFn: () => postCreateWorkroom(studioName),
     onSuccess: (data) => {
-      router.push(`/workroom/${data}`);
+      router.push(`/workroom/${data.studioId}`);
     },
   });
 };

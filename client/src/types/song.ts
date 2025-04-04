@@ -5,14 +5,20 @@ export type TTag = {
 
 export interface IPreviewSong {
   songId: number;
-  songSrc: string;
-  instruments: TTag[];
-  gerne: string;
+  userId: number;
+  title: string;
+  songPresignedUrl: string;
+  viewCount: number;
+  likes: number;
+  imagePresignedUrl: string;
+  genre: string;
   mood: string;
+  createdAt: string;
+  aiused: boolean;
 }
 
 export interface IPreviewSongList {
-  songs: IPreviewSong[];
+  songList: IPreviewSong[];
 }
 
 export interface IShareSong {

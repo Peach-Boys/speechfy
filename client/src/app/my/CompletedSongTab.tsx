@@ -12,7 +12,7 @@ function CompletedSongTab() {
   const { data, isLoading } = useGetCompletedSongList();
 
   useEffect(() => {
-    if (data) setCompleteSongList(data);
+    if (data) setCompleteSongList(data.songList);
   }, [data]);
 
   if (isLoading) return <Spinner />;
