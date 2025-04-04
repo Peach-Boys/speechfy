@@ -1,8 +1,12 @@
+import Menu from '@/components/common/Menu';
 import PlayBar from '@/components/common/PlayBar';
 import Tag from '@/components/common/Tag';
 import IconTripleDots from '@/components/icons/IconTripleDots';
 import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
+import useOutSideClick from '@/hooks/useOutSideClick';
+import { useDeleteCompletedSong } from '@/service/queries/useDeleteCompletedSong';
 import { BaseCompletedSong } from '@/types/workroom';
+import { useRef, useState } from 'react';
 
 interface Props {
   song: BaseCompletedSong;
@@ -18,6 +22,27 @@ function CompletedSongBox({ song }: Props) {
     isPlaying,
     isReady,
   } = useAudioPlayBar(song.songPresignedUrl);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  useOutSideClick(menuRef, () => setIsMenuOpen(false));
+  const deleteMutation = useDeleteCompletedSong(song.songId);
+
+  function handleDelete() {
+    deleteMutation.mutate();
+  }
+
+  async function handleShare() {
+    try {
+      await navigator.share({
+        title: document.title,
+        text: song.title,
+        url: song.songPresignedUrl,
+      });
+    } catch (err) {
+      console.error('err:', err);
+    }
+  }
+
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
@@ -30,8 +55,21 @@ function CompletedSongBox({ song }: Props) {
           <div>{song.title}</div>
           <div>{song.createdAt}</div>
         </div>
-        <div className='h-fit cursor-pointer'>
+        <div
+          className='relative h-fit py-1 cursor-pointer'
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
+        >
           <IconTripleDots color='#ffffff' />
+          {isMenuOpen && (
+            <div ref={menuRef} className='absolute z-10 top-3 right-0'>
+              <Menu
+                items={[
+                  { label: '공유', onClick: () => handleShare() },
+                  { label: '삭제', onClick: () => handleDelete() },
+                ]}
+              />
+            </div>
+          )}
         </div>
       </div>
       <div className='w-full flex flex-col gap-5'>

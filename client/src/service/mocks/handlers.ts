@@ -1,4 +1,5 @@
 import { DUMMY_COMPLETED_SONG_LIST } from '@/service/mocks/dummies/CompleteSongList';
+import { DUMMY_SHARE_SONG } from '@/service/mocks/dummies/ShareSong';
 import { DUMMY_AI_SONGS } from '@/service/mocks/dummies/SongList';
 import { DUMMY_WORKROOM_LIST } from '@/service/mocks/dummies/WorkroomList';
 import { http, HttpResponse } from 'msw';
@@ -64,5 +65,9 @@ export const handlers = [
     return new Response(null, {
       status: 201,
     });
+  }),
+
+  http.get(`${BASEURL}/song/share/1`, () => {
+    return HttpResponse.json(DUMMY_SHARE_SONG);
   }),
 ];

@@ -14,3 +14,9 @@ export interface IPreviewSong {
 export interface IPreviewSongList {
   songList: IPreviewSong[];
 }
+
+export interface IShareSong {
+  songTitle: string;
+  imageCloudFrontUrl: string;
+  songCloudFrontUrl: string;
+}
