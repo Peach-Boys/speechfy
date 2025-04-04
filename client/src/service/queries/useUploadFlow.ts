@@ -11,6 +11,7 @@ interface Props {
   originalAudio: string;
   transAudio: string;
   instrument: string;
+  trackName: string;
   order: number;
 }
 
@@ -24,6 +25,7 @@ export const useUploadFlow = () => {
       transAudio,
       instrument,
       order,
+      trackName,
     }: Props) => {
       const presignedUrl = await getRequestPresignedUrlTrack(workroomId);
       console.log('presi:', presignedUrl);
@@ -52,7 +54,14 @@ export const useUploadFlow = () => {
         throw new Error('업로드 중 에러가 발생했습니다.');
       }
 
-      await postSuccess(workroomId, instrument, order, trackUUID, recordUUID);
+      await postSuccess(
+        workroomId,
+        instrument,
+        order,
+        trackName,
+        trackUUID,
+        recordUUID
+      );
     },
     onSuccess: () => {
       console.log('모든 업로드 완료');

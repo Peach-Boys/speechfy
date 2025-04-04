@@ -30,12 +30,12 @@ function ClientWorkroom() {
         data.trackList.map((trackData: TrackListItem) => ({
           trackId: trackData.track.trackId,
           instrumentName: trackData.track.instrumentName,
-          trackUrl: trackData.track.trackUrl,
+          trackUrl: trackData.track.trackPresignedUrl,
           trackName: trackData.track.trackName,
           recordId: trackData.record.recordId,
-          recordUrl: trackData.record.recordUrl,
+          recordUrl: trackData.record.recordPresignedUrl,
           isPlaying: false,
-          order: trackData.order,
+          order: trackData.track.order,
         }))
       );
     }

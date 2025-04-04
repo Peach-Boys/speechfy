@@ -17,26 +17,26 @@ function SelectInstrument({ handleNextLevel, setInstrument }: Props) {
     <div className='w-full flex justify-between items-center'>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={() => handleNext('violin')}
+        onClick={() => handleNext('VIOLIN')}
       >
         {' '}
         <IconElecGuitar color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={() => handleNext('trumpet')}
+        onClick={() => handleNext('TRUMPET')}
       >
         <IconPiano color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={() => handleNext('drum')}
+        onClick={() => handleNext('DRUM')}
       >
         <IconDrum color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={() => handleNext('tenor_saxophone')}
+        onClick={() => handleNext('TENOR_SAXOPHONE')}
       >
         <IconBaseGuitar color='#000000' />
       </div>

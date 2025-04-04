@@ -50,12 +50,18 @@ export const postSuccess = async (
   workroomId: string,
   instrument: string,
   order: number,
+  trackName: string,
   trackUUID: string,
   recordUUID: string
 ): Promise<TrackListItem> => {
   try {
     return await client.post(`/work/track/${workroomId}`, {
-      data: { instrument, order, trackUUID, recordUUID },
+      instrument,
+      recordId: 0,
+      trackName,
+      order,
+      trackUUID,
+      recordUUID,
     });
   } catch (err: unknown) {
     throw new Error((err as Error).message);

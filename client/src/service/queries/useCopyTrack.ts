@@ -12,13 +12,13 @@ export const useCopyTrack = (
     mutationFn: () => {
       const updatedTracks = tracks.map((track) => {
         return {
-          track: track.trackId,
+          trackId: track.trackId,
           order: track.order,
           trackName: track.trackName,
         };
       });
       updatedTracks.push({
-        track: tracks[order - 1].trackId,
+        trackId: tracks[order - 1].trackId,
         order: tracks.length + 1,
         trackName: tracks[order - 1].trackName,
       });

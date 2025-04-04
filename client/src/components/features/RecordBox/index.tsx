@@ -26,7 +26,7 @@ interface Props {
 
 const label = ['악기 선택', '녹음', '녹음 중'];
 
-function RecordBox({ setIsCreate, addTrack }: Props) {
+function RecordBox({ setIsCreate }: Props) {
   const { workroom_id } = useParams();
   const { isRecording, startRecording, stopRecording, audio } = useRecord();
   const [hasProcessed, setHasProcessed] = useState(false);
@@ -56,17 +56,18 @@ function RecordBox({ setIsCreate, addTrack }: Props) {
       transAudio: convertedUrl,
       instrument: instrument,
       order: tracks.length + 1,
+      trackName: instrument,
     });
-    addTrack({
-      order: 0,
-      trackId: 1,
-      instrumentName: 'SoundHelix-Song-1',
-      trackName: 'SoundHelix-Song-1',
-      trackUrl: convertedUrl,
-      recordId: 1,
-      recordUrl: '',
-      isPlaying: false,
-    });
+    // addTrack({
+    //   order: 0,
+    //   trackId: 1,
+    //   instrumentName: 'SoundHelix-Song-1',
+    //   trackName: 'SoundHelix-Song-1',
+    //   trackUrl: convertedUrl,
+    //   recordId: 1,
+    //   recordUrl: '',
+    //   isPlaying: false,
+    // });
   }
   useEffect(() => {
     console.log(audio, initialized);
