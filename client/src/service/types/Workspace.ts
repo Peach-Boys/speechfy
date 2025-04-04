@@ -1,22 +1,24 @@
 export interface BaseTrack {
+  order: number;
   trackId: number;
   instrumentName: string;
-  trackUrl: string;
+  trackPresignedUrl: string;
   trackName: string;
+  recordId: number;
 }
 
 export interface BaseRecord {
   recordId: number;
-  recordUrl: string;
+  recordPresignedUrl: string;
 }
 
 export interface TrackListItem {
-  order: number;
   track: BaseTrack;
   record: BaseRecord;
 }
 
 export interface StudioData {
+  studioId: number;
   studioName: string;
   trackList: TrackListItem[];
 }

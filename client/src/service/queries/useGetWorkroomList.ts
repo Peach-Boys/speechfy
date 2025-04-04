@@ -1,7 +1,8 @@
 import { getWorkrommList } from '@/service/apis/MyPage';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, UseQueryResult } from '@tanstack/react-query';
+import { IWorkroom } from '@/service/types/MyPage';
 
-export const useGetWorkroomList = () => {
+export const useGetWorkroomList = (): UseQueryResult<IWorkroom, Error> => {
   return useQuery({
     queryKey: ['workroomList'],
     queryFn: () => getWorkrommList(),

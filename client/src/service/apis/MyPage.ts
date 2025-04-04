@@ -1,7 +1,7 @@
 import { client } from '@/service/clients';
-import { ICompletedSong, IWorkroom } from '@/service/types/MyPage';
+import { ICompletedSongList, IWorkroom } from '@/service/types/MyPage';
 
-export const getWorkrommList = async (): Promise<IWorkroom[]> => {
+export const getWorkrommList = async (): Promise<IWorkroom> => {
   try {
     const res = await client.get('/work/studio');
     return res.data;
@@ -10,7 +10,7 @@ export const getWorkrommList = async (): Promise<IWorkroom[]> => {
   }
 };
 
-export const getCompletedSongList = async (): Promise<ICompletedSong[]> => {
+export const getCompletedSongList = async (): Promise<ICompletedSongList> => {
   try {
     const res = await client.get('/song');
     return res.data;

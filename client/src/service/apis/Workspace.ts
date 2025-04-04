@@ -1,9 +1,13 @@
 import { client } from '@/service/clients';
 import { INSTRUMENT_TYPE, StudioData } from '@/service/types/Workspace';
+import { CreateResponse } from '@/types/workroom';
 
-export const postCreateWorkroom = async (studioName: string): Promise<void> => {
+export const postCreateWorkroom = async (
+  studioName: string
+): Promise<CreateResponse> => {
   try {
-    await client.post('/work/studio', studioName);
+    const res = await client.post('/work/studio', { studioName: studioName });
+    return res.data;
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
@@ -29,14 +33,14 @@ export const deleteTrack = async (trackId: number): Promise<void> => {
 export const updateTrack = async (
   workId: string,
   tracks: {
-    track: number;
+    trackId: number;
     order: number;
     trackName: string;
   }[]
 ): Promise<void> => {
   try {
-    await client.put(`/work/studio/${workId}`, {
-      tracks,
+    await client.post(`/work/studio/${workId}`, {
+      updateList: tracks,
     });
   } catch (err: unknown) {
     throw new Error((err as Error).message);
@@ -45,7 +49,7 @@ export const updateTrack = async (
 
 export const deleteAllTrack = async (workId: string): Promise<void> => {
   try {
-    await client.delete(`/work/studio/${workId}`);
+    await client.delete(`/work/studio/${workId}/reset`);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
