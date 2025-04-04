@@ -76,4 +76,13 @@ public class S3Service {
             System.err.println("이미지 업로드 중 오류 발생: " + e.getMessage());
         }
     }
+
+    public void deleteFile(String objectKey) {
+        try {
+            s3Client.deleteObject(builder -> builder.bucket(bucketName).key(objectKey));
+            System.out.println("파일 삭제 완료");
+        } catch (Exception e) {
+            System.err.println("파일 삭제 중 오류 발생: " + e.getMessage());
+        }
+    }
 }
