@@ -70,7 +70,7 @@ public class SongController {
     }
 
     // 앨범 커버 생성
-    @GetMapping("/cover")
+    @PostMapping("/cover")
     public ResponseEntity<?> createCover(@RequestBody ImageCreateDto createDto) {
         ImageResponseDto dto = songService.createCover(createDto);
         return ResponseEntity.ok(dto);
