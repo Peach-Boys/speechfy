@@ -2,6 +2,8 @@ package com.ssafy.speechfy.dto.song;
 
 import lombok.*;
 
+import java.util.List;
+
 @Builder
 @Getter
 @NoArgsConstructor
@@ -17,4 +19,5 @@ public class SongResponseDto {
     private String genre;
     private String mood;
     private boolean AIUsed;
+    private List<String> instruments;
 }
