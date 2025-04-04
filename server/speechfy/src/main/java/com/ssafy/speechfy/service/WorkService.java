@@ -123,11 +123,8 @@ public class WorkService {
         Studio studio = studioReposiotry.findById(studioId)
                 .orElseThrow(() -> new NoSuchElementException("Studio not found"));
 
-        Integer instrumentId = trackCreateDto.getInstrumentId();
-        if (instrumentId < 0 || instrumentId >= InstrumentType.values().length) {
-            throw new IllegalArgumentException("Invalid instrument id");
-        }
-        InstrumentType instrumentType = InstrumentType.values()[instrumentId];
+        String instrument = trackCreateDto.getInstrument();
+        InstrumentType instrumentType = InstrumentType.valueOf(instrument.toUpperCase());
 
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record = createRecord( optionalRecord, userId, trackCreateDto);
