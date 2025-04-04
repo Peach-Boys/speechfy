@@ -43,6 +43,21 @@ function CompletedSongBox({ song }: Props) {
     }
   }
 
+  async function handleDownload() {
+    const response = await fetch(song.completeUrl);
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${song.title}.wav`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    window.URL.revokeObjectURL(url);
+  }
+
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
@@ -91,13 +106,12 @@ function CompletedSongBox({ song }: Props) {
         >
           {isPlaying ? '정지' : '재생'}
         </button>
-        <a
-          href={song.completeUrl}
+        <button
           className='w-full py-3 flex justify-center bg-gray-200 text-black rounded-[10px] cursor-pointer'
-          download
+          onClick={() => handleDownload()}
         >
           다운로드
-        </a>
+        </button>
       </div>
       <audio ref={audioRef} src={song.completeUrl} />
     </article>
