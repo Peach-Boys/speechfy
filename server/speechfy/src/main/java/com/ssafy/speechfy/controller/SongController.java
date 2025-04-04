@@ -47,9 +47,8 @@ public class SongController {
 
     // 완성곡 변환 저장
     @PostMapping("/{studioId}")
-    public ResponseEntity<?> createSongList(@PathVariable Integer studioId, @RequestBody TrackListRequestDto trackListRequestDto) {
-        Integer userId = getCurrentUserId();
-        songService.saveSong(trackListRequestDto);
+    public ResponseEntity<?> createSongList(@PathVariable Integer studioId, @RequestBody SongRequestDto songRequestDto) {
+        songService.saveSong(songRequestDto, studioId);
         return ResponseEntity.ok(null);
     }
 
@@ -62,7 +61,7 @@ public class SongController {
     }
 
     // 완성곡 삭제
-    @DeleteMapping("/download/{songId}")
+    @DeleteMapping("/{songId}")
     public ResponseEntity<String> deleteSong(@PathVariable Integer songId) {
         Integer userId = getCurrentUserId();
         songService.deleteSongById(songId, userId);
