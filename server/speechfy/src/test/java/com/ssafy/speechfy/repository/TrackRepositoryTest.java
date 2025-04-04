@@ -24,8 +24,4 @@ class TrackRepositoryTest {
     @PersistenceContext
     EntityManager em;
 
-    @Test
-    void findByStudio() {
-
-    }
 }

@@ -13,12 +13,12 @@ import lombok.Setter;
 @Table(name="track")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Track {
+public class Track extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private int id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -43,4 +43,14 @@ public class Track {
 
     @Column(name = "`order`") // 초기값 1로 하기로
     private int order;
+
+    public Track(User user, InstrumentType instrumentType, Record record, Studio studio, String name, String filePath, int order) {
+        this.user = user;
+        this.instrumentType = instrumentType;
+        this.record = record;
+        this.studio = studio;
+        this.name = name;
+        this.filePath = filePath;
+        this.order = order;
+    }
 }

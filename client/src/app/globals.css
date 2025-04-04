@@ -1,8 +1,10 @@
-@import "tailwindcss";
+@import 'tailwindcss';
+@import '../assets/styles/fonts.css';
 
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --jihyegra: linear-gradient(to right, #b73abb, #d0579a, #e46e80);
 }
 
 @theme inline {
@@ -21,6 +23,25 @@
 
 body {
   background: var(--background);
+  height: 100dvh;
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+*::-webkit-scrollbar {
+  width: 4px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #777777; /* 스크롤바 색상 */
+  border-radius: 10px; /* 스크롤바 둥근 테두리 */
+}
+
+*::-webkit-scrollbar-track {
+  background: #444444; /*스크롤바 뒷 배경 색상*/
+  border-radius: 10px;
+}
+
+.bg-jihyegra {
+  background-image: var(--jihyegra);
 }

@@ -1,29 +1,58 @@
 package com.ssafy.speechfy.service;
 
-import com.ssafy.speechfy.dto.song.songResponseDto;
+import com.ssafy.speechfy.dto.song.*;
+import com.ssafy.speechfy.dto.work.track.TrackListRequestDto;
 import com.ssafy.speechfy.entity.Song;
+import com.ssafy.speechfy.entity.Studio;
 import com.ssafy.speechfy.entity.User;
+import com.ssafy.speechfy.enums.GenreType;
+import com.ssafy.speechfy.enums.MoodType;
+import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.repository.SongRepository;
+import com.ssafy.speechfy.repository.StudioRepository;
 import com.ssafy.speechfy.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import jakarta.persistence.EntityNotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import com.ssafy.speechfy.dto.song.songListResponseDto;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.http.*;
+import java.util.List;
+import java.util.NoSuchElementException;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class SongService {
+
+    @Value("${openai.api.key}")
+    private String apiKey;
+    private final String OPENAI_URL = "https://api.openai.com/v1/images/generations";
+
+    @Autowired
+    private S3Service s3Service;
+
     private final SongRepository songRepository;
     private final UserRepository userRepository;
+    private final StudioRepository studioRepository;
 
-    public SongService(SongRepository songRepository, UserRepository userRepository) {
-        this.songRepository = songRepository;
-        this.userRepository = userRepository;
+    private Integer getCurrentUserId() {
+        return SecurityUtil.getCurrentUserId();
     }
 
     /**
@@ -31,45 +60,98 @@ public class SongService {
      * songListResponseDto
      * 페이지네이션 기능 추가
      */
-    public songListResponseDto getAllSongs(Integer userId, Pageable pageable) {
+    public SongListResponseDto getAllSongs() {
+        Integer userId = getCurrentUserId();
+        Pageable pageable = PageRequest.of(0, 3);
+
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("해당 ID의 유저를 찾을 수 없습니다."));
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
         Page<Song> songList = songRepository.findPageByUser(user, pageable);
 
-        List<songResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
-            songResponseDto dto = new songResponseDto();
-            dto.setSongId(song.getId());
-            dto.setUserId(userId);
-            dto.setSongPresignedUrl(song.getFilePath());
-            dto.setViewCount(song.getViewCount());
-            dto.setLikes(song.getLikes());
-            dto.setImagePresignedUrl(song.getImagePath());
-            dto.setGenre(song.getGenreType().toString());
-            dto.setMood(song.getMoodType().toString());
+        List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
+            URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+            URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
 
-            return dto;
+
+            return SongResponseDto.builder()
+                    .songId(song.getId())
+                    .title(song.getName())
+                    .AIUsed(song.getIsAIUsed())
+                    .userId(song.getUser().getId())
+                    .songPresignedUrl(songCloudFrontUrl.toString())
+                    .viewCount(song.getViewCount())
+                    .likesCount(song.getLikesCount())
+                    .imagePresignedUrl(imageCloudFrontUrl.toString())
+                    .genre(song.getGenreType().toString())
+                    .mood(song.getMoodType().toString())
+                    .build();
         }).collect(Collectors.toList());
-        
-        return new songListResponseDto(songResponseDtoList);
+
+        return SongListResponseDto.builder()
+                .songList(songResponseDtoList)
+                .build();
+    }
+
+    // 스튜디오의 모든 곡 리스트 반환
+    public SongListResponseDto getStudioSongs(Integer studioId) {
+        Pageable pageable = PageRequest.of(0, 3);
+
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new NoSuchElementException("User not found"));
+//        Page<Song> songList = songRepository.findPageByUser(user, pageable);
+        Studio studio = studioRepository.findById(studioId)
+                .orElseThrow(() -> new EntityNotFoundException("Studio not found with id: " + studioId));
+
+        Page<Song> songList = songRepository.findPageByStudio(studio, pageable);
+
+
+        List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
+            URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+            URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
+
+
+            return SongResponseDto.builder()
+                    .songId(song.getId())
+                    .title(song.getName())
+                    .AIUsed(song.getIsAIUsed())
+                    .userId(song.getUser().getId())
+                    .songPresignedUrl(songCloudFrontUrl.toString())
+                    .viewCount(song.getViewCount())
+                    .likesCount(song.getLikesCount())
+                    .imagePresignedUrl(imageCloudFrontUrl.toString())
+                    .genre(song.getGenreType().toString())
+                    .mood(song.getMoodType().toString())
+                    .build();
+        }).collect(Collectors.toList());
+
+        return SongListResponseDto.builder()
+                .songList(songResponseDtoList)
+                .build();
     }
 
     /**
      * id 기반 완성곡 반환
-     *
      */
-    public songResponseDto getSongById(int songid) {
-        Song song = songRepository.findById(songid);
-        songResponseDto dto = new songResponseDto();
-        dto.setSongId(song.getId());
-        dto.setUserId(song.getUser().getId());
-        dto.setSongPresignedUrl(song.getFilePath());
-        dto.setViewCount(song.getViewCount());
-        dto.setLikes(song.getLikes());
-        dto.setImagePresignedUrl(song.getImagePath());
-        dto.setGenre(song.getGenreType().toString());
-        dto.setMood(song.getMoodType().toString());
+    public SongResponseDto getSongById(int songId) {
+        Song song = songRepository.findById(songId).orElseThrow(
+                () -> new NoSuchElementException("Song not found")
+        );
 
-        return dto;
+        URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+        URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
+
+        return SongResponseDto.builder()
+                .songId(song.getId())
+                .title(song.getName())
+                .AIUsed(song.getIsAIUsed())
+                .userId(song.getUser().getId())
+                .songPresignedUrl(songCloudFrontUrl.toString())
+                .viewCount(song.getViewCount())
+                .likesCount(song.getLikesCount())
+                .imagePresignedUrl(imageCloudFrontUrl.toString())
+                .genre(song.getGenreType().toString())
+                .mood(song.getMoodType().toString())
+                .build();
     }
 
     /**
@@ -84,14 +166,55 @@ public class SongService {
      * 완성곡 삭제
      */
     @Transactional
-    public void deleteSongById(int id) {}
+    public void deleteSongById(int songId, int userId) {
+        Song song = songRepository.findById(songId).orElseThrow(
+                () -> new NoSuchElementException("Song not found")
+        );;
+        if (song.getUser().getId() != userId) {
+            return;
+        }
+        songRepository.deleteById(songId);
+    }
 
     /**
      * 앨범커버 생성
      */
     @Transactional
-    public void createCoverById(int id) {}
+    public String createCover(ImageCreateDto createDto) {
+        String genre = createDto.getGenre();
+        String mood = createDto.getMood();
+        String title = createDto.getTitle();
+        String prompt = "A stunning album cover for a " + genre + " music album, evoking a " + mood + " atmosphere. The title '" + title + "' is featured in a stylish font. The artwork is visually captivating, with a blend of cinematic lighting, rich colors, and artistic composition.";
+        // 이미지 생성
+        String imageUrl = generateImage(prompt);
+        String objeckKey = "images/" + UUID.randomUUID();
+        // 이미지 S3에 업로드
+        s3Service.uploadImageFromUrl(imageUrl, objeckKey);
+        return objeckKey;
+    }
 
+    public String generateImage(String prompt) {
+        RestTemplate restTemplate = new RestTemplate();
+
+        // 요청 생성
+        OpenAIRequestDto request = new OpenAIRequestDto(prompt, 1, "1024x1024");
+
+        // HTTP 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.set("Authorization", "Bearer " + apiKey);
+        headers.set("Content-Type", "application/json");
+
+        HttpEntity<OpenAIRequestDto> entity = new HttpEntity<>(request, headers);
+
+        // API 요청
+        ResponseEntity<OpenAIResponseDto> response = restTemplate.exchange(
+                OPENAI_URL, HttpMethod.POST, entity, OpenAIResponseDto.class);
+
+        if (response.getBody() != null && !response.getBody().getData().isEmpty()) {
+            return response.getBody().getData().get(0).getUrl();
+        }
+        return null;
+    }
     /**
     * 완성곡 리스트 수정
     */
@@ -106,4 +229,60 @@ public class SongService {
     @Transactional
     public void deleteSong() {}
 
+    // 기본 곡 저장을 위한 presignedUrl 생성
+    public BasicSongPresignedUrlResponseDto generateBasicSongPresignedUrl(int userId) {
+        String basicSongFilePath = "users/" + userId + "/basicSong/" + UUID.randomUUID().toString() + ".wav";
+        URL basicSongPresignedUrl = s3Service.generatePresignedUrl(basicSongFilePath);
+        return BasicSongPresignedUrlResponseDto.builder()
+                .basicSongPresignedUrl(basicSongPresignedUrl.toString())
+                .basicSongFilePath(basicSongFilePath)
+                .build();
+    }
+
+    @Transactional
+    public BasicSongRegisterResponseDto registerBasicSong(int userId, int studioId, BasicSongRegisterRequestDto requestDto) {
+        User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new EntityNotFoundException("User not found with id: " + userId));
+        Studio studio = studioRepository.findById(studioId)
+                        .orElseThrow(() -> new EntityNotFoundException("Studio not found with id: " + studioId));
+
+        // imagePath만 null이고 나머지는 초기값이 존재함.
+        Song basicSong = Song.builder()
+                .user(user)
+                .studio(studio)
+                .moodType(MoodType.valueOf(requestDto.getMood()))
+                .genreType(GenreType.valueOf(requestDto.getGenre()))
+                .viewCount(0)
+                .likesCount(0)
+                .name(requestDto.getTitle())
+                .filePath(requestDto.getBasicSongFilePath())
+                .isAIUsed(false)
+                .build();
+
+        Song savedSong = songRepository.save(basicSong);
+
+        return BasicSongRegisterResponseDto.builder()
+                .basicSongId(savedSong.getId())
+                .userId(userId)
+                .studioId(studioId)
+                .viewCount(savedSong.getViewCount())
+                .likesCount(savedSong.getLikesCount())
+                .mood(savedSong.getMoodType().toString())
+                .genre(savedSong.getGenreType().toString())
+                .title(savedSong.getName())
+                .AIUsed(savedSong.getIsAIUsed())
+                .build();
+    }
+
+    public URL  checkMalformedUrlException(String filePath) {
+        try {
+            return s3Service.getCloudFrontUrl(filePath);
+        } catch (MalformedURLException e) {
+            throw new RuntimeException("잘못된 파일 경로입니다.");
+        }
+    }
+
+    public void saveSong(TrackListRequestDto trackListRequestDto) {
+
+    }
 }
