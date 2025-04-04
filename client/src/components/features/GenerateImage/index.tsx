@@ -3,11 +3,14 @@
 import Input from '@/components/common/Input';
 import IconLightning from '@/components/icons/IconLightning';
 import clsx from 'clsx';
-import { useState } from 'react';
+import React from 'react';
 
-function GenerateImage() {
-  const [title, setTitle] = useState<string>('');
+interface Props {
+  title: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+}
 
+function GenerateImage({ title, setTitle }: Props) {
   return (
     <div className='w-full flex flex-col justify-between items-center gap-5'>
       <div className='w-full flex text-xl'>

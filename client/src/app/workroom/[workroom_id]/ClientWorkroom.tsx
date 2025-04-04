@@ -55,7 +55,10 @@ function ClientWorkroom() {
           <AITab selectTag={selectTag} setSelectTag={setSelectTag} />
         </div>
         <div className={tab === 'complete' ? 'block' : 'hidden'}>
-          <CompleteTab />
+          <CompleteTab
+            workroomId={workroom_id as string}
+            selectTags={selectTag}
+          />
         </div>
       </div>
     </div>

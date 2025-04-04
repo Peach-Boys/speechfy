@@ -23,6 +23,7 @@ export const putUploadTrack = async (
       baseURL: presignedUrl,
       withCredentials: true,
       headers: {
+        'Content-Disposition': 'attachment',
         'Content-Type': 'audio/mpeg',
       },
     });
