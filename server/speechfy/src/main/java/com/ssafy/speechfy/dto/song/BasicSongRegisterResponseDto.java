@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Builder
 @Getter
 @NoArgsConstructor
@@ -19,4 +21,5 @@ public class BasicSongRegisterResponseDto {
     private String genre;
     private String title;
     private boolean AIUsed;
+    private List<String> instruments;
 }
