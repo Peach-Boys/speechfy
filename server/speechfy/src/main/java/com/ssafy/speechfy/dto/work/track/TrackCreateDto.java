@@ -13,6 +13,7 @@ public class TrackCreateDto {
     private String instrument;
     private Integer order;
     private Integer recordId;
+    private Integer trackId;
     private String trackName;
     private String trackUUID;
     private String recordUUID;
