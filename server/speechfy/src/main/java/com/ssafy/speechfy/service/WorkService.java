@@ -180,11 +180,9 @@ public class WorkService {
     public RecordDto getRecordDto(Integer recordId){
         Record record = recordReposiotry.findById(recordId)
                 .orElseThrow(() -> new NoSuchElementException("Record not found"));
-        Integer userId = getCurrentUserId();
-        String objectKey = "users/"+ userId.toString() +"/record/" + record.getId();
         return new RecordDto(
                 record.getId(),
-                checkMalformedUrlException(objectKey).toString()
+                checkMalformedUrlException(record.getFilePath()).toString()
         );
     }
 
@@ -202,13 +200,11 @@ public class WorkService {
     public TrackDto getTrackDto(Integer trackId){
         Track track =  trackReposiotry.findById(trackId)
                 .orElseThrow(() -> new NoSuchElementException("Track not found"));
-        Integer userId = getCurrentUserId();
-        String objectKey = "users/"+ userId.toString() + "/track/" + track.getId();
 
         return new TrackDto(
                 track.getId(),
                 track.getInstrumentType().name(),
-                checkMalformedUrlException(objectKey).toString(),
+                checkMalformedUrlException(track.getFilePath()).toString(),
                 track.getName(),
                 track.getRecord().getId(),
                 track.getOrder()
