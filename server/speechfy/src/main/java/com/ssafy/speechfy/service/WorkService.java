@@ -153,10 +153,14 @@ public class WorkService {
         //s3내의 트랙파일 삭제하기
         if(trackCreateFailDto.getTrackUUID() != null){
             trackFilePath += trackCreateFailDto.getTrackUUID() + ".wav";
+            System.out.println(trackFilePath);
+            s3Service.deleteFile(trackFilePath);
         }
-        //s3내의 레코드파일 삭제하기
+        //s3내의 레코드파일 삭제하기-
         if(trackCreateFailDto.getRecordUUID() != null){
             recordFilePath += trackCreateFailDto.getRecordUUID() + ".wav";
+            System.out.println(recordFilePath);
+            s3Service.deleteFile(recordFilePath);
         }
     }
 
