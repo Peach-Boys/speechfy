@@ -26,3 +26,7 @@ export interface IShareSong {
   imageCloudFrontUrl: string;
   songCloudFrontUrl: string;
 }
+
+export interface CreateImageResponse {
+  imageUrl: string;
+}
