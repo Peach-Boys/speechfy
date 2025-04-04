@@ -44,7 +44,7 @@ function PlayBar({
   return (
     <div className='w-full'>
       {!disableTime && (
-        <div className='flex justify-between text-xs text-gray-400 mb-1 px-1'>
+        <div className='flex justify-between text-xs text-pink-300 mb-1 px-1'>
           <span>{formatMusicTime(currentTime)}</span>
           <span>{formatMusicTime(endTime)}</span>
         </div>

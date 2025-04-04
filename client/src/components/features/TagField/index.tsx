@@ -3,12 +3,12 @@ import { TAGS } from '@/constants/tags';
 import React from 'react';
 
 interface Props {
-  select: (number | null)[];
-  setSelect: React.Dispatch<React.SetStateAction<(number | null)[]>>;
+  select: (string | null)[];
+  setSelect: React.Dispatch<React.SetStateAction<(string | null)[]>>;
 }
 
 function TagField({ select, setSelect }: Props) {
-  function handleTagClick(kind: number, id: number) {
+  function handleTagClick(kind: number, id: string) {
     setSelect((prev) => {
       const newSelect = [...prev];
       newSelect[kind] = prev[kind] === id ? null : id;
