@@ -16,4 +16,6 @@ public interface TrackRepository extends JpaRepository<Track, Integer> {
     List<Track> findByStudio(Studio studio);
 
     List<Track> findByRecord(Record record);
+
+    List<Track> findByStudioId(Integer studioId);
 }
