@@ -8,6 +8,7 @@ import com.ssafy.speechfy.entity.CustomOAuth2User;
 import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.WorkService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -73,7 +74,7 @@ public class WorkController {
     @PostMapping("/track/{studioId}")
     public ResponseEntity<TrackResponseDto> createTrack(
             @PathVariable Integer studioId,
-            @RequestBody TrackCreateDto workCreateDto ){
+            @Valid @RequestBody TrackCreateDto workCreateDto ){
 
         TrackResponseDto responseDto = workService.createTrack(studioId, workCreateDto);
 
@@ -83,7 +84,7 @@ public class WorkController {
     @DeleteMapping("/track/{studioId}/fail")
     public ResponseEntity<String> createTrackFail(
             @PathVariable Integer studioId,
-            @RequestBody TrackCreateFailDto workCreateFailDto ){
+            @Valid @RequestBody TrackCreateFailDto workCreateFailDto ){
 
        workService.createTrackFail(workCreateFailDto);
 
