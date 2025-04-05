@@ -16,7 +16,7 @@ public class TrackCreateDto {
     private Integer order;
     @NotBlank(message = "recordId는 필수 입력 항목입니다.")
     private Integer recordId;
-    @NotBlank(message = "trackName은 필수 입력 항목입니다.")
+    private Integer trackId;
     private String trackName;
     @NotBlank(message = "tracjUUID는 필수 입력 항목입니다.")
     private String trackUUID;

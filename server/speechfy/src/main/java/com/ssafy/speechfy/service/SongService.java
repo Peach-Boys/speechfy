@@ -226,17 +226,24 @@ public class SongService {
      * 앨범커버 생성
      */
     @Transactional
-    public String createCover(ImageCreateDto createDto) {
+    public ImageResponseDto createCover(ImageCreateDto createDto) {
         String genre = createDto.getGenre();
         String mood = createDto.getMood();
         String title = createDto.getTitle();
         String prompt = "A stunning album cover for a " + genre + " music album, evoking a " + mood + " atmosphere. The title '" + title + "' is featured in a stylish font. The artwork is visually captivating, with a blend of cinematic lighting, rich colors, and artistic composition.";
         // 이미지 생성
-        String imageUrl = generateImage(prompt);
-        String objeckKey = "images/" + UUID.randomUUID();
+        //String imageUrl = generateImage(prompt);
+        //String objectKey = "images/" + UUID.randomUUID();
         // 이미지 S3에 업로드
-        s3Service.uploadImageFromUrl(imageUrl, objeckKey);
-        return objeckKey;
+        // s3Service.uploadImageFromUrl(imageUrl, objectKey);
+        String objectKey = "images/album-cover.png";
+        URL cloudFrontImageUrl;
+        try {
+            cloudFrontImageUrl = s3Service.getCloudFrontUrl(objectKey);
+        } catch (Exception e) {
+            cloudFrontImageUrl = null;
+        }
+        return new ImageResponseDto(cloudFrontImageUrl.toString());
     }
 
     public String generateImage(String prompt) {

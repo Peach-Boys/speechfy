@@ -88,6 +88,24 @@ public class WorkService {
     @Transactional
     public void updateTrackList(Integer studioId, TrackListUpdateDto trackListUpdateDto){
         List<TrackUpdateDto> dtoList = trackListUpdateDto.getUpdateList();
+        List<Track> trackList = trackReposiotry.findByStudioId(studioId);
+
+        if(dtoList.size() != trackList.size()){ // 트랙을 복사한 경우
+            TrackUpdateDto updateDto = dtoList.get(dtoList.size()-1);
+            Track track = trackReposiotry.findById(updateDto.getTrackId()).orElseThrow(
+                    () -> new NoSuchElementException("Track not found")
+            );
+            Track saveTrack = new Track(
+                    track.getUser(),
+                    track.getInstrumentType(),
+                    track.getRecord(),
+                    track.getStudio(),
+                    track.getName(),
+                    track.getFilePath(),
+                    updateDto.getOrder()
+            );
+            trackReposiotry.save(saveTrack);
+        }
         for (TrackUpdateDto trackUpdateDto : dtoList) {
             int trackId = trackUpdateDto.getTrackId();
             updateTrack(studioId,trackId,trackUpdateDto);
@@ -122,6 +140,8 @@ public class WorkService {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         Studio studio = studioReposiotry.findById(studioId)
                 .orElseThrow(() -> new NoSuchElementException("Studio not found"));
+        Optional<Track> optionalTrack = trackReposiotry.findById(trackCreateDto.getTrackId());
+
 
         String instrument = trackCreateDto.getInstrument();
         InstrumentType instrumentType = InstrumentType.valueOf(instrument.toUpperCase());
@@ -129,15 +149,24 @@ public class WorkService {
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record = createRecord( optionalRecord, userId, trackCreateDto);
         String trackFilePath = "users/" + userId + "/track/" + trackCreateDto.getTrackUUID() + ".wav";
-        Track track = new Track(
-                user,
-                instrumentType, //인스트러먼트 이넘이라 모르겠으
-                record,
-                studio,
-                trackCreateDto.getTrackName(),
-                trackFilePath,
-                trackCreateDto.getOrder()
-        );
+        Track track = null;
+        if(optionalTrack.isPresent()){ // 해당 트랙Id가 있다.
+            track = optionalTrack.get();
+            track.setFilePath(trackFilePath);
+            track.setInstrumentType(instrumentType);
+            track.setName(trackCreateDto.getTrackName());
+        }
+        else {
+            track = new Track(
+                    user,
+                    instrumentType, //인스트러먼트 이넘이라 모르겠으
+                    record,
+                    studio,
+                    trackCreateDto.getTrackName(),
+                    trackFilePath,
+                    trackCreateDto.getOrder()
+            );
+        }
         Track saveTrack = trackReposiotry.save(track);
 
         return getTrackResponseDto(saveTrack.getId());
@@ -180,11 +209,9 @@ public class WorkService {
     public RecordDto getRecordDto(Integer recordId){
         Record record = recordReposiotry.findById(recordId)
                 .orElseThrow(() -> new NoSuchElementException("Record not found"));
-        Integer userId = getCurrentUserId();
-        String objectKey = "users/"+ userId.toString() +"/record/" + record.getId();
         return new RecordDto(
                 record.getId(),
-                checkMalformedUrlException(objectKey).toString()
+                checkMalformedUrlException(record.getFilePath()).toString()
         );
     }
 
@@ -202,13 +229,11 @@ public class WorkService {
     public TrackDto getTrackDto(Integer trackId){
         Track track =  trackReposiotry.findById(trackId)
                 .orElseThrow(() -> new NoSuchElementException("Track not found"));
-        Integer userId = getCurrentUserId();
-        String objectKey = "users/"+ userId.toString() + "/track/" + track.getId();
 
         return new TrackDto(
                 track.getId(),
                 track.getInstrumentType().name(),
-                checkMalformedUrlException(objectKey).toString(),
+                checkMalformedUrlException(track.getFilePath()).toString(),
                 track.getName(),
                 track.getRecord().getId(),
                 track.getOrder()
