@@ -18,9 +18,4 @@ class SongRepositoryTest {
     @PersistenceContext
     EntityManager em;
 
-    @Test
-    public void testSave() {
-        em.clear();
-
-    }
 }
