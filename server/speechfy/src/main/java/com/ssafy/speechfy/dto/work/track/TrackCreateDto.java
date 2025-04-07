@@ -11,15 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TrackCreateDto {
-    @NotBlank(message = "Instrument는 필수 입력 항목입니다.")
     private String instrument;
     private Integer order;
-    @NotBlank(message = "recordId는 필수 입력 항목입니다.")
     private Integer recordId;
     private Integer trackId;
     private String trackName;
-    @NotBlank(message = "tracjUUID는 필수 입력 항목입니다.")
     private String trackUUID;
-    @NotBlank(message = "recordUUID는 필수 입력 항목입니다.")
     private String recordUUID;
 }
