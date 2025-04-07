@@ -4,8 +4,6 @@ import Metronome from '@/components/features/RecordBox/Metronome';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import useCountDown from '@/hooks/useCountDown';
-import clsx from 'clsx';
-import React from 'react';
 
 interface Props {
   isRecording: boolean;
@@ -24,21 +22,20 @@ function Recording({ isRecording, stopRecording, startRecording }: Props) {
     <div className='w-full flex flex-col items-center'>
       {isRecording ? (
         <div className='w-full flex flex-col items-center gap-10'>
-          <div
-            className={clsx(
-              'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
-              countdown > 4 ? 'block' : 'none'
-            )}
-            onClick={handleFinishRecording}
-          >
-            <IconStop width={20} height={20} color='#000000' />
-          </div>
           {countdown > 4 ? (
-            <Metronome
-              isRecording={isRecording}
-              bpm={125}
-              onFinish={handleFinishRecording}
-            />
+            <>
+              <div
+                className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
+                onClick={handleFinishRecording}
+              >
+                <IconStop width={20} height={20} color='#000000' />
+              </div>
+              <Metronome
+                isRecording={isRecording}
+                bpm={125}
+                onFinish={handleFinishRecording}
+              />
+            </>
           ) : (
             <span className='text-xl font-bold'>
               {countdown == 4 ? 'GO!' : countdown}
@@ -47,13 +44,10 @@ function Recording({ isRecording, stopRecording, startRecording }: Props) {
         </div>
       ) : (
         <div
-          className={clsx(
-            'size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer',
-            countdown > 4 ? 'block' : 'none'
-          )}
+          className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
           onClick={startRecording}
         >
-          <IconPlay />
+          <IconPlay width={20} height={20} />
         </div>
       )}
     </div>

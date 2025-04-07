@@ -1,0 +1,8 @@
+{
+    "averageMaxLoudness": -48.6,
+    "loudnessThreshold": -100.0,
+    "meanLoudness": -68.5,
+    "meanPitch": 62.0,
+    "postGain": 2,
+    "modelMaxFrameLength": 1250
+}

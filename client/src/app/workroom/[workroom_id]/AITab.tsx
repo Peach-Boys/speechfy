@@ -2,26 +2,31 @@
 
 import PreviewSongList from '@/components/features/PreviewSongList';
 import TagField from '@/components/features/TagField';
+import useMergeAudio from '@/hooks/useMergeAudio';
 import { DUMMY_ADD_SONG } from '@/service/mocks/dummies/AddSong';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
+import { useWorkRoomStore } from '@/stores/workroomStore';
+import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import React from 'react';
 
 interface Props {
-  selectTag: (number | null)[];
-  setSelectTag: React.Dispatch<React.SetStateAction<(number | null)[]>>;
+  selectTag: (string | null)[];
+  setSelectTag: React.Dispatch<React.SetStateAction<(string | null)[]>>;
 }
 
 function AITab({ selectTag, setSelectTag }: Props) {
   const { workroom_id } = useParams();
-
+  const { tracks } = useWorkRoomStore();
   const postMutation = usePostPreviewSong(
     workroom_id as string,
     DUMMY_ADD_SONG
   );
-
+  const { mergeWavFiles } = useMergeAudio();
   async function handleCreateAISong() {
-    postMutation.mutate();
+    const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
+    const mergedAudio = await mergeWavFiles(fileUrls);
+    postMutation.mutate({ mergedAudio });
   }
 
   return (

@@ -5,34 +5,40 @@ import IconPiano from '@/components/icons/IconPiano';
 
 interface Props {
   handleNextLevel: () => void;
+  setInstrument: (instType: string) => void;
 }
 
-function SelectInstrument({ handleNextLevel }: Props) {
+function SelectInstrument({ handleNextLevel, setInstrument }: Props) {
+  function handleNext(inst: string) {
+    handleNextLevel();
+    setInstrument(inst);
+  }
   return (
     <div className='w-full flex justify-between items-center'>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={handleNextLevel}
+        onClick={() => handleNext('VIOLIN')}
       >
-        <IconBaseGuitar color='#000000' />
+        {' '}
+        <IconElecGuitar color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={handleNextLevel}
+        onClick={() => handleNext('TRUMPET')}
       >
         <IconPiano color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={handleNextLevel}
+        onClick={() => handleNext('DRUM')}
       >
         <IconDrum color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-        onClick={handleNextLevel}
+        onClick={() => handleNext('TENOR_SAXOPHONE')}
       >
-        <IconElecGuitar color='#000000' />
+        <IconBaseGuitar color='#000000' />
       </div>
     </div>
   );

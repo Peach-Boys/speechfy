@@ -5,12 +5,42 @@ export type TTag = {
 
 export interface IPreviewSong {
   songId: number;
-  songSrc: string;
-  instruments: TTag[];
-  gerne: string;
+  userId: number;
+  title: string;
+  songPresignedUrl: string;
+  viewCount: number;
+  likes: number;
+  imagePresignedUrl: string;
+  genre: string;
   mood: string;
+  createdAt: string;
+  aiused: boolean;
 }
 
 export interface IPreviewSongList {
-  songs: IPreviewSong[];
+  songList: IPreviewSong[];
+}
+
+export interface IShareSong {
+  songTitle: string;
+  imageCloudFrontUrl: string;
+  songCloudFrontUrl: string;
+}
+
+export interface CreateImageResponse {
+  imageUrl: string;
+}
+
+export interface AISong {
+  aiSongId: number;
+  userId: number;
+  studioId: number;
+  viewCount: number;
+  likesCount: number;
+  signedUrl: string;
+  mood: string;
+  genre: string;
+  instruments: string[];
+  name: string;
+  isAIUsed: boolean;
 }

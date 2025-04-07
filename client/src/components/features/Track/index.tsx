@@ -7,8 +7,11 @@ import InstrumentList from '@/components/features/Track/InstrumentList';
 import TrackMenu from '@/components/features/Track/TrackMenu';
 import IconDoubleCircle from '@/components/icons/IconDoubleCircle';
 import IconTripleDots from '@/components/icons/IconTripleDots';
+import { useDDSP } from '@/hooks/useDDSP';
 import useOutSideClick from '@/hooks/useOutSideClick';
+import { useTransferTrack } from '@/hooks/useTransferTrack';
 import { ITrack } from '@/types/track';
+import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 
 interface Props {
@@ -24,9 +27,34 @@ function Track({ track, isAllPlay }: Props) {
   const selectInstRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
+  const [instrument, setInstrument] = useState<string>(track.instrumentName);
   const [endTime, setEndTime] = useState<number>(0);
+  const { initialized, toneTransfer } = useDDSP();
+  const { mutate: uploadTrack } = useTransferTrack();
   useOutSideClick(menuRef, () => setIsMenuOpen(false));
   useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
+  const { workroom_id: workroomId } = useParams();
+  useEffect(() => {
+    if (track.instrumentName === instrument) return;
+    if (!audioRef.current) return;
+    if (!initialized) return;
+    console.log(track);
+
+    async function transTrack() {
+      const url = await toneTransfer(instrument, track.trackUrl);
+      uploadTrack({
+        workroomId: workroomId as string,
+        originalAudio: track.trackUrl,
+        transAudio: url,
+        instrument: instrument,
+        trackName: track.trackName,
+        order: track.order,
+        trackId: track.trackId,
+        recordId: track.recordId,
+      });
+    }
+    transTrack();
+  }, [instrument]);
 
   function handlePlayTrack() {
     if (!audioRef.current) return;
@@ -108,7 +136,10 @@ function Track({ track, isAllPlay }: Props) {
                 ref={selectInstRef}
                 className='absolute z-10 pt-1 overflow-hidden'
               >
-                <InstrumentList instrumentId={1} />
+                <InstrumentList
+                  instrument={instrument}
+                  setInstrument={setInstrument}
+                />
               </div>
             )}
           </div>

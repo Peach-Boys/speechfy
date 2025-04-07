@@ -1,12 +1,15 @@
-import { IPreviewSong } from '@/types/song';
+import { AISong } from '@/types/song';
 
-export const DUMMY_ADD_SONG: IPreviewSong = {
-  songId: 0,
-  songSrc: 'https://www.youtube.com/watch?v=K4DyBUG242c',
-  instruments: [
-    { id: 0, label: '기타' },
-    { id: 1, label: '피아노' },
-  ],
-  gerne: '힙합',
-  mood: '평화로운',
+export const DUMMY_ADD_SONG: AISong = {
+  aiSongId: 0,
+  studioId: 19,
+  userId: 6,
+  likesCount: 0,
+  viewCount: 0,
+  signedUrl: 'https://www.youtube.com/watch?v=K4DyBUG242c',
+  instruments: ['VIOLIN', 'TRUMPET'],
+  genre: 'HIPHOP',
+  mood: 'SENSITIVE',
+  name: '',
+  isAIUsed: true,
 };

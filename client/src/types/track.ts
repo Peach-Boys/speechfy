@@ -10,7 +10,7 @@ export interface BaseRecord {
   recordUrl: string;
 }
 
-export interface ITrack extends BaseTrack {
+export interface ITrack extends BaseTrack, BaseRecord {
   isPlaying: boolean;
   order: number;
 }

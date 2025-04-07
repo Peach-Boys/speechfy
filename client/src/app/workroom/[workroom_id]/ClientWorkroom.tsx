@@ -13,7 +13,7 @@ import { useEffect, useState } from 'react';
 function ClientWorkroom() {
   const { workroom_id } = useParams();
   const [tab, setTab] = useState<string>('work');
-  const [selectTag, setSelectTag] = useState<(number | null)[]>([null, null]);
+  const [selectTag, setSelectTag] = useState<(string | null)[]>([null, null]);
   const { setTracks } = useWorkRoomStore();
   const { data, isLoading, isError } = useGetTracks(workroom_id as string);
 
@@ -30,20 +30,22 @@ function ClientWorkroom() {
         data.trackList.map((trackData: TrackListItem) => ({
           trackId: trackData.track.trackId,
           instrumentName: trackData.track.instrumentName,
-          trackUrl: trackData.track.trackUrl,
+          trackUrl: trackData.track.trackPresignedUrl,
           trackName: trackData.track.trackName,
+          recordId: trackData.record.recordId,
+          recordUrl: trackData.record.recordPresignedUrl,
           isPlaying: false,
-          order: trackData.order,
+          order: trackData.track.order,
         }))
       );
     }
-  }, [data, isLoading]);
+  }, [data, isLoading, setTracks]);
 
   return (
     <div className='w-full h-full flex flex-col'>
       <WorkroomTabs tab={tab} setTab={setTab} />
       <div className='w-full flex justify-center text-2xl h-fit'>
-        당근할아버지 프로젝트 {workroom_id}
+        {data?.studioName}
       </div>
       <div className='relative w-full h-full'>
         <div className={tab === 'work' ? 'block' : 'hidden'}>
@@ -53,7 +55,10 @@ function ClientWorkroom() {
           <AITab selectTag={selectTag} setSelectTag={setSelectTag} />
         </div>
         <div className={tab === 'complete' ? 'block' : 'hidden'}>
-          <CompleteTab />
+          <CompleteTab
+            workroomId={workroom_id as string}
+            selectTags={selectTag}
+          />
         </div>
       </div>
     </div>
