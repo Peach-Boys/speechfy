@@ -137,7 +137,7 @@ public class SongService {
     }
 
     // 스튜디오내 모든 AI 송 반환
-    public SongListResponseDto getStudioAISongs(Integer studioId) {
+    public List<AISongRegisterResponseDto> getStudioAISongs(Integer studioId) {
         Pageable pageable = PageRequest.of(0, 100);
 
 //        User user = userRepository.findById(userId)
@@ -148,22 +148,19 @@ public class SongService {
 
         Page<Song> songList = songRepository.findPageByStudioAndIsAIUsedTrue(studio, pageable);
 
-        List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
+        List<AISongRegisterResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
             URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
-            URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
 
-
-            return SongResponseDto.builder()
-                    .songId(song.getId())
-                    .title(song.getName())
-                    .AIUsed(song.getIsAIUsed())
+            return AISongRegisterResponseDto.builder()
+                    .aiSongId(song.getId())
+                    .name(song.getName())
+                    .isAIUsed(song.getIsAIUsed())
                     .userId(song.getUser().getId())
-                    .songPresignedUrl(songCloudFrontUrl.toString())
+                    .signedUrl(songCloudFrontUrl.toString())
                     .viewCount(song.getViewCount())
                     .likesCount(song.getLikesCount())
-                    .imagePresignedUrl(imageCloudFrontUrl.toString())
-                    .genre(song.getGenreType().toString())
-                    .mood(song.getMoodType().toString())
+                    .genre(song.getGenreType())
+                    .mood(song.getMoodType())
                     .instruments(song.getInstruments()
                             .stream()
                             .map(Enum::toString)
@@ -171,9 +168,7 @@ public class SongService {
                     .build();
         }).collect(Collectors.toList());
 
-        return SongListResponseDto.builder()
-                .songList(songResponseDtoList)
-                .build();
+        return songResponseDtoList;
     }
 
     /**

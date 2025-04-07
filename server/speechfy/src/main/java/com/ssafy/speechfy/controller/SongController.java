@@ -13,6 +13,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/song")
@@ -47,10 +49,10 @@ public class SongController {
 
     // 스튜디오의 모든 완성곡 리스트 반환
     @GetMapping("/ai/{studioId}")
-    public ResponseEntity<SongListResponseDto> getStudioAISongList(@PathVariable Integer studioId) {
+    public ResponseEntity<List<AISongRegisterResponseDto>> getStudioAISongList(@PathVariable Integer studioId) {
         Integer userId = getCurrentUserId();
         Pageable pageable = PageRequest.of(0, 3);
-        SongListResponseDto songListResponseDto = songService.getStudioAISongs(studioId);
+        List<AISongRegisterResponseDto> songListResponseDto = songService.getStudioAISongs(studioId);
 
         return ResponseEntity.ok(songListResponseDto);
     }
