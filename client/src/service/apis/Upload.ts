@@ -68,3 +68,28 @@ export const postSuccess = async (
     throw new Error((err as Error).message);
   }
 };
+
+export const postTransferSuccess = async (
+  workroomId: string,
+  instrument: string,
+  order: number,
+  trackName: string,
+  trackUUID: string,
+  recordUUID: string | null,
+  trackId: number,
+  recordId: number
+): Promise<TrackListItem> => {
+  try {
+    return await client.post(`/work/track/${workroomId}`, {
+      instrument,
+      trackName,
+      order,
+      trackUUID,
+      recordUUID,
+      trackId,
+      recordId,
+    });
+  } catch (err: unknown) {
+    throw new Error((err as Error).message);
+  }
+};
