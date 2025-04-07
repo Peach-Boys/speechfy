@@ -26,3 +26,15 @@ export interface IShareSong {
   imageCloudFrontUrl: string;
   songCloudFrontUrl: string;
 }
+
+export interface AISong {
+  aiSongId: number;
+  userId: number;
+  studioId: number;
+  viewCount: number;
+  likesCount: number;
+  mood: string;
+  genre: string;
+  name: string;
+  isAIUsed: boolean;
+}
