@@ -14,3 +14,19 @@ export interface IPreviewSong {
 export interface IPreviewSongList {
   songList: IPreviewSong[];
 }
+
+export interface AISong {
+  aiSongId: number;
+  userId: number;
+  studioId: number;
+  viewCount: number;
+  likesCount: number;
+  mood: string;
+  genre: string;
+  name: string;
+  isAIUsed: boolean;
+}
+
+export interface AISongList {
+  aiSongList: AISong[];
+}

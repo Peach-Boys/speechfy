@@ -1,8 +1,8 @@
 import { postPreviewSongList } from '@/service/apis/MusicGen';
-import { IPreviewSong } from '@/service/types/MusicGen';
+import { AISong } from '@/types/song';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-export const usePostPreviewSong = (workroomId: string, song: IPreviewSong) => {
+export const usePostPreviewSong = (workroomId: string, song: AISong) => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: () => postPreviewSongList(workroomId, song),

@@ -1,7 +1,6 @@
 import { client } from '@/service/clients';
-import { IPreviewSong } from '@/service/types/MusicGen';
 import { BasicPresginedURL } from '@/service/types/Upload';
-import { CreateImageResponse, IPreviewSongList } from '@/types/song';
+import { AISong, CreateImageResponse, IPreviewSongList } from '@/types/song';
 
 export const getPreviewSongList = async (
   workroomId: string
@@ -16,11 +15,10 @@ export const getPreviewSongList = async (
 
 export const postPreviewSongList = async (
   workroomId: string,
-  songs: IPreviewSong
-): Promise<IPreviewSong> => {
+  songs: AISong
+): Promise<void> => {
   try {
-    const res = await client.post(`/song/${workroomId}`, songs);
-    return res.data;
+    await client.post(`/song/${workroomId}`, songs);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }

@@ -37,8 +37,10 @@ export interface AISong {
   studioId: number;
   viewCount: number;
   likesCount: number;
+  signedUrl: string;
   mood: string;
   genre: string;
+  instruments: string[];
   name: string;
   isAIUsed: boolean;
 }
