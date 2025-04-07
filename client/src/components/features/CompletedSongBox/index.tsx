@@ -61,11 +61,28 @@ function CompletedSongBox({ song }: Props) {
     }
   }
 
+  function isInvalidImageUrl(url?: string): boolean {
+    if (!url) return true;
+
+    try {
+      const parsed = new URL(url);
+      const lastSegment = parsed.pathname.split('/').pop(); // 마지막 path
+      return !lastSegment || lastSegment === 'null';
+    } catch (e) {
+      console.error(e);
+      return true;
+    }
+  }
+
+  const imageUrl = isInvalidImageUrl(song.imagePresignedUrl)
+    ? '/images/defaultImage.png'
+    : song.imagePresignedUrl;
+
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
         <img
-          src={song.imagePresignedUrl ?? '/images/defaultImage.png'}
+          src={imageUrl}
           alt='음악 이미지'
           className='w-10 h-10 rounded-[10px]'
         />

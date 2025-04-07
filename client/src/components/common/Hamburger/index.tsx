@@ -1,16 +1,23 @@
 'use client';
 
+import { logout } from '@/service/apis/Login';
+import clsx from 'clsx';
 import { useEffect, useState } from 'react';
 
 function Hamburger() {
   const [open, setOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
+  const isLogin = document.cookie.includes('speechfyaccesstoken');
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!mounted) return null;
+
+  async function handleLogout() {
+    await logout();
+  }
 
   return (
     <div className=''>
@@ -53,9 +60,24 @@ function Hamburger() {
           <a href='/my' className='block text-gray-200 hover:text-white'>
             마이페이지
           </a>
-          <a href='#' className='block text-gray-200 hover:text-white'>
-            로그아웃
+          <a
+            href='/login'
+            className={clsx(
+              'text-gray-200 hover:text-white',
+              isLogin ? 'none' : 'block'
+            )}
+          >
+            로그인
           </a>
+          <button
+            className={clsx(
+              'text-gray-200 hover:text-white',
+              isLogin ? 'none' : 'block'
+            )}
+            onClick={handleLogout}
+          >
+            로그아웃
+          </button>
         </nav>
       </div>
     </div>
