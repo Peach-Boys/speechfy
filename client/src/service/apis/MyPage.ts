@@ -29,7 +29,7 @@ export const deleteWorkroom = async (studioId: number): Promise<void> => {
 
 export const deleteCompletedSong = async (songId: number): Promise<void> => {
   try {
-    await client.delete(`/song/download/${songId}`);
+    await client.delete(`/song/${songId}`);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
