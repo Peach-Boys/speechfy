@@ -9,12 +9,12 @@ import Skeleton from '@/components/common/Skeleton';
 import { useDDSP } from '@/hooks/useDDSP';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { ITrack } from '@/types/track';
+import dynamic from 'next/dynamic';
 import { useParams } from 'next/navigation';
 import React, { SetStateAction, useEffect, useState } from 'react';
 import Recording from './Recording';
 import SelectInstrument from './SelectInstrument';
 import SelectMode from './SelectMode';
-import dynamic from 'next/dynamic';
 const InstrumentGenerator = dynamic(
   () => import('@/components/features/InstrumentGenerator'),
   { ssr: false }
@@ -106,37 +106,42 @@ function RecordBox({ setIsCreate }: Props) {
       <div className='flex flex-col items-center gap-10'>
         <div className='w-full h-full flex justify-between'>
           <span>{label[level]}</span>
-          {!isRecording && !isAutoComplete && (
+          {!isRecording && !isAutoComplete && !loading && (
             <div className='cursor-pointer' onClick={handleClose}>
               <IconClose width={15} height={15} color='#ffffff' />
             </div>
           )}
         </div>
-        {loading && <Skeleton className='w-full h-24' />}
-        {level == 0 && (
-          <SelectInstrument
-            handleNextLevel={handleNextLevel}
-            setInstrument={setInstrument}
-          />
-        )}
-        {level == 1 && (
-          <SelectMode
-            handleNextLevel={handleNextLevel}
-            setAutoComplete={setAutoComplete}
-          />
-        )}
-        {level == 2 && !isAutoComplete && (
-          <Recording
-            isRecording={isRecording}
-            stopRecording={stopRecording}
-            startRecording={startRecording}
-          />
-        )}
-        {level == 2 && isAutoComplete && (
-          <InstrumentGenerator
-            selectedInst={instrument}
-            setGenAudio={setGenAudio}
-          />
+        {loading ? (
+          <Skeleton className='w-full h-24' />
+        ) : (
+          <>
+            {level == 0 && (
+              <SelectInstrument
+                handleNextLevel={handleNextLevel}
+                setInstrument={setInstrument}
+              />
+            )}
+            {level == 1 && (
+              <SelectMode
+                handleNextLevel={handleNextLevel}
+                setAutoComplete={setAutoComplete}
+              />
+            )}
+            {level == 2 && !isAutoComplete && (
+              <Recording
+                isRecording={isRecording}
+                stopRecording={stopRecording}
+                startRecording={startRecording}
+              />
+            )}
+            {level == 2 && isAutoComplete && (
+              <InstrumentGenerator
+                selectedInst={instrument}
+                setGenAudio={setGenAudio}
+              />
+            )}
+          </>
         )}
       </div>
     </Box>

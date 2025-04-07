@@ -93,14 +93,14 @@ function CompleteSong() {
       {isReady ? (
         <div
           onClick={handlePlayTrack}
-          className='size-10 p-3 bg-gray-200 rounded-full cursor-pointer hover:scale-105 transition'
+          className='size-10 p-3 flex justify-center items-center bg-gray-300 rounded-full cursor-pointer hover:scale-105 transition'
         >
-          {isPlaying ? <IconStop /> : <IconPlay width={15} height={16} />}
+          {isPlaying ? <IconStop /> : <IconPlay width={20} height={20} />}
         </div>
       ) : (
         <Spinner />
       )}
-      <audio ref={audioRef} src={selectSong.songSrc} />
+      <audio ref={audioRef} src={selectSong.songPresignedUrl} />
     </div>
   );
 }
