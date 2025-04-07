@@ -17,7 +17,7 @@ spring:
         public: ${OAUTH2_JWT_PUBLIC_KEY_PATH}
       client:
         jwt:
-          access-token-time: 15
+          access-token-time: 100000
           refresh-token-time: 300000
         provider:
           kakao:
