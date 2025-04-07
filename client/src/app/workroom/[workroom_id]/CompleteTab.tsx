@@ -42,7 +42,7 @@ function CompleteTab({ workroomId, selectTags }: Props) {
 
     mutation.mutate({
       workroomId,
-      selectSong: selectSong?.songPresignedUrl,
+      selectSong: selectSong?.signedUrl,
       mood: selectTags[1]!,
       genre: selectTags[0]!,
       title,

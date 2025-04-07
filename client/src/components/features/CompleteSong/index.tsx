@@ -100,7 +100,7 @@ function CompleteSong() {
       ) : (
         <Spinner />
       )}
-      <audio ref={audioRef} src={selectSong.songPresignedUrl} />
+      <audio ref={audioRef} src={selectSong.signedUrl} />
     </div>
   );
 }

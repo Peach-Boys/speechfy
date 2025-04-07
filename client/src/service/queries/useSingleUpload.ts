@@ -32,9 +32,13 @@ export const useSingleUpload = () => {
         console.error('Error uploading file:', error);
       }
 
+      const songPath = selectSong
+        ? new URL(selectSong).pathname.slice(1) // 앞에 '/' 제거
+        : res.basicSongFilePath;
+
       await postSaveNonAISong(
         workroomId,
-        selectSong ? selectSong : res.basicSongFilePath,
+        songPath,
         mood,
         genre,
         title,

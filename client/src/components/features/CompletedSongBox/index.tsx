@@ -54,10 +54,8 @@ function CompletedSongBox({ song }: Props) {
       const a = document.createElement('a');
       a.href = song.songPresignedUrl;
       a.download = `${song.title}.wav`;
-      document.body.appendChild(a);
+      a.target = '_blank';
       a.click();
-      a.remove();
-      window.URL.revokeObjectURL(song.songPresignedUrl);
     } catch (error) {
       console.error('Download error:', error);
     }
