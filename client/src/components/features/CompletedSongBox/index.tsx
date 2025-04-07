@@ -43,6 +43,26 @@ function CompletedSongBox({ song }: Props) {
     }
   }
 
+  async function handleDownload() {
+    try {
+      console.log('song.songPresignedUrl:', song.songPresignedUrl);
+      // const response = await fetch(song.songPresignedUrl);
+      // const blob = await song.songPresignedUrl.blob();
+      // const url = window.URL.createObjectURL(blob);
+
+      // console.log('url:', url);
+      const a = document.createElement('a');
+      a.href = song.songPresignedUrl;
+      a.download = `${song.title}.wav`;
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(song.songPresignedUrl);
+    } catch (error) {
+      console.error('Download error:', error);
+    }
+  }
+
   return (
     <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
       <div className='w-full flex gap-4'>
@@ -91,13 +111,12 @@ function CompletedSongBox({ song }: Props) {
         >
           {isPlaying ? '정지' : '재생'}
         </button>
-        <a
-          href={song.songPresignedUrl}
+        <button
           className='w-full py-3 flex justify-center bg-gray-200 text-black rounded-[10px] cursor-pointer'
-          download
+          onClick={() => handleDownload()}
         >
           다운로드
-        </a>
+        </button>
       </div>
       <audio ref={audioRef} src={song.songPresignedUrl} />
     </article>

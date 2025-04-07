@@ -58,11 +58,12 @@ export const postSuccess = async (
   try {
     return await client.post(`/work/track/${workroomId}`, {
       instrument,
-      recordId: 0,
       trackName,
       order,
       trackUUID,
       recordUUID,
+      trackId: 0,
+      recordId: 0,
     });
   } catch (err: unknown) {
     throw new Error((err as Error).message);
