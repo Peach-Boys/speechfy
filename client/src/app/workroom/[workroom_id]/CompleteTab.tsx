@@ -55,7 +55,11 @@ function CompleteTab({ workroomId, selectTags }: Props) {
     <div className='w-full h-full p-5 flex flex-col justify-between items-center gap-5'>
       <div className='w-full h-full flex flex-col items-center gap-5'>
         <CompleteSong />
-        <GenerateImage title={title} setTitle={setTitle} />
+        <GenerateImage
+          title={title}
+          setTitle={setTitle}
+          selectTags={selectTags}
+        />
       </div>
       <button
         className='w-full py-3 bg-jihyegra rounded-[10px] cursor-pointer'
