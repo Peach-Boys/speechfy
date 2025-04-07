@@ -1,20 +1,24 @@
 package com.ssafy.speechfy.entity;
 
 import com.ssafy.speechfy.enums.GenreType;
+import com.ssafy.speechfy.enums.InstrumentType;
 import com.ssafy.speechfy.enums.MoodType;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Setter
 @Getter
-@Builder
 @Table(name="song")
 @NoArgsConstructor
 @AllArgsConstructor
+@SuperBuilder
 public class Song extends BaseEntity {
 
     @Id
@@ -55,8 +59,14 @@ public class Song extends BaseEntity {
     private List<Like> likes;
 
     @OneToMany(mappedBy = "song", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Image> images = new ArrayList<>();
+    private List<Image> images;
 
     @Column(name = "is_ai_used")
     private boolean isAIUsed;
+
+    @ElementCollection(targetClass = InstrumentType.class)
+    @Enumerated(EnumType.STRING)
+    @CollectionTable(name = "song_instruments", joinColumns = @JoinColumn(name = "song_id"))
+    @Column(name = "instrument")
+    private Set<InstrumentType> instruments = new HashSet<>();
 }
