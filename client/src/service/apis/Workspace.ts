@@ -39,7 +39,7 @@ export const updateTrack = async (
   }[]
 ): Promise<void> => {
   try {
-    await client.post(`/work/studio/${workId}`, {
+    await client.put(`/work/studio/${workId}`, {
       updateList: tracks,
     });
   } catch (err: unknown) {
