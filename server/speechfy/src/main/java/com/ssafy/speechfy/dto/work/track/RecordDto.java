@@ -11,5 +11,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class RecordDto {
     private Integer recordId;
-    private String recordPresignedUrl;
+    private String recordCloudFrontUrl;
 }

@@ -140,14 +140,18 @@ public class WorkService {
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         Studio studio = studioReposiotry.findById(studioId)
                 .orElseThrow(() -> new NoSuchElementException("Studio not found"));
-        Optional<Track> optionalTrack = trackReposiotry.findById(trackCreateDto.getTrackId());
 
 
+        // 악기 값 가져오기
         String instrument = trackCreateDto.getInstrument();
         InstrumentType instrumentType = InstrumentType.valueOf(instrument.toUpperCase());
 
+        //레코드 저장 -> 이미 있는 url이면 저장안하고 기존 record불러옴.
         Optional<Record> optionalRecord = recordReposiotry.findById(trackCreateDto.getRecordId());
         Record record = createRecord( optionalRecord, userId, trackCreateDto);
+
+
+        Optional<Track> optionalTrack = trackReposiotry.findById(trackCreateDto.getTrackId());
         String trackFilePath = "users/" + userId + "/track/" + trackCreateDto.getTrackUUID() + ".wav";
         Track track = null;
         if(optionalTrack.isPresent()){ // 해당 트랙Id가 있다.
@@ -169,7 +173,23 @@ public class WorkService {
         }
         Track saveTrack = trackReposiotry.save(track);
 
-        return getTrackResponseDto(saveTrack.getId());
+        TrackDto trackDto = getTrackDto(saveTrack.getId());
+        RecordDto recordDto = null;
+        if(trackCreateDto.getRecordId() != 0){
+            recordDto = new RecordDto(
+                    trackDto.getRecordId(),
+                    null
+            );
+        }
+        else{
+            recordDto = getRecordDto(trackDto.getRecordId());
+        }
+        TrackResponseDto trackResponseDto = new TrackResponseDto(
+                trackDto,
+                recordDto
+        );
+
+        return trackResponseDto;
     }
 
     @Transactional
@@ -219,7 +239,11 @@ public class WorkService {
         if (optionalRecord.isPresent()) {
             return  optionalRecord.get();
         } else { // 해당 레코드가 없으면 새로운 레코드 만들기
-            String recordFilePath = "users/" + userId + "/record/" + trackCreateDto.getRecordUUID()+ ".wav";
+            String recordUUID = trackCreateDto.getRecordUUID();
+            if(recordUUID == null){
+                throw new NoSuchElementException("레코드 저장 경로를 확인할 수 없습니다.");
+            }
+            String recordFilePath = "users/" + userId + "/record/" + recordUUID + ".wav";
             Record record = new Record(recordFilePath);
             Record saveRecord = recordReposiotry.save(record);
             return saveRecord;

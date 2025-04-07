@@ -12,7 +12,7 @@ import lombok.Setter;
 public class TrackDto {
    private Integer trackId;
    private String instrumentName;
-   private String trackPresignedUrl;
+   private String trackCloudFrontUrl;
    private String trackName;
    private Integer recordId;
    private Integer order;
