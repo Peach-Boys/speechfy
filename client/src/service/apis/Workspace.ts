@@ -78,7 +78,7 @@ export const postSaveNonAISong = async (
   instruments: string[]
 ): Promise<void> => {
   try {
-    await client.post(`/song/studio/${workroomId}/basic`, {
+    await client.post(`/song/studios/${workroomId}/basic/save`, {
       basicSongFilePath,
       mood,
       genre,
