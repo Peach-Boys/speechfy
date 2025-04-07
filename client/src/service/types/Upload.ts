@@ -4,3 +4,8 @@ export interface IPresignedURL {
   trackUUID: string;
   recordUUID: string;
 }
+
+export interface BasicPresginedURL {
+  basicSongPresignedUrl: string;
+  basicSongFilePath: string;
+}

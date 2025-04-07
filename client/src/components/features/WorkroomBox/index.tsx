@@ -17,6 +17,7 @@ function WorkroomBox({ workroom }: Props) {
   const menuRef = useRef<HTMLDivElement | null>(null);
   useOutSideClick(menuRef, () => setIsMenuOpen(false));
   const deleteMutation = useDeleteWorkroom(workroom.studioId);
+  const tracks = Array.from(new Set([...workroom.trackInfo]));
 
   function handleDelete() {
     deleteMutation.mutate();
@@ -47,7 +48,7 @@ function WorkroomBox({ workroom }: Props) {
         </div>
       </div>
       <div className='w-full flex flex-wrap gap-2'>
-        {workroom.trackInfo.map((t) => (
+        {tracks.map((t) => (
           <Tag key={t} label={t} isSelect />
         ))}
       </div>

@@ -6,12 +6,13 @@ import Tag from '@/components/common/Tag';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
+import { TAGS } from '@/constants/tags';
 import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
-import { BaseCompletedSong } from '@/types/workroom';
+import { AISong } from '@/types/song';
 import clsx from 'clsx';
 
 interface Props {
-  song: BaseCompletedSong;
+  song: AISong;
   selected: boolean;
   onSelect: () => void;
 }
@@ -25,7 +26,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
     handleSeek,
     isPlaying,
     isReady,
-  } = useAudioPlayBar(song.songPresignedUrl);
+  } = useAudioPlayBar(song.signedUrl);
 
   return (
     <div
@@ -64,8 +65,20 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
           {/* {song.map((instrument) => (
             <Tag key={instrument.id} label={instrument.label} isSelect />
           ))} */}
-          <Tag label={song.genre} isSelect />
-          <Tag label={song.mood} isSelect />
+          <Tag
+            label={
+              TAGS.genre.find((item) => item.id === song.genre)?.label ??
+              song.genre
+            }
+            isSelect
+          />
+          <Tag
+            label={
+              TAGS.mood.find((item) => item.id === song.mood)?.label ??
+              song.mood
+            }
+            isSelect
+          />
         </div>
         <PlayBar
           currentTime={currentTime}
@@ -77,7 +90,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
       <div className='w-fit h-full flex items-center cursor-pointer hover:scale-110 transition-transform active:scale-95'>
         <IconTrash width={20} height={25} color='#ff2222' />
       </div>
-      <audio ref={audioRef} src={song.songPresignedUrl} />
+      <audio ref={audioRef} src={song.signedUrl} />
     </div>
   );
 }

@@ -68,3 +68,24 @@ export const postChangeInstrument = async (
     throw new Error((err as Error).message);
   }
 };
+
+export const postSaveNonAISong = async (
+  workroomId: string,
+  basicSongFilePath: string,
+  mood: string,
+  genre: string,
+  title: string,
+  instruments: string[]
+): Promise<void> => {
+  try {
+    await client.post(`/song/studios/${workroomId}/basic/save`, {
+      basicSongFilePath,
+      mood,
+      genre,
+      title,
+      instruments,
+    });
+  } catch (err: unknown) {
+    throw new Error((err as Error).message);
+  }
+};

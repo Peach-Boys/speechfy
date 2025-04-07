@@ -24,25 +24,11 @@ function AITab({ selectTag, setSelectTag }: Props) {
   );
   const { mergeWavFiles } = useMergeAudio();
   async function handleCreateAISong() {
-    const mergedAudio = await handleMerge();
-    console.log(mergedAudio);
-    postMutation.mutate();
-  }
-  const handleMerge = async (): Promise<string> => {
     const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
-    try {
-      const wavBuffer = await mergeWavFiles(fileUrls);
-      const blob = new Blob([wavBuffer], { type: 'audio/wav' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'merged.wav';
-      a.click();
-      return url;
-    } catch (error: unknown) {
-      throw new Error((error as Error).message);
-    }
-  };
+    const mergedAudio = await mergeWavFiles(fileUrls);
+    postMutation.mutate({ mergedAudio });
+  }
+
   return (
     <div className='w-full h-full min-h-4/5 max-h-5/6 p-5 flex flex-col items-center gap-3'>
       <div className='text-sm h-fit'>

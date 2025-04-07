@@ -3,14 +3,15 @@ import { initializeMSW } from '@/lib/msw';
 import { getShareSong } from '@/service/apis/Share';
 
 type Props = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-async function PlayerPage({ params }: Props) {
+const PlayerPage = async ({ params }: Props) => {
   await initializeMSW();
-  const songId = Number(params.id);
+  const { id } = await params;
+  const songId = Number(id);
   const data = await getShareSong(songId);
 
   return (
@@ -18,6 +19,6 @@ async function PlayerPage({ params }: Props) {
       <SharePlayer song={data} />
     </>
   );
-}
+};
 
 export default PlayerPage;

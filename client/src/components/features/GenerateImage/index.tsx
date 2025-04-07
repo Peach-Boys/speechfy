@@ -4,12 +4,15 @@ import Input from '@/components/common/Input';
 import IconLightning from '@/components/icons/IconLightning';
 import { useGenerateImage } from '@/service/queries/useGenerateImage';
 import clsx from 'clsx';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
+
 interface Props {
-  selectTag: (string | null)[];
+  title: string;
+  setTitle: React.Dispatch<React.SetStateAction<string>>;
+  selectTags: (string | null)[];
 }
-function GenerateImage({ selectTag }: Props) {
-  const [title, setTitle] = useState<string>('');
+
+function GenerateImage({ title, setTitle, selectTags }: Props) {
   const { mutate, data } = useGenerateImage();
   const [imgSrc, setImgSrc] = useState<string>('');
   useEffect(() => {
@@ -21,8 +24,8 @@ function GenerateImage({ selectTag }: Props) {
     if (title.length > 1) {
       mutate({
         title: title,
-        genre: selectTag[0] || '',
-        mood: selectTag[1] || '',
+        genre: selectTags[0] || '',
+        mood: selectTags[1] || '',
       });
     } else {
       alert('제목을 입력해주세요!');

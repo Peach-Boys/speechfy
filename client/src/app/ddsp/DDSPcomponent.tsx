@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState } from 'react';
-import { useRecord } from '@/hooks/useRecord';
 import { useDDSP } from '@/hooks/useDDSP';
-import MelodyGenerator from './MelodyGenerator';
+import { useRecord } from '@/hooks/useRecord';
+import { useState } from 'react';
 
 export default function DdspPage() {
   // useRecord 훅은 음원 녹음을 위한 훅입니다.
@@ -98,7 +97,6 @@ export default function DdspPage() {
           </div>
         )}
       </section>
-      <MelodyGenerator />
     </div>
   );
 }

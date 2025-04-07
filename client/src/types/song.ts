@@ -30,3 +30,17 @@ export interface IShareSong {
 export interface CreateImageResponse {
   imageUrl: string;
 }
+
+export interface AISong {
+  aiSongId: number;
+  userId: number;
+  studioId: number;
+  viewCount: number;
+  likesCount: number;
+  signedUrl: string;
+  mood: string;
+  genre: string;
+  instruments: string[];
+  name: string;
+  isAIUsed: boolean;
+}

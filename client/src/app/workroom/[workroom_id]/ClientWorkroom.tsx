@@ -45,7 +45,7 @@ function ClientWorkroom() {
     <div className='w-full h-full flex flex-col'>
       <WorkroomTabs tab={tab} setTab={setTab} />
       <div className='w-full flex justify-center text-2xl h-fit'>
-        {workroom_id}
+        {data?.studioName}
       </div>
       <div className='relative w-full h-full'>
         <div className={tab === 'work' ? 'block' : 'hidden'}>
@@ -55,7 +55,10 @@ function ClientWorkroom() {
           <AITab selectTag={selectTag} setSelectTag={setSelectTag} />
         </div>
         <div className={tab === 'complete' ? 'block' : 'hidden'}>
-          <CompleteTab selectTag={selectTag} />
+          <CompleteTab
+            workroomId={workroom_id as string}
+            selectTags={selectTag}
+          />
         </div>
       </div>
     </div>
