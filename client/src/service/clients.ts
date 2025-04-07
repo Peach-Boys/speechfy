@@ -31,7 +31,7 @@ function subscribeTokenRefresh(cb: () => void): void {
 
 // GET /refresh 요청을 통해 토큰을 갱신
 function refreshToken(): Promise<AxiosResponse> {
-  return client.get(`/refresh`, {
+  return axios.get(`/refresh`, {
     withCredentials: true,
   });
 }
