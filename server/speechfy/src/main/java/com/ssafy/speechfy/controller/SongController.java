@@ -1,27 +1,25 @@
 package com.ssafy.speechfy.controller;
 
+import com.ssafy.speechfy.oauth.SecurityUtil;
+import lombok.RequiredArgsConstructor;
 import com.ssafy.speechfy.dto.song.*;
 import com.ssafy.speechfy.dto.work.track.TrackListRequestDto;
 import com.ssafy.speechfy.oauth.SecurityUtil;
-import com.ssafy.speechfy.service.MusicGenService;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.SongService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import java.net.MalformedURLException;
 import java.util.List;
 
-@RestController
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/api/song")
 public class SongController {
     private final SongService songService;
-    private final S3Service s3Service;
-    private final MusicGenService musicGenService;
 
     private Integer getCurrentUserId() {
         return SecurityUtil.getCurrentUserId();
@@ -87,15 +85,23 @@ public class SongController {
         return ResponseEntity.ok(dto);
     }
 
-    // basicSong 저장
-    // presignedUrl 생성 및 반환
+    // basicSong 저장할 presignedUrl 생성 및 반환
     @GetMapping("/basic/presignedUrl")
-    public ResponseEntity<BasicSongPresignedUrlResponseDto> getPresignedUrl() {
+    public ResponseEntity<BasicSongPresignedUrlResponseDto> getBasicSongPresignedUrl() {
         Integer userId = getCurrentUserId();
         BasicSongPresignedUrlResponseDto basicSongPresignedUrlResponse = songService.generateBasicSongPresignedUrl(userId);
         return ResponseEntity.ok(basicSongPresignedUrlResponse);
     }
 
+    // aiSong 저장할 presignedUrl 생성 및 반환
+    @GetMapping("/ai/presignedUrl")
+    public ResponseEntity<AISongPresignedUrlResponseDto> getAISongPresignedUrl() {
+        Integer userId = getCurrentUserId();
+        AISongPresignedUrlResponseDto aiSongPresignedUrlResponse = songService.generateAISongPresignedUrl(userId);
+        return ResponseEntity.ok(aiSongPresignedUrlResponse);
+    }
+
+    // S3에 저장한 곡을 DB에도 저장
     @PostMapping("/studios/{studioId}/basic/save")
     public ResponseEntity<BasicSongRegisterResponseDto> registerBasicSong(
             @PathVariable("studioId") String studioId,
@@ -103,6 +109,33 @@ public class SongController {
         Integer userId = getCurrentUserId();
         BasicSongRegisterResponseDto basicSongRegisterResponse = songService.registerBasicSong(userId, Integer.parseInt(studioId), requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(basicSongRegisterResponse);
+    }
+
+    // S3에 저장한 곡을 DB에도 저장
+    @PostMapping("/studios/{studioId}/ai/save")
+    public ResponseEntity<AISongRegisterResponseDto> registerAISong(
+            @PathVariable("studioId") String studioId,
+            @CookieValue(name = "userId") Integer userId,
+            @RequestBody AISongRegisterRequestDto requestDto) {
+        AISongRegisterResponseDto aiSongRegisterResponse = songService.registerAISong(userId, Integer.parseInt(studioId), requestDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(aiSongRegisterResponse);
+    }
+
+    @PostMapping("/studios/{studioId}/ai")
+    public ResponseEntity<String> composeSong(@RequestBody AISongCreateDto createDto,
+                                              @CookieValue(name = "userId") Integer userId) {
+        try {
+            songService.requestSongComposition(userId, createDto.getBasicSongId());
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        }
+
+        // requestSongComposition() 안에서 아무리 시간이 오래 걸리는 작업이 있어도
+        // 그 작업을 새 쓰레드(비동기)로 넘기기만 하면
+        // 메인 쓰레드는 즉시 다음 줄(return ResponseEntity)을 실행
+        return ResponseEntity
+                .status(HttpStatus.ACCEPTED)
+                .body("변환 요청이 접수되었습니다.");
     }
 
     @GetMapping("/share/{songId}")

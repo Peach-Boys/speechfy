@@ -1,5 +1,7 @@
 package com.ssafy.speechfy.dto.song;
 
+import com.ssafy.speechfy.enums.GenreType;
+import com.ssafy.speechfy.enums.MoodType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,9 +19,9 @@ public class BasicSongRegisterResponseDto {
     private Integer studioId;
     private Integer viewCount;
     private Integer likesCount;
-    private String mood;
-    private String genre;
-    private String title;
-    private boolean AIUsed;
+    private MoodType mood;
+    private GenreType genre;
+    private String name;
+    private boolean isAIUsed;
     private List<String> instruments;
 }
