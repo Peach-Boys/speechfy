@@ -1,4 +1,4 @@
-package com.ssafy.speechfy.controller;
+package com.ssafy.speechfy.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,7 +18,7 @@ import java.util.NoSuchElementException;
 
 @Slf4j
 @RestControllerAdvice
-public class WebExceptionHandler {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
