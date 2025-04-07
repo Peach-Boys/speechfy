@@ -29,7 +29,7 @@ function Track({ track, isAllPlay }: Props) {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [instrument, setInstrument] = useState<string>(track.instrumentName);
   const [endTime, setEndTime] = useState<number>(0);
-  const { initialized, toneTransfer, loading } = useDDSP();
+  const { initialized, toneTransfer } = useDDSP();
   const { mutate: uploadTrack } = useTransferTrack();
   useOutSideClick(menuRef, () => setIsMenuOpen(false));
   useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
