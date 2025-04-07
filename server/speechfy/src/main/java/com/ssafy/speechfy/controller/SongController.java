@@ -84,7 +84,7 @@ public class SongController {
         return ResponseEntity.ok(basicSongPresignedUrlResponse);
     }
 
-    @PostMapping("/studios/{studioId}/basic")
+    @PostMapping("/studios/{studioId}/basic/save")
     public ResponseEntity<BasicSongRegisterResponseDto> registerBasicSong(
             @PathVariable("studioId") String studioId,
             @RequestBody BasicSongRegisterRequestDto requestDto) {
