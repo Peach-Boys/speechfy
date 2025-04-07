@@ -17,8 +17,8 @@ spring:
         public: ${OAUTH2_JWT_PUBLIC_KEY_PATH}
       client:
         jwt:
-          access-token-time: 15
-          refresh-token-time: 300000
+          access-token-time: 100000
+          refresh-token-time: 7200
         provider:
           kakao:
             authorization-uri: https://kauth.kakao.com/oauth/authorize
