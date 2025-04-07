@@ -16,4 +16,6 @@ public interface SongRepository extends JpaRepository<Song, Integer> {
     Page<Song> findPageByStudio(@Param("studio") Studio studio, Pageable pageable);
     void deleteById(int id);
     List<Song> findByStudioId(int studioId);
+
+    Page<Song> findPageByStudioAndIsAIUsedTrue(@Param("studio") Studio studio, Pageable pageable);
 }

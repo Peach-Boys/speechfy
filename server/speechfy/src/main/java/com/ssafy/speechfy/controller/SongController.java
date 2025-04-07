@@ -45,6 +45,16 @@ public class SongController {
         return ResponseEntity.ok(songListResponseDto);
     }
 
+    // 스튜디오의 모든 완성곡 리스트 반환
+    @GetMapping("/ai/{studioId}")
+    public ResponseEntity<SongListResponseDto> getStudioAISongList(@PathVariable Integer studioId) {
+        Integer userId = getCurrentUserId();
+        Pageable pageable = PageRequest.of(0, 3);
+        SongListResponseDto songListResponseDto = songService.getStudioAISongs(studioId);
+
+        return ResponseEntity.ok(songListResponseDto);
+    }
+
     // 완성곡 변환 저장
     @PostMapping("/{studioId}")
     public ResponseEntity<?> createSongList(@PathVariable Integer studioId, @RequestBody SongRequestDto songRequestDto) {
