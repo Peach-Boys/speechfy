@@ -1,6 +1,6 @@
 package com.ssafy.speechfy.service;
 
-import com.ssafy.speechfy.controller.WebExceptionHandler;
+import com.ssafy.speechfy.exception.GlobalExceptionHandler;
 import com.ssafy.speechfy.dto.work.studio.StudioResponseDto;
 import com.ssafy.speechfy.dto.work.track.*;
 import com.ssafy.speechfy.dto.work.studio.StudioSimpleDto;
@@ -127,7 +127,7 @@ public class WorkService {
                 .orElseThrow(() -> new NoSuchElementException("Studio not found"));
         Integer userId = getCurrentUserId();
         if(studio.getUser().getId() != userId){
-            throw new WebExceptionHandler.UnauthorizedAccessException("잘못된 접근입니다: 해당 스튜디오는 사용자의 것이 아닙니다.");
+            throw new GlobalExceptionHandler.UnauthorizedAccessException("잘못된 접근입니다: 해당 스튜디오는 사용자의 것이 아닙니다.");
         }
         List<Track> trackList = trackReposiotry.findByStudio(studio);
         for (Track track : trackList) deleteTrack(track.getId());

@@ -136,6 +136,46 @@ public class SongService {
                 .build();
     }
 
+    // 스튜디오내 모든 AI 송 반환
+    public SongListResponseDto getStudioAISongs(Integer studioId) {
+        Pageable pageable = PageRequest.of(0, 100);
+
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new NoSuchElementException("User not found"));
+//        Page<Song> songList = songRepository.findPageByUser(user, pageable);
+        Studio studio = studioRepository.findById(studioId)
+                .orElseThrow(() -> new EntityNotFoundException("Studio not found with id: " + studioId));
+
+        Page<Song> songList = songRepository.findPageByStudioAndIsAIUsedTrue(studio, pageable);
+
+        List<SongResponseDto> songResponseDtoList = songList.getContent().stream().map(song -> {
+            URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
+            URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
+
+
+            return SongResponseDto.builder()
+                    .songId(song.getId())
+                    .title(song.getName())
+                    .AIUsed(song.getIsAIUsed())
+                    .userId(song.getUser().getId())
+                    .songPresignedUrl(songCloudFrontUrl.toString())
+                    .viewCount(song.getViewCount())
+                    .likesCount(song.getLikesCount())
+                    .imagePresignedUrl(imageCloudFrontUrl.toString())
+                    .genre(song.getGenreType().toString())
+                    .mood(song.getMoodType().toString())
+                    .instruments(song.getInstruments()
+                            .stream()
+                            .map(Enum::toString)
+                            .collect(Collectors.toList()))
+                    .build();
+        }).collect(Collectors.toList());
+
+        return SongListResponseDto.builder()
+                .songList(songResponseDtoList)
+                .build();
+    }
+
     /**
      * id 기반 완성곡 반환
      */
