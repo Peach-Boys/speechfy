@@ -9,6 +9,30 @@ const nextConfig: NextConfig = {
       },
     },
   },
+  async redirects() {
+    return [
+      {
+        source: '/my',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/workroom/:path*',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/error',
+        destination: '/',
+        permanent: true,
+      },
+      {
+        source: '/create',
+        destination: '/',
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;
