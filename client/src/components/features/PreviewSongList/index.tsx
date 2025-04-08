@@ -4,20 +4,19 @@ import Spinner from '@/components/common/Spinner';
 import PreviewSongItem from '@/components/features/PreviewSongList/PreviewSongItem';
 import { useGetPreviewSongList } from '@/service/queries/useGetPreviewSongList';
 import { useSelectSongStore } from '@/stores/selectSongStore';
-import { AISong } from '@/types/song';
+import { usePreviewStore } from '@/stores/usePreviewStore';
 import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 
 function PreviewSongList() {
   const { workroom_id } = useParams();
   const { selectSong, setSelectSong } = useSelectSongStore();
-  const [previewSongs, setPreviewSongs] = useState<AISong[]>();
+  const { previewSongList, setPreviewSongList } = usePreviewStore();
   const { data, isLoading } = useGetPreviewSongList(workroom_id as string);
 
   useEffect(() => {
     if (data) {
-      console.log('data:', data);
-      setPreviewSongs(data);
+      setPreviewSongList(data);
     }
   }, [data]);
 
@@ -31,8 +30,8 @@ function PreviewSongList() {
       </div>
 
       <div className='w-full max-h-[300px] overflow-y-auto flex flex-col gap-2 scrollbar-thin scrollbar-thumb-gray-500'>
-        {previewSongs ? (
-          previewSongs.map((song) => (
+        {previewSongList ? (
+          previewSongList.map((song) => (
             <PreviewSongItem
               key={song.aiSongId}
               song={song}
