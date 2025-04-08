@@ -78,14 +78,18 @@ public class userController {
     @PostMapping("/logout")
     public ResponseEntity<?> logout(HttpServletResponse response) {
         Cookie accessTokenCookie = new Cookie("speechfyAccessToken", null);
-        accessTokenCookie.setPath("/");
+        accessTokenCookie.setMaxAge(0);
         accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setMaxAge(0);  // 쿠키 삭제
+        accessTokenCookie.setPath("/");
+        accessTokenCookie.setSecure(true);
+        accessTokenCookie.setAttribute("SameSite", "None");
 
         Cookie refreshTokenCookie = new Cookie("speechfyRefreshToken", null);
-        refreshTokenCookie.setPath("/");
+        refreshTokenCookie.setMaxAge(0);
         refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setMaxAge(0);  // 쿠키 삭제
+        refreshTokenCookie.setPath("/api/refresh");
+        refreshTokenCookie.setSecure(true);
+        refreshTokenCookie.setAttribute("SameSite", "None");
 
         response.addCookie(accessTokenCookie);
         response.addCookie(refreshTokenCookie);
