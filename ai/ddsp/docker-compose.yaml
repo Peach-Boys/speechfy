@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  ddsp_guitar:
+    image: ddsp_api:latest
+    container_name: ddsp_guitar
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    ports:
+      - "8888:8888"
+      - "3000:3000"
+    volumes:
+      - C:/Users/SSAFY/Desktop/develop/S12P21B105/ai/ddsp/pretrained/guitar:/tf/app/pretrained/
+
+
+  # model_violin:
+  #   image: ddsp_api:latest
+  #   container_name: model_violin
+  #   command: uvicorn app.main:app --host 0.0.0.0 --port 8002
+  #   ports:
+  #     - "8002:8002"
+  #   volumes:
+  #     # 호스트의 체크포인트 디렉토리(예: violin 체크포인트)를 컨테이너 내 /tf/pretrained 로 마운트합니다.
+  #     - /path/to/violin/checkpoint:/tf/pretrained
+  #   environment:
+  #     - INSTRUMENT=violin
