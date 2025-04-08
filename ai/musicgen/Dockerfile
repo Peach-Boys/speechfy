@@ -10,7 +10,7 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # 4. 앱 코드 복사
-COPY app.py .
+COPY . .
 
 # 5. 포트 개방
 EXPOSE 8000
