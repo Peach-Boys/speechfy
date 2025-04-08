@@ -1,5 +1,5 @@
 import { client } from '@/service/clients';
-import { IPreviewSong } from '@/service/types/MusicGen';
+import { IBasicResponse, IPreviewSong } from '@/service/types/MusicGen';
 import { BasicPresginedURL } from '@/service/types/Upload';
 import { AISong, CreateImageResponse } from '@/types/song';
 
@@ -17,9 +17,21 @@ export const getPreviewSongList = async (
 export const postPreviewSong = async (
   workroomId: string,
   songs: IPreviewSong
-): Promise<void> => {
+): Promise<IBasicResponse> => {
   try {
-    await client.post(`song/studios/${workroomId}/basic/save`, songs);
+    const res = await client.post(
+      `song/studios/${workroomId}/basic/save`,
+      songs
+    );
+    return res.data;
+  } catch (err: unknown) {
+    throw new Error((err as Error).message);
+  }
+};
+
+export const postAIRequest = async (workroomId: string, songId: string) => {
+  try {
+    await client.post(`song/studios/${workroomId}/ai`, songId);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }

@@ -28,3 +28,15 @@ export interface AISong {
 export interface AISongList {
   songList: AISong[];
 }
+
+export interface IBasicResponse {
+  basicSongId: string;
+  userId: string;
+  studioId: string;
+  viewCount: number;
+  likesCount: number;
+  mood: string;
+  genre: string;
+  name: string;
+  isAIUsed: boolean;
+}

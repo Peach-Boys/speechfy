@@ -1,4 +1,8 @@
-import { getBasicPresginedUrl, postPreviewSong } from '@/service/apis/MusicGen';
+import {
+  getBasicPresginedUrl,
+  postAIRequest,
+  postPreviewSong,
+} from '@/service/apis/MusicGen';
 import { putUploadTrack } from '@/service/apis/Upload';
 import { IPreviewSong } from '@/service/types/MusicGen';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -30,7 +34,12 @@ export const usePostPreviewSong = (workroomId: string) => {
         instruments: [],
       };
 
-      return postPreviewSong(workroomId, song);
+      try {
+        const songResponse = await postPreviewSong(workroomId, song);
+        await postAIRequest(workroomId, songResponse.basicSongId);
+      } catch (err: unknown) {
+        throw new Error((err as Error).message);
+      }
     },
     onSuccess: () => {
       alert('노래가 완성되면 알려드릴게요!');
