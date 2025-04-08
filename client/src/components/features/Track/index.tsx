@@ -2,6 +2,7 @@
 
 import Box from '@/components/common/Box';
 import Button from '@/components/common/Button';
+import Modal from '@/components/common/Modal/intex';
 import PlayBar from '@/components/common/PlayBar';
 import InstrumentList from '@/components/features/Track/InstrumentList';
 import TrackMenu from '@/components/features/Track/TrackMenu';
@@ -10,6 +11,7 @@ import IconTripleDots from '@/components/icons/IconTripleDots';
 import { useDDSP } from '@/hooks/useDDSP';
 import useOutSideClick from '@/hooks/useOutSideClick';
 import { useTransferTrack } from '@/hooks/useTransferTrack';
+import { useDeleteTrack } from '@/service/queries/useDeleteTrack';
 import { ITrack } from '@/types/track';
 import { useParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -20,25 +22,29 @@ interface Props {
 }
 
 function Track({ track, isAllPlay }: Props) {
+  const { workroom_id: workroomId } = useParams();
   const [isPlay, setIsPlay] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isSelInstOpen, setIsSelInstOpen] = useState<boolean>(false);
-  const menuRef = useRef<HTMLDivElement | null>(null);
-  const selectInstRef = useRef<HTMLDivElement | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [instrument, setInstrument] = useState<string>(track.instrumentName);
   const [endTime, setEndTime] = useState<number>(0);
+  const menuRef = useRef<HTMLDivElement | null>(null);
+  const selectInstRef = useRef<HTMLDivElement | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
   const { initialized, toneTransfer } = useDDSP();
   const { mutate: uploadTrack } = useTransferTrack();
+  const { mutate: deleteTrack } = useDeleteTrack(track.trackId);
+
   useOutSideClick(menuRef, () => setIsMenuOpen(false));
   useOutSideClick(selectInstRef, () => setIsSelInstOpen(false));
-  const { workroom_id: workroomId } = useParams();
+
   useEffect(() => {
     if (track.instrumentName === instrument) return;
     if (!audioRef.current) return;
     if (!initialized) return;
-    console.log(track);
 
     async function transTrack() {
       const url = await toneTransfer(instrument, track.trackUrl);
@@ -65,6 +71,10 @@ function Track({ track, isAllPlay }: Props) {
       audioRef.current.pause();
       setIsPlay(false);
     }
+  }
+
+  function handleDelete() {
+    deleteTrack();
   }
 
   function handleOpenMenu() {
@@ -109,53 +119,72 @@ function Track({ track, isAllPlay }: Props) {
     }
   }, [currentTime, endTime]);
   return (
-    <Box borderStyle='solid'>
-      <div className='w-full flex flex-col gap-5'>
-        <div className='w-full flex justify-between items-center'>
-          <div className='flex items-center gap-2'>
-            <IconDoubleCircle color='#ffffff' />
-            <span>{track.instrumentName}</span>
+    <>
+      <Box borderStyle='solid'>
+        <div className='w-full flex flex-col gap-5'>
+          <div className='w-full flex justify-between items-center'>
+            <div className='flex items-center gap-2'>
+              <IconDoubleCircle color='#ffffff' />
+              <span>{track.instrumentName}</span>
+            </div>
+            <div
+              className='relative w-auto py-2 cursor-pointer'
+              onClick={handleOpenMenu}
+            >
+              <IconTripleDots color='#ffffff' />
+              {isMenuOpen && (
+                <div ref={menuRef} className='absolute z-10 top-0 right-0'>
+                  <TrackMenu
+                    order={track.order}
+                    setIsModalOpen={setIsModalOpen}
+                  />
+                </div>
+              )}
+            </div>
           </div>
-          <div
-            className='relative w-auto py-2 cursor-pointer'
-            onClick={handleOpenMenu}
-          >
-            <IconTripleDots color='#ffffff' />
-            {isMenuOpen && (
-              <div ref={menuRef} className='absolute z-10 top-0 right-0'>
-                <TrackMenu trackId={track.trackId} order={track.order} />
-              </div>
-            )}
+          <div className='flex gap-4'>
+            <div className='relative w-full'>
+              <Button onClick={handleOpenSelInst}>악기 선택</Button>
+              {isSelInstOpen && (
+                <div
+                  ref={selectInstRef}
+                  className='absolute z-10 pt-1 overflow-hidden'
+                >
+                  <InstrumentList
+                    instrument={instrument}
+                    setInstrument={setInstrument}
+                  />
+                </div>
+              )}
+            </div>
+            <Button
+              onClick={handlePlayTrack}
+              buttonStyle='bg-jihyegra text-white'
+            >
+              {!isPlay ? '재생' : '일시정지'}
+            </Button>
           </div>
-        </div>
-        <div className='flex gap-4'>
-          <div className='relative w-full'>
-            <Button onClick={handleOpenSelInst}>악기 선택</Button>
-            {isSelInstOpen && (
-              <div
-                ref={selectInstRef}
-                className='absolute z-10 pt-1 overflow-hidden'
-              >
-                <InstrumentList
-                  instrument={instrument}
-                  setInstrument={setInstrument}
-                />
-              </div>
-            )}
-          </div>
-          <Button
-            onClick={handlePlayTrack}
-            buttonStyle='bg-jihyegra text-white'
-          >
-            {!isPlay ? '재생' : '일시정지'}
-          </Button>
-        </div>
 
-        {/* <WavePlay isPlay={isPlay} /> */}
-        <PlayBar currentTime={currentTime} endTime={endTime} />
-      </div>
-      <audio ref={audioRef} src={track.trackUrl} />
-    </Box>
+          {/* <WavePlay isPlay={isPlay} /> */}
+          <PlayBar currentTime={currentTime} endTime={endTime} />
+        </div>
+        <audio ref={audioRef} src={track.trackUrl} />
+      </Box>
+      <Modal label='현재 선택한 트랙을 삭제하시겠습니까?' isOpen={isModalOpen}>
+        <button
+          className='w-full py-3 bg-gray-400 rounded-[10px] cursor-pointer'
+          onClick={() => setIsModalOpen(false)}
+        >
+          취소
+        </button>
+        <button
+          className='w-full py-3 bg-red-400 rounded-[10px] cursor-pointer'
+          onClick={handleDelete}
+        >
+          삭제
+        </button>
+      </Modal>
+    </>
   );
 }
 

@@ -1,5 +1,6 @@
 'use client';
 
+import { logout } from '@/service/apis/Login';
 import { useEffect, useMemo, useState } from 'react';
 
 function Hamburger() {
@@ -28,6 +29,10 @@ function Hamburger() {
   }, []);
 
   if (!mounted) return null;
+
+  async function handleLogout() {
+    await logout();
+  }
 
   return (
     <div className=''>
@@ -75,9 +80,12 @@ function Hamburger() {
               <a href='/my' className='block text-gray-200 hover:text-white'>
                 마이페이지
               </a>
-              <a href='#' className='block text-gray-200 hover:text-white'>
+              <button
+                onClick={handleLogout}
+                className='block text-gray-200 hover:text-white'
+              >
                 로그아웃
-              </a>
+              </button>
             </>
           ) : (
             <button

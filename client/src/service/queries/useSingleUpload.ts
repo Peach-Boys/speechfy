@@ -2,6 +2,7 @@ import { getBasicPresginedUrl } from '@/service/apis/MusicGen';
 import { putUploadTrack } from '@/service/apis/Upload';
 import { postSaveNonAISong } from '@/service/apis/Workspace';
 import { useMutation } from '@tanstack/react-query';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   workroomId: string;
@@ -14,6 +15,7 @@ interface Props {
 }
 
 export const useSingleUpload = () => {
+  const router = useRouter();
   return useMutation({
     mutationFn: async ({
       workroomId,
@@ -44,6 +46,9 @@ export const useSingleUpload = () => {
         title,
         instruments
       );
+    },
+    onSuccess: () => {
+      router.push('/my');
     },
   });
 };

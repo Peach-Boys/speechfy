@@ -8,3 +8,11 @@ export async function login(code: string): Promise<void> {
     throw new Error((err as Error).message);
   }
 }
+
+export async function logout(): Promise<void> {
+  try {
+    await client.post('/logout');
+  } catch (err: unknown) {
+    throw new Error((err as Error).message);
+  }
+}
