@@ -21,11 +21,11 @@ public class AIWebSocketHandler extends TextWebSocketHandler {
 
     /**
      * 클라이언트가 WebSocket 연결을 맺을 때 호출됨
-     * userId를 쿼리파라미터로 받아 세션에 저장
+     * userId를 시큐리티를 통해 받아 세션에 저장
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        // 예: ws://localhost:8080/ws/ai?userId=123
+        // 예: ws://localhost:8080/ws/ai
         Integer userId = SecurityUtil.getCurrentUserId();
 
         if (userId != null) {
