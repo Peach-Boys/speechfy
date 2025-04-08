@@ -12,22 +12,12 @@ const nextConfig: NextConfig = {
   async redirects() {
     return [
       {
-        source: '/my',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/workroom/:path*',
+        source: '/login',
         destination: '/',
         permanent: true,
       },
       {
         source: '/error',
-        destination: '/',
-        permanent: true,
-      },
-      {
-        source: '/create',
         destination: '/',
         permanent: true,
       },
