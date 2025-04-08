@@ -31,7 +31,7 @@ export const postPreviewSong = async (
 
 export const postAIRequest = async (workroomId: string, songId: string) => {
   try {
-    await client.post(`song/studios/${workroomId}/ai`, songId);
+    await client.post(`song/studios/${workroomId}/ai`, { songId });
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }
