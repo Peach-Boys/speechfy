@@ -19,7 +19,7 @@ export const postPreviewSong = async (
   songs: IPreviewSong
 ): Promise<void> => {
   try {
-    await client.post(`/song/${workroomId}`, songs);
+    await client.post(`song/studios/${workroomId}/basic/save`, songs);
   } catch (err: unknown) {
     throw new Error((err as Error).message);
   }

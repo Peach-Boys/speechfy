@@ -22,12 +22,16 @@ function AITab({ selectTag, setSelectTag }: Props) {
 
   async function handleCreateAISong() {
     const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
+    const instruments: string[] = tracks.map(
+      (tracks: ITrack) => tracks.instrumentName
+    );
 
     const mergedAudio = await mergeWavFiles(fileUrls);
     postMutation.mutate({
       mergedAudio,
       genre: selectTag[0]!,
       mood: selectTag[1]!,
+      instruments,
     });
   }
 

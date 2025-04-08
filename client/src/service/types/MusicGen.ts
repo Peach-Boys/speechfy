@@ -8,6 +8,7 @@ export interface IPreviewSong {
   mood: string;
   genre: string;
   name: string;
+  instruments: string[];
 }
 
 export interface AISong {

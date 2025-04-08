@@ -7,6 +7,7 @@ interface Props {
   mergedAudio: ArrayBuffer;
   genre: string;
   mood: string;
+  instruments: string[];
 }
 
 export const usePostPreviewSong = (workroomId: string) => {
@@ -26,12 +27,13 @@ export const usePostPreviewSong = (workroomId: string) => {
         genre: genre,
         mood: mood,
         name: '',
+        instruments: [],
       };
 
       return postPreviewSong(workroomId, song);
     },
     onSuccess: () => {
-      alert('노래가 추가되었습니다.');
+      alert('노래가 완성되면 알려드릴게요!');
       queryClient.invalidateQueries({
         queryKey: ['previewSongList', workroomId],
       });
