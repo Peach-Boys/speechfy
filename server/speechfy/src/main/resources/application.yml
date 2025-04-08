@@ -51,7 +51,7 @@ logging:
     org.hibernate.SQL: debug
     #    org.hibernate.type: trace
     org.springframework.security: debug
-    com.ssafy.wevi: debug
+    com.ssafy.speechfy: debug
 
 openai:
   api:
