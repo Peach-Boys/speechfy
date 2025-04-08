@@ -1,6 +1,7 @@
 package com.ssafy.speechfy.websocket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.speechfy.oauth.SecurityUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
@@ -25,9 +26,7 @@ public class AIWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 예: ws://localhost:8080/ws/ai?userId=123
-        // 쿼리에서 빼고 쿠키에서 JWT 읽어와서 decode해서 userId 뽑기
-        String query = session.getUri().getQuery(); // userId=123
-        Integer userId = extractUserIdFromQuery(query);
+        Integer userId = SecurityUtil.getCurrentUserId();
 
         if (userId != null) {
             userSessions.put(userId, session);
@@ -70,24 +69,5 @@ public class AIWebSocketHandler extends TextWebSocketHandler {
         } else {
             log.warn("userId={} 의 WebSocket 세션이 없음", userId);
         }
-    }
-
-    /**
-     * 쿼리에서 userId 파싱
-     */
-    private Integer extractUserIdFromQuery(String query) {
-        if (query == null) return null;
-
-        for (String param : query.split("&")) {
-            String[] keyValue = param.split("=");
-            if (keyValue.length == 2 && keyValue[0].equals("userId")) {
-                try {
-                    return Integer.parseInt(keyValue[1]);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-        }
-        return null;
     }
 }
