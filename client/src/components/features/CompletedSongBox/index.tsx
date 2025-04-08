@@ -1,3 +1,5 @@
+'use client';
+
 import Menu from '@/components/common/Menu';
 import Modal from '@/components/common/Modal/intex';
 import PlayBar from '@/components/common/PlayBar';
