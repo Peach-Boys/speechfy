@@ -1,14 +1,12 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { logout } from '@/service/apis/Login';
+import { useEffect, useRef, useState } from 'react';
 
 function Hamburger() {
   const [open, setOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
-  const isLogined = useMemo(
-    () => document.cookie.includes('speechfyAccessToken'),
-    [document.cookie]
-  );
+  const isLogined = useRef(false);
 
   function handleLogin() {
     kakaoLogin();
@@ -25,9 +23,14 @@ function Hamburger() {
   }
   useEffect(() => {
     setMounted(true);
+    isLogined.current = document.cookie.includes('speechfyAccessToken');
   }, []);
 
   if (!mounted) return null;
+
+  async function handleLogout() {
+    await logout();
+  }
 
   return (
     <div className=''>
@@ -75,9 +78,12 @@ function Hamburger() {
               <a href='/my' className='block text-gray-200 hover:text-white'>
                 마이페이지
               </a>
-              <a href='#' className='block text-gray-200 hover:text-white'>
+              <button
+                onClick={handleLogout}
+                className='block text-gray-200 hover:text-white'
+              >
                 로그아웃
-              </a>
+              </button>
             </>
           ) : (
             <button

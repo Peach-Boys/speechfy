@@ -1,4 +1,5 @@
 import Menu from '@/components/common/Menu';
+import Modal from '@/components/common/Modal/intex';
 import PlayBar from '@/components/common/PlayBar';
 import Tag from '@/components/common/Tag';
 import IconTripleDots from '@/components/icons/IconTripleDots';
@@ -23,6 +24,7 @@ function CompletedSongBox({ song }: Props) {
     isReady,
   } = useAudioPlayBar(song.songPresignedUrl);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLDivElement | null>(null);
   useOutSideClick(menuRef, () => setIsMenuOpen(false));
   const deleteMutation = useDeleteCompletedSong(song.songId);
@@ -31,12 +33,13 @@ function CompletedSongBox({ song }: Props) {
     deleteMutation.mutate();
   }
 
+  const NEXT_PUBLIC_BASE = process.env.NEXT_PUBLIC_BASE;
   async function handleShare() {
     try {
       await navigator.share({
         title: document.title,
         text: song.title,
-        url: song.songPresignedUrl,
+        url: `${NEXT_PUBLIC_BASE}/player/${song.songId}`,
       });
     } catch (err) {
       console.error('err:', err);
@@ -61,63 +64,99 @@ function CompletedSongBox({ song }: Props) {
     }
   }
 
+  function isInvalidImageUrl(url?: string): boolean {
+    if (!url) return true;
+
+    try {
+      const parsed = new URL(url);
+      const lastSegment = parsed.pathname.split('/').pop(); // 마지막 path
+      return !lastSegment || lastSegment === 'null';
+    } catch (e) {
+      console.error(e);
+      return true;
+    }
+  }
+
+  const imageUrl = isInvalidImageUrl(song.imagePresignedUrl)
+    ? '/images/defaultImage.png'
+    : song.imagePresignedUrl;
+
   return (
-    <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
-      <div className='w-full flex gap-4'>
-        <img
-          src={song.imagePresignedUrl ?? '/images/defaultImage.png'}
-          alt='음악 이미지'
-          className='w-10 h-10 rounded-[10px]'
-        />
-        <div className='w-full'>
-          <div>{song.title}</div>
-          <div>{song.createdAt}</div>
+    <>
+      <article className='w-full p-3 flex flex-col gap-4 border-1 rounded-[10px]'>
+        <div className='w-full flex gap-4'>
+          <img
+            src={imageUrl}
+            alt='음악 이미지'
+            className='w-10 h-10 rounded-[10px]'
+          />
+          <div className='w-full'>
+            <div>{song.title}</div>
+            <div>{song.createdAt}</div>
+          </div>
+          <div
+            className='relative h-fit py-1 cursor-pointer'
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+          >
+            <IconTripleDots color='#ffffff' />
+            {isMenuOpen && (
+              <div ref={menuRef} className='absolute z-10 top-3 right-0'>
+                <Menu
+                  items={[
+                    { label: '공유', onClick: () => handleShare() },
+                    { label: '삭제', onClick: () => setIsModalOpen(true) },
+                  ]}
+                />
+              </div>
+            )}
+          </div>
         </div>
-        <div
-          className='relative h-fit py-1 cursor-pointer'
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
-        >
-          <IconTripleDots color='#ffffff' />
-          {isMenuOpen && (
-            <div ref={menuRef} className='absolute z-10 top-3 right-0'>
-              <Menu
-                items={[
-                  { label: '공유', onClick: () => handleShare() },
-                  { label: '삭제', onClick: () => handleDelete() },
-                ]}
-              />
-            </div>
-          )}
+        <div className='w-full flex flex-col gap-5'>
+          <PlayBar
+            currentTime={currentTime}
+            endTime={endTime}
+            isReady={isReady}
+            onSeek={(e) => handleSeek(e)}
+          />
+          <div className='w-full flex flex-wrap gap-2'>
+            <Tag label={song.genre} isSelect />
+            <Tag label={song.mood} isSelect />
+          </div>
         </div>
-      </div>
-      <div className='w-full flex flex-col gap-5'>
-        <PlayBar
-          currentTime={currentTime}
-          endTime={endTime}
-          isReady={isReady}
-          onSeek={(e) => handleSeek(e)}
-        />
-        <div className='w-full flex flex-wrap gap-2'>
-          <Tag label={song.genre} isSelect />
-          <Tag label={song.mood} isSelect />
+        <div className='w-full flex gap-2'>
+          <button
+            className='w-full py-3 bg-gray-200 text-black rounded-[10px] cursor-pointer'
+            onClick={() => handlePlay()}
+          >
+            {isPlaying ? '정지' : '재생'}
+          </button>
+          <button
+            className='w-full py-3 flex justify-center bg-gray-200 text-black rounded-[10px] cursor-pointer'
+            onClick={() => handleDownload()}
+          >
+            다운로드
+          </button>
         </div>
-      </div>
-      <div className='w-full flex gap-2'>
+        <audio ref={audioRef} src={song.songPresignedUrl} />
+      </article>
+      <Modal
+        label='현재 선택한 완성곡을 삭제하시겠습니까?'
+        isOpen={isModalOpen}
+      >
         <button
-          className='w-full py-3 bg-gray-200 text-black rounded-[10px] cursor-pointer'
-          onClick={() => handlePlay()}
+          className='w-full py-3 bg-gray-400 rounded-[10px] cursor-pointer'
+          onClick={() => setIsModalOpen(false)}
         >
-          {isPlaying ? '정지' : '재생'}
+          취소
         </button>
         <button
-          className='w-full py-3 flex justify-center bg-gray-200 text-black rounded-[10px] cursor-pointer'
-          onClick={() => handleDownload()}
+          className='w-full py-3 bg-red-400 rounded-[10px] cursor-pointer'
+          onClick={handleDelete}
         >
-          다운로드
+          삭제
         </button>
-      </div>
-      <audio ref={audioRef} src={song.songPresignedUrl} />
-    </article>
+      </Modal>
+    </>
   );
 }
 
