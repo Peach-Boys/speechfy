@@ -499,7 +499,7 @@ public class SongService {
         // 다른 쓰레드에서 실행 중인 애를 현재 쓰레드에서 실행하도록!
         CompletableFuture.runAsync(() -> {
             webClient.post()
-                    .uri("http://127.0.0.1:8000/api/compose") // FastAPI 포트 확인!
+                    .uri("http://192.168.31.170:8000/api/compose") // FastAPI 포트 확인!
                     .header("Content-Type", "application/json")
                     .bodyValue(payload)
                     .retrieve()
