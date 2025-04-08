@@ -1,11 +1,26 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function Hamburger() {
   const [open, setOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
+  const isLogined = useRef(
+    document.cookie.includes('speechfyAccessToken') ? true : false
+  );
+  function handleLogin() {
+    kakaoLogin();
+  }
+  function kakaoLogin() {
+    const REDIRECT_URI = process.env.NEXT_PUBLIC_KAKAO_REDIRECT;
+    const KAKAO_SECRET = process.env.NEXT_PUBLIC_KAKAO_SECRET;
+    if (!REDIRECT_URI) return;
+    const kakaoAuthUrl = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${KAKAO_SECRET}&redirect_uri=${encodeURIComponent(
+      REDIRECT_URI
+    )}&prompt=login`;
 
+    window.location.href = kakaoAuthUrl;
+  }
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -47,15 +62,29 @@ function Hamburger() {
           </button>
         </div>
         <nav className='p-4 space-y-4'>
-          <a href='/create' className='block text-gray-200 hover:text-white'>
-            작업 하기
-          </a>
-          <a href='/my' className='block text-gray-200 hover:text-white'>
-            마이페이지
-          </a>
-          <a href='#' className='block text-gray-200 hover:text-white'>
-            로그아웃
-          </a>
+          {isLogined.current ? (
+            <>
+              <a
+                href='/create'
+                className='block text-gray-200 hover:text-white'
+              >
+                작업 하기
+              </a>
+              <a href='/my' className='block text-gray-200 hover:text-white'>
+                마이페이지
+              </a>
+              <a href='#' className='block text-gray-200 hover:text-white'>
+                로그아웃
+              </a>
+            </>
+          ) : (
+            <button
+              onClick={handleLogin}
+              className='block text-gray-200 hover:text-white'
+            >
+              로그인
+            </button>
+          )}
         </nav>
       </div>
     </div>
