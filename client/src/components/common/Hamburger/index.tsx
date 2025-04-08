@@ -1,13 +1,15 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 
 function Hamburger() {
   const [open, setOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
-  const isLogined = useRef(
-    document.cookie.includes('speechfyAccessToken') ? true : false
+  const isLogined = useMemo(
+    () => document.cookie.includes('speechfyAccessToken'),
+    [document.cookie]
   );
+
   function handleLogin() {
     kakaoLogin();
   }
@@ -62,7 +64,7 @@ function Hamburger() {
           </button>
         </div>
         <nav className='p-4 space-y-4'>
-          {isLogined.current ? (
+          {isLogined ? (
             <>
               <a
                 href='/create'
