@@ -3,7 +3,6 @@
 import PreviewSongList from '@/components/features/PreviewSongList';
 import TagField from '@/components/features/TagField';
 import useMergeAudio from '@/hooks/useMergeAudio';
-import { DUMMY_ADD_SONG } from '@/service/mocks/dummies/AddSong';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { ITrack } from '@/types/track';
@@ -18,15 +17,18 @@ interface Props {
 function AITab({ selectTag, setSelectTag }: Props) {
   const { workroom_id } = useParams();
   const { tracks } = useWorkRoomStore();
-  const postMutation = usePostPreviewSong(
-    workroom_id as string,
-    DUMMY_ADD_SONG
-  );
+  const postMutation = usePostPreviewSong(workroom_id as string);
   const { mergeWavFiles } = useMergeAudio();
+
   async function handleCreateAISong() {
     const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
+
     const mergedAudio = await mergeWavFiles(fileUrls);
-    postMutation.mutate({ mergedAudio });
+    postMutation.mutate({
+      mergedAudio,
+      genre: selectTag[0]!,
+      mood: selectTag[1]!,
+    });
   }
 
   return (

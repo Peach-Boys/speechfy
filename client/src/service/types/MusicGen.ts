@@ -4,15 +4,10 @@ export type TTag = {
 };
 
 export interface IPreviewSong {
-  songId: number;
-  songSrc: string;
-  instruments: TTag[];
-  gerne: string;
+  basicSongUFilePath: string;
   mood: string;
-}
-
-export interface IPreviewSongList {
-  songList: IPreviewSong[];
+  genre: string;
+  name: string;
 }
 
 export interface AISong {

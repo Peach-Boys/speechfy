@@ -1,4 +1,5 @@
 import { client } from '@/service/clients';
+import { IPreviewSong } from '@/service/types/MusicGen';
 import { BasicPresginedURL } from '@/service/types/Upload';
 import { AISong, CreateImageResponse } from '@/types/song';
 
@@ -15,7 +16,7 @@ export const getPreviewSongList = async (
 
 export const postPreviewSong = async (
   workroomId: string,
-  songs: AISong
+  songs: IPreviewSong
 ): Promise<void> => {
   try {
     await client.post(`/song/${workroomId}`, songs);
