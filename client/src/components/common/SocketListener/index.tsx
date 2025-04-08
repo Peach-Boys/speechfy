@@ -3,7 +3,6 @@
 import useWebSocket from '@/hooks/useWebSocket';
 import { useAuthStore } from '@/stores/useAuthStore';
 import { AISong } from '@/types/song';
-import { useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef } from 'react';
 
 type WebSocketEventMap = {
@@ -14,7 +13,6 @@ function SocketContext() {
   const { isLogin } = useAuthStore();
   const { wsConnection, on, ws } = useWebSocket<WebSocketEventMap>();
   const connected = useRef<boolean>(false);
-  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isLogin && !connected.current) {
@@ -23,9 +21,6 @@ function SocketContext() {
 
       on('AI_COMPOSE_SUCCESS', () => {
         alert('작업이 끝났어요.\n작업실로 가서 만들어진 곡을 만나봐요!');
-        queryClient.invalidateQueries({
-          queryKey: ['previewSongList'],
-        });
       });
     }
 
