@@ -7,8 +7,8 @@ function useWebSocket<T extends WebSocketEventMap>() {
   const listeners = useRef<Partial<{ [K in keyof T]: (data: T[K]) => void }>>(
     {}
   );
-  const { NEXT_PUBLIC_SOCKET_BASE } = process.env;
 
+  const NEXT_PUBLIC_SOCKET_BASE = process.env.NEXT_PUBLIC_SOCKET_BASE;
   function wsConnection() {
     ws.current = new WebSocket(`${NEXT_PUBLIC_SOCKET_BASE}`);
 
