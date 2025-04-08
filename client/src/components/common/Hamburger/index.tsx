@@ -1,15 +1,12 @@
 'use client';
 
 import { logout } from '@/service/apis/Login';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function Hamburger() {
   const [open, setOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
-  const isLogined = useMemo(
-    () => document.cookie.includes('speechfyAccessToken'),
-    [document.cookie]
-  );
+  const isLogined = useRef(false);
 
   function handleLogin() {
     kakaoLogin();
@@ -26,6 +23,7 @@ function Hamburger() {
   }
   useEffect(() => {
     setMounted(true);
+    isLogined.current = document.cookie.includes('speechfyAccessToken');
   }, []);
 
   if (!mounted) return null;
