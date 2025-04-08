@@ -115,16 +115,16 @@ public class SongController {
     @PostMapping("/studios/{studioId}/ai/save")
     public ResponseEntity<AISongRegisterResponseDto> registerAISong(
             @PathVariable("studioId") String studioId,
-            @CookieValue(name = "userId") Integer userId,
             @RequestBody AISongRegisterRequestDto requestDto) {
+        Integer userId = getCurrentUserId();
         AISongRegisterResponseDto aiSongRegisterResponse = songService.registerAISong(userId, Integer.parseInt(studioId), requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(aiSongRegisterResponse);
     }
 
     @PostMapping("/studios/{studioId}/ai")
-    public ResponseEntity<String> composeSong(@RequestBody AISongCreateDto createDto,
-                                              @CookieValue(name = "userId") Integer userId) {
+    public ResponseEntity<String> composeSong(@RequestBody AISongCreateDto createDto) {
         try {
+            Integer userId = getCurrentUserId();
             songService.requestSongComposition(userId, createDto.getBasicSongId());
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
