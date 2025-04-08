@@ -1,17 +1,12 @@
-import SharePlayer from '@/components/features/SharePlayer';
-import { getShareSong } from '@/service/apis/Share';
+import ClientProvider from '@/components/common/ClientProvider';
+import ClientSharePage from './ClientSharePage';
 
-interface Params {
-  params: {
-    id: string;
-  };
+function PlayerPage() {
+  return (
+    <ClientProvider>
+      <ClientSharePage />
+    </ClientProvider>
+  );
 }
-
-const PlayerPage = async ({ params }: Params) => {
-  const songId = Number(params.id);
-  const data = await getShareSong(songId);
-
-  return <SharePlayer song={data} />;
-};
 
 export default PlayerPage;
