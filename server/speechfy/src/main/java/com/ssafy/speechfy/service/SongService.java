@@ -451,22 +451,31 @@ public class SongService {
 
     // 기본곡을 AI를 이용해서 작곡 요청
     public void requestSongComposition(int userId, int basicSongId) throws MalformedURLException {
-        Song basicSong = songRepository.findById(basicSongId)
-                .orElseThrow(() -> new NoSuchElementException("기본곡을 찾을 수 없습니다."));
-        int songUserId = basicSong.getUser().getId();
+        log.info("[AI 작곡 요청 시작] 사용자 ID: {}, 기본곡 ID: {}", userId, basicSongId);
 
-        // 1. 원본 음성 정보 가져오기 (분위기, 장르, 악기 종류)
+        Song basicSong = songRepository.findById(basicSongId)
+                .orElseThrow(() -> {
+                    log.error("기본곡 ID {} 에 해당하는 곡이 존재하지 않습니다.", basicSongId);
+                    return new NoSuchElementException("기본곡을 찾을 수 없습니다.");
+                });
+
+        int songUserId = basicSong.getUser().getId();
         String mood = basicSong.getMoodType().toString();
         String genre = basicSong.getGenreType().toString();
         String name = basicSong.getName();
         Integer studioId = basicSong.getStudio().getId();
         Set<InstrumentType> instruments = basicSong.getInstruments();
 
-        // 2. instruments를 콤마로 연결된 소문자 문자열로 변환
+        log.debug("기본곡 정보 - 이름: {}, 장르: {}, 분위기: {}, 사용자 ID: {}, 스튜디오 ID: {}",
+                name, genre, mood, songUserId, studioId);
+        log.debug("악기 목록: {}", instruments);
+
+        // 악기 문자열 변환
         String instrumentsString = instruments.stream()
                 .map(Enum::toString)
                 .map(String::toLowerCase)
                 .collect(Collectors.joining(", "));
+        log.debug("악기 문자열 (AI 서버 전송용): {}", instrumentsString);
 
         String prompt = String.format(
                 "%s music featuring %s, evoking a sense of %s.",
@@ -474,15 +483,15 @@ public class SongService {
                 instrumentsString,
                 mood.toLowerCase()
         );
+        log.debug("AI Prompt: {}", prompt);
 
-        // 4. 원본 음성 S3 URL 가져오기
-        String basicSongFilePath = basicSong.getFilePath(); // ex) "songs/user123/abc.wav"
-
-        // 5. CloudFront signed URL 생성
+        String basicSongFilePath = basicSong.getFilePath();
         URL signedUrl = s3Service.getCloudFrontUrl(basicSongFilePath);
 
+        log.debug("S3 File Path: {}", basicSongFilePath);
+        log.debug("Signed URL: {}", signedUrl);
 
-        // 6. AI 서버 요청 payload 생성
+        // payload 구성
         Map<String, Object> payload = Map.of(
                 "userId", userId,
                 "studioId", studioId,
@@ -493,20 +502,20 @@ public class SongService {
                 "name", name,
                 "prompt", prompt
         );
+        log.debug("최종 Payload: {}", payload);
 
-        // 6. 비동기로 AI 서버 호출
-        // 로직이 변경돼서 시간되면 AI서버에서 202오면 얘도 202 반환하도록 하게 수정하기
-        // 다른 쓰레드에서 실행 중인 애를 현재 쓰레드에서 실행하도록!
+        // AI 서버 비동기 요청
         CompletableFuture.runAsync(() -> {
+            log.info("AI 서버로 비동기 요청 시작");
             webClient.post()
-                    .uri("http://192.168.31.170:8000/api/compose") // FastAPI 포트 확인!
+                    .uri("http://192.168.31.170:8000/api/compose")
                     .header("Content-Type", "application/json")
                     .bodyValue(payload)
                     .retrieve()
                     .toBodilessEntity()
                     .doOnSuccess(res -> log.info("AI 서버 요청 성공"))
                     .doOnError(e -> log.error("AI 서버 요청 실패", e))
-                    .subscribe(); // 요청 실행
+                    .subscribe();
         });
     }
 

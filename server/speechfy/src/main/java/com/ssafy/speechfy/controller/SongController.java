@@ -1,12 +1,14 @@
 package com.ssafy.speechfy.controller;
 
 import com.ssafy.speechfy.oauth.SecurityUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import com.ssafy.speechfy.dto.song.*;
 import com.ssafy.speechfy.dto.work.track.TrackListRequestDto;
 import com.ssafy.speechfy.oauth.SecurityUtil;
 import com.ssafy.speechfy.service.S3Service;
 import com.ssafy.speechfy.service.SongService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.net.MalformedURLException;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/song")
@@ -122,11 +125,19 @@ public class SongController {
     }
 
     @PostMapping("/studios/{studioId}/ai")
-    public ResponseEntity<String> composeSong(@RequestBody AISongCreateDto createDto) {
+    public ResponseEntity<String> composeSong(@RequestBody AISongCreateDto createDto,
+                                              @PathVariable int studioId,
+                                              HttpServletRequest request) {
+        // Content-Type 로그 출력
+        String contentType = request.getContentType();
+        log.info("요청 Content-Type: {}", contentType);
+
         try {
             Integer userId = getCurrentUserId();
+            log.info("사용자 ID: {}, 스튜디오 ID: {}, 요청된 기본곡 ID: {}", userId, studioId, createDto.getBasicSongId());
             songService.requestSongComposition(userId, createDto.getBasicSongId());
         } catch (MalformedURLException e) {
+            log.error("잘못된 URL 오류", e);
             throw new RuntimeException(e);
         }
 
@@ -137,6 +148,7 @@ public class SongController {
                 .status(HttpStatus.ACCEPTED)
                 .body("변환 요청이 접수되었습니다.");
     }
+
 
     @GetMapping("/share/{songId}")
     public ResponseEntity<SongShareResponseDto> getShareSong(@PathVariable Integer songId) {
