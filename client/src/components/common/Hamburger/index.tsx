@@ -7,7 +7,7 @@ import { useEffect, useState } from 'react';
 function Hamburger() {
   const [open, setOpen] = useState<boolean>(false);
   const [mounted, setMounted] = useState<boolean>(false);
-  const isLogin = document.cookie.includes('speechfyaccesstoken');
+  const isLogin = document.cookie.includes('speechfyAccessToken');
 
   useEffect(() => {
     setMounted(true);
