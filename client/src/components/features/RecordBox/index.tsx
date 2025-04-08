@@ -90,6 +90,13 @@ function RecordBox({ setIsCreate }: Props) {
       async function processRecording() {
         if (!hasProcessed && genAudio && initialized) {
           if (!instrument) return;
+          if (instrument === 'DRUM') {
+            console.log(genAudio);
+            handleAddTrack(genAudio);
+            setIsCreate(false);
+            setHasProcessed(true);
+            return;
+          }
           const convertedUrl = await toneTransfer(instrument, genAudio);
           console.log(convertedUrl);
           handleAddTrack(convertedUrl);
