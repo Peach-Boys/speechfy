@@ -91,7 +91,6 @@ function Track({ track, isAllPlay }: Props) {
     if (!audioEl) return;
 
     const handleTimeUpdate = () => {
-      console.log(audioEl.duration, track);
       setCurrentTime(audioEl.currentTime);
       setEndTime(audioEl.duration);
     };
