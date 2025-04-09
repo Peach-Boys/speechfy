@@ -22,11 +22,9 @@ function Hamburger() {
     window.location.href = kakaoAuthUrl;
   }
   useEffect(() => {
-    console.log('ham:', isLogined.current);
     setMounted(true);
     isLogined.current = document.cookie.includes('speechfyAccessToken');
-    console.log('after ham:', isLogined.current);
-  }, []);
+  }, [document.cookie]);
 
   if (!mounted) return null;
 
