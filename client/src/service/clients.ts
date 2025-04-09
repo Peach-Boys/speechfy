@@ -63,6 +63,7 @@ client.interceptors.response.use(
 
       isRefreshing = true;
       try {
+        localStorage.setItem('speechfy', 'true');
         // GET /refresh 호출 (쿠키를 통해 새 토큰이 설정됨)
         await refreshToken();
         // 대기 중인 요청 재시도

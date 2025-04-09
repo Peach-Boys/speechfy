@@ -11,6 +11,7 @@ export function useLogin() {
     mutationKey: ['login'],
     onSuccess: () => {
       setIsLogin(true);
+      localStorage.setItem('speechfy', 'true');
       navigation.push('/my');
     },
     onError: () => {

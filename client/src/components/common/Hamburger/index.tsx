@@ -23,8 +23,8 @@ function Hamburger() {
   }
   useEffect(() => {
     setMounted(true);
-    isLogined.current = document.cookie.includes('speechfyAccessToken');
-  }, [document.cookie]);
+    isLogined.current = localStorage.getItem('speechfy') === 'true';
+  }, []);
 
   if (!mounted) return null;
 
