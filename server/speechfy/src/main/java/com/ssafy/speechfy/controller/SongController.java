@@ -98,8 +98,11 @@ public class SongController {
 
     // aiSong 저장할 presignedUrl 생성 및 반환
     @GetMapping("/ai/presignedUrl")
-    public ResponseEntity<AISongPresignedUrlResponseDto> getAISongPresignedUrl() {
-        Integer userId = getCurrentUserId();
+    public ResponseEntity<AISongPresignedUrlResponseDto> getAISongPresignedUrl(@CookieValue(value = "userId", required = false) Integer userId) {
+
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         AISongPresignedUrlResponseDto aiSongPresignedUrlResponse = songService.generateAISongPresignedUrl(userId);
         return ResponseEntity.ok(aiSongPresignedUrlResponse);
     }
@@ -118,8 +121,11 @@ public class SongController {
     @PostMapping("/studios/{studioId}/ai/save")
     public ResponseEntity<AISongRegisterResponseDto> registerAISong(
             @PathVariable("studioId") String studioId,
-            @RequestBody AISongRegisterRequestDto requestDto) {
-        Integer userId = getCurrentUserId();
+            @RequestBody AISongRegisterRequestDto requestDto,
+            @CookieValue(value = "userId", required = false) Integer userId) {
+        if (userId == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
         AISongRegisterResponseDto aiSongRegisterResponse = songService.registerAISong(userId, Integer.parseInt(studioId), requestDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(aiSongRegisterResponse);
     }
