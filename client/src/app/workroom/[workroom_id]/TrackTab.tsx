@@ -1,6 +1,5 @@
 'use client';
 
-import DrumBeatGenerator from '@/app/ddsp/DrumBeatGenerator';
 import CreateRecord from '@/components/features/CreateRecord';
 import Track from '@/components/features/Track';
 import IconAllPlay from '@/components/icons/IconAllPlay';
@@ -42,7 +41,6 @@ function TrackTab() {
           <Track key={track.trackId} track={track} isAllPlay={isAllPlay} />
         ))}
         <CreateRecord />
-        <DrumBeatGenerator />
       </div>
     </div>
   );
