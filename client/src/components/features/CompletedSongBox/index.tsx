@@ -35,13 +35,12 @@ function CompletedSongBox({ song }: Props) {
     deleteMutation.mutate();
   }
 
-  const NEXT_PUBLIC_BASE = process.env.NEXT_PUBLIC_BASE;
   async function handleShare() {
     try {
       await navigator.share({
         title: document.title,
         text: song.title,
-        url: `${NEXT_PUBLIC_BASE}/player/${song.songId}`,
+        url: `/player/${song.songId}`,
       });
     } catch (err) {
       console.error('err:', err);

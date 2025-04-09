@@ -18,6 +18,12 @@ function Recording({ isRecording, stopRecording, startRecording }: Props) {
     await stopRecording();
   }
 
+  function handleStartRecording() {
+    setTimeout(async () => {
+      await startRecording();
+    }, 4000);
+  }
+
   return (
     <div className='w-full flex flex-col items-center'>
       {isRecording ? (
@@ -45,7 +51,7 @@ function Recording({ isRecording, stopRecording, startRecording }: Props) {
       ) : (
         <div
           className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
-          onClick={startRecording}
+          onClick={handleStartRecording}
         >
           <IconPlay width={20} height={20} />
         </div>

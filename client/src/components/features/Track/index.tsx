@@ -19,10 +19,12 @@ import { useEffect, useRef, useState } from 'react';
 interface Props {
   track: ITrack;
   isAllPlay: boolean;
+  onFinished: () => void;
 }
 
-function Track({ track, isAllPlay }: Props) {
+function Track({ track, isAllPlay, onFinished }: Props) {
   const { workroom_id: workroomId } = useParams();
+
   const [isPlay, setIsPlay] = useState<boolean>(false);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -30,6 +32,7 @@ function Track({ track, isAllPlay }: Props) {
   const [currentTime, setCurrentTime] = useState<number>(0);
   const [instrument, setInstrument] = useState<string>(track.instrumentName);
   const [endTime, setEndTime] = useState<number>(0);
+
   const menuRef = useRef<HTMLDivElement | null>(null);
   const selectInstRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
@@ -113,10 +116,12 @@ function Track({ track, isAllPlay }: Props) {
   }, [isAllPlay]);
 
   useEffect(() => {
-    if (currentTime === endTime) {
+    if (currentTime === endTime && isPlay) {
       setIsPlay(false);
+      onFinished?.();
     }
-  }, [currentTime, endTime]);
+  }, [currentTime, endTime, isPlay]);
+
   return (
     <>
       <Box borderStyle='solid'>
