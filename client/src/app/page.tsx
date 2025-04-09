@@ -29,7 +29,10 @@ export default async function Home() {
           도전해보세요!
         </p>
         {isLogin ? (
-          <button className='w-full max-w-[500px] bg-jihyegra rounded-lg py-3 cursor-pointer'>
+          <button
+            className='w-full max-w-[500px] bg-jihyegra rounded-lg py-3 cursor-pointer'
+            onClick={() => (window.location.href = '/create')}
+          >
             작업하기
           </button>
         ) : (
@@ -173,7 +176,10 @@ export default async function Home() {
           간단한 허밍 한 번으로 작곡의 세계에 발을 내딛어 보세요.
         </p>
         {isLogin ? (
-          <button className='w-full max-w-[500px] bg-jihyegra rounded-lg py-3 cursor-pointer'>
+          <button
+            className='w-full max-w-[500px] bg-jihyegra rounded-lg py-3 cursor-pointer'
+            onClick={() => (window.location.href = '/create')}
+          >
             작업하기
           </button>
         ) : (

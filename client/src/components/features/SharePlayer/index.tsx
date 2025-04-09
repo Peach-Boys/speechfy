@@ -22,6 +22,23 @@ function SharePlayer({ song }: Props) {
     isReady,
   } = useAudioPlayBar(song.songCloudFrontUrl);
 
+  function isInvalidImageUrl(url?: string): boolean {
+    if (!url) return true;
+
+    try {
+      const parsed = new URL(url);
+      const lastSegment = parsed.pathname.split('/').pop(); // 마지막 path
+      return !lastSegment || lastSegment === 'null';
+    } catch (e) {
+      console.error(e);
+      return true;
+    }
+  }
+
+  const imageUrl = isInvalidImageUrl(song.imageCloudFrontUrl)
+    ? '/images/defaultImage.png'
+    : song.imageCloudFrontUrl;
+
   return (
     <>
       <Background imgSrc={song.imageCloudFrontUrl}>
@@ -29,7 +46,7 @@ function SharePlayer({ song }: Props) {
           <div className='max-w-screen-sm w-full p-5 flex flex-col items-center gap-6'>
             <div className='relative w-full aspect-[1/1] max-w-100 max-h-100 shadow-lg'>
               <Image
-                src={song.imageCloudFrontUrl ?? '/images/defaultImage.png'}
+                src={imageUrl}
                 alt='이미지'
                 className='rounded-[10px]'
                 fill
