@@ -41,7 +41,7 @@ function SharePlayer({ song }: Props) {
 
   return (
     <>
-      <Background imgSrc={song.imageCloudFrontUrl}>
+      <Background imgSrc={imageUrl}>
         <div className='w-full h-full p-5 flex flex-col items-center gap-10'>
           <div className='max-w-screen-sm w-full p-5 flex flex-col items-center gap-6'>
             <div className='relative w-full aspect-[1/1] max-w-100 max-h-100 shadow-lg'>
