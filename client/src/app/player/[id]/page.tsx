@@ -1,24 +1,12 @@
-import SharePlayer from '@/components/features/SharePlayer';
-import { initializeMSW } from '@/lib/msw';
-import { getShareSong } from '@/service/apis/Share';
+import ClientProvider from '@/components/common/ClientProvider';
+import ClientSharePage from './ClientSharePage';
 
-type Props = {
-  params: Promise<{
-    id: string;
-  }>;
-};
-
-const PlayerPage = async ({ params }: Props) => {
-  await initializeMSW();
-  const { id } = await params;
-  const songId = Number(id);
-  const data = await getShareSong(songId);
-
+function PlayerPage() {
   return (
-    <>
-      <SharePlayer song={data} />
-    </>
+    <ClientProvider>
+      <ClientSharePage />
+    </ClientProvider>
   );
-};
+}
 
 export default PlayerPage;

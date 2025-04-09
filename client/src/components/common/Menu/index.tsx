@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface IMenu {
   label: string;
   onClick: () => void;

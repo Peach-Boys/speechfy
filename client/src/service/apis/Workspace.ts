@@ -82,7 +82,7 @@ export const postSaveNonAISong = async (
       basicSongFilePath,
       mood,
       genre,
-      title,
+      name: title,
       instruments,
     });
   } catch (err: unknown) {

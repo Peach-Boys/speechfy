@@ -7,10 +7,10 @@ function useWebSocket<T extends WebSocketEventMap>() {
   const listeners = useRef<Partial<{ [K in keyof T]: (data: T[K]) => void }>>(
     {}
   );
-  const { NEXT_PUBLIC_SOCKET_BASE } = process.env;
 
+  const NEXT_PUBLIC_SOCKET_BASE = process.env.NEXT_PUBLIC_SOCKET_BASE;
   function wsConnection() {
-    ws.current = new WebSocket(`${NEXT_PUBLIC_SOCKET_BASE}/`);
+    ws.current = new WebSocket(`${NEXT_PUBLIC_SOCKET_BASE}`);
 
     ws.current.onopen = () => console.log('WebSocket 연결');
     ws.current.onerror = (err) => console.error('WebSocket 에러', err);

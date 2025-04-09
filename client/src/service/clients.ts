@@ -31,7 +31,7 @@ function subscribeTokenRefresh(cb: () => void): void {
 
 // GET /refresh 요청을 통해 토큰을 갱신
 function refreshToken(): Promise<AxiosResponse> {
-  return axios.get(`/refresh`, {
+  return axios.get(`${API_BASE}/refresh`, {
     withCredentials: true,
   });
 }
@@ -63,6 +63,7 @@ client.interceptors.response.use(
 
       isRefreshing = true;
       try {
+        localStorage.setItem('speechfy', 'true');
         // GET /refresh 호출 (쿠키를 통해 새 토큰이 설정됨)
         await refreshToken();
         // 대기 중인 요청 재시도
