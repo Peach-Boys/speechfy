@@ -1,7 +1,7 @@
-import IconBaseGuitar from '@/components/icons/IconBaseGuitar';
+import IconViolin from '@/components/icons/IconViolin';
 // import IconDrum from '@/components/icons/IconDrum';
-import IconElecGuitar from '@/components/icons/IconElecGuitar';
-import IconPiano from '@/components/icons/IconPiano';
+import IconTenorSaxophone from '@/components/icons/IconTenorSaxophone';
+import IconTrumpet from '@/components/icons/IconTrumpet';
 import clsx from 'clsx';
 
 interface Props {
@@ -22,7 +22,7 @@ function InstrumentList({ instrument, setInstrument }: Props) {
         onClick={() => setInstrument('VIOLIN')}
         disabled={instrument === 'VIOLIN' ? true : false}
       >
-        <IconPiano />
+        <IconTrumpet />
       </button>
       <button
         className={clsx(
@@ -32,7 +32,7 @@ function InstrumentList({ instrument, setInstrument }: Props) {
         onClick={() => setInstrument('TRUMPET')}
         disabled={instrument === 'TRUMPET' ? true : false}
       >
-        <IconBaseGuitar />
+        <IconViolin />
       </button>
       {/* {instrumentId !== 2 && (
         <div
@@ -50,7 +50,7 @@ function InstrumentList({ instrument, setInstrument }: Props) {
         onClick={() => setInstrument('TENOR_SAXOPHONE')}
         disabled={instrument === 'TENOR_SAXOPHONE' ? true : false}
       >
-        <IconElecGuitar />
+        <IconTenorSaxophone />
       </button>
     </menu>
   );

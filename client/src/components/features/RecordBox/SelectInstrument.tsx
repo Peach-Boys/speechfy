@@ -1,7 +1,7 @@
-import IconBaseGuitar from '@/components/icons/IconBaseGuitar';
 import IconDrum from '@/components/icons/IconDrum';
-import IconElecGuitar from '@/components/icons/IconElecGuitar';
-import IconPiano from '@/components/icons/IconPiano';
+import IconTenorSaxophone from '@/components/icons/IconTenorSaxophone';
+import IconTrumpet from '@/components/icons/IconTrumpet';
+import IconViolin from '@/components/icons/IconViolin';
 
 interface Props {
   handleNextLevel: () => void;
@@ -19,14 +19,13 @@ function SelectInstrument({ handleNextLevel, setInstrument }: Props) {
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
         onClick={() => handleNext('VIOLIN')}
       >
-        {' '}
-        <IconElecGuitar color='#000000' />
+        <IconViolin color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
         onClick={() => handleNext('TRUMPET')}
       >
-        <IconPiano color='#000000' />
+        <IconTrumpet color='#000000' />
       </div>
       <div
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
@@ -38,7 +37,7 @@ function SelectInstrument({ handleNextLevel, setInstrument }: Props) {
         className='size-12 flex justify-center items-center rounded-full bg-gray-300 cursor-pointer'
         onClick={() => handleNext('TENOR_SAXOPHONE')}
       >
-        <IconBaseGuitar color='#000000' />
+        <IconTenorSaxophone color='#000000' />
       </div>
     </div>
   );
