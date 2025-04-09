@@ -22,8 +22,10 @@ function Hamburger() {
     window.location.href = kakaoAuthUrl;
   }
   useEffect(() => {
+    console.log('ham:', isLogined.current);
     setMounted(true);
     isLogined.current = document.cookie.includes('speechfyAccessToken');
+    console.log('after ham:', isLogined.current);
   }, []);
 
   if (!mounted) return null;
@@ -67,7 +69,7 @@ function Hamburger() {
           </button>
         </div>
         <nav className='p-4 space-y-4'>
-          {isLogined ? (
+          {isLogined.current ? (
             <>
               <a
                 href='/create'
