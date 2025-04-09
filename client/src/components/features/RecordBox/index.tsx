@@ -58,16 +58,6 @@ function RecordBox({ setIsCreate }: Props) {
       order: tracks.length + 1,
       trackName: instrument,
     });
-    // addTrack({
-    //   order: 0,
-    //   trackId: 1,
-    //   instrumentName: 'SoundHelix-Song-1',
-    //   trackName: 'SoundHelix-Song-1',
-    //   trackUrl: convertedUrl,
-    //   recordId: 1,
-    //   recordUrl: '',
-    //   isPlaying: false,
-    // });
   }
   useEffect(() => {
     console.log(audio, initialized);
@@ -131,6 +121,7 @@ function RecordBox({ setIsCreate }: Props) {
             )}
             {level == 1 && (
               <SelectMode
+                instrument={instrument}
                 handleNextLevel={handleNextLevel}
                 setAutoComplete={setAutoComplete}
               />
