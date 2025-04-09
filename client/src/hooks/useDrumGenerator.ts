@@ -110,8 +110,8 @@ export function useDrumGenerator(
   }
 
   // (4) 메인 함수: DrumsRNN → 오프라인 렌더링 → WAV
-  const generateDrumBeat = async () => {
-    if (typeof window === 'undefined') return;
+  const generateDrumBeat = async (): Promise<string> => {
+    if (typeof window === 'undefined') return '';
     setLoading(true);
     setAudioURL(null);
 
@@ -171,11 +171,12 @@ export function useDrumGenerator(
       const wavBlob = new Blob([wavData], { type: 'audio/wav' });
       const wavURL = URL.createObjectURL(wavBlob);
 
-      setAudioURL(wavURL);
+      return wavURL;
     } catch (err) {
       console.error('Error generating drum WAV:', err);
     }
     setLoading(false);
+    return '';
   };
 
   return {
