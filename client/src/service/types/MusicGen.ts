@@ -4,7 +4,7 @@ export type TTag = {
 };
 
 export interface IPreviewSong {
-  basicSongUFilePath: string;
+  basicSongFilePath: string;
   mood: string;
   genre: string;
   name: string;
