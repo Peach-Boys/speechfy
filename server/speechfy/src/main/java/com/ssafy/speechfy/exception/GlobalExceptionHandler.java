@@ -86,6 +86,7 @@ public class GlobalExceptionHandler {
     // 500 Internal Server Error (서버 오류)
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> handleGeneralException(Exception e) {
+        log.error("Exception: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", e.getMessage()));
     }
 
