@@ -69,7 +69,7 @@ public class SecurityConfig {
                                 new AntPathRequestMatcher("/api/refresh", "GET"),
                                 // 수정필요!!!
                                 new AntPathRequestMatcher("/api/song/ai/presignedUrl", "GET"),
-                                new AntPathRequestMatcher("/api/studios/*/ai/save")
+                                new AntPathRequestMatcher("/api/song/studios/*/ai/save", "POST")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
