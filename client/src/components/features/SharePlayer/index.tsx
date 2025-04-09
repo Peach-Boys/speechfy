@@ -55,7 +55,7 @@ function SharePlayer({ song }: Props) {
                 priority
               />
             </div>
-            <h1 className='text-4xl'>{song.songTitle}</h1>
+            <h1 className='text-4xl'>{song.songName}</h1>
             <div className='w-full max-w-200'>
               <PlayBar
                 currentTime={currentTime}

@@ -22,7 +22,7 @@ export interface IPreviewSongList {
 }
 
 export interface IShareSong {
-  songTitle: string;
+  songName: string;
   imageCloudFrontUrl: string;
   songCloudFrontUrl: string;
 }
