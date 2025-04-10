@@ -4,6 +4,7 @@ import Box from '@/components/common/Box';
 import Button from '@/components/common/Button';
 import Modal from '@/components/common/Modal/intex';
 import PlayBar from '@/components/common/PlayBar';
+import Skeleton from '@/components/common/Skeleton';
 import InstrumentList from '@/components/features/Track/InstrumentList';
 import TrackMenu from '@/components/features/Track/TrackMenu';
 import IconDoubleCircle from '@/components/icons/IconDoubleCircle';
@@ -37,7 +38,7 @@ function Track({ track, isAllPlay, onFinished }: Props) {
   const selectInstRef = useRef<HTMLDivElement | null>(null);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
-  const { initialized, toneTransfer } = useDDSP();
+  const { initialized, toneTransfer, loading } = useDDSP();
   const { mutate: uploadTrack } = useTransferTrack();
   const { mutate: deleteTrack } = useDeleteTrack(track.trackId);
 
@@ -130,6 +131,9 @@ function Track({ track, isAllPlay, onFinished }: Props) {
             <div className='flex items-center gap-2'>
               <IconDoubleCircle color='#ffffff' />
               <span>{track.instrumentName}</span>
+              <span className='text-sm text-gray-400'>
+                {initialized ? '모델 사용 가능' : '잠시 가다려 주세요'}
+              </span>
             </div>
             <div
               className='relative w-auto py-2 cursor-pointer'
@@ -146,28 +150,32 @@ function Track({ track, isAllPlay, onFinished }: Props) {
               )}
             </div>
           </div>
-          <div className='flex gap-4'>
-            <div className='relative w-full'>
-              <Button onClick={handleOpenSelInst}>악기 선택</Button>
-              {isSelInstOpen && (
-                <div
-                  ref={selectInstRef}
-                  className='absolute z-10 pt-1 overflow-hidden'
-                >
-                  <InstrumentList
-                    instrument={instrument}
-                    setInstrument={setInstrument}
-                  />
-                </div>
-              )}
+          {loading ? (
+            <Skeleton className='w-full h-24' />
+          ) : (
+            <div className='flex gap-4'>
+              <div className='relative w-full'>
+                <Button onClick={handleOpenSelInst}>악기 선택</Button>
+                {isSelInstOpen && (
+                  <div
+                    ref={selectInstRef}
+                    className='absolute z-10 pt-1 overflow-hidden'
+                  >
+                    <InstrumentList
+                      instrument={instrument}
+                      setInstrument={setInstrument}
+                    />
+                  </div>
+                )}
+              </div>
+              <Button
+                onClick={handlePlayTrack}
+                buttonStyle='bg-jihyegra text-white'
+              >
+                {!isPlay ? '재생' : '일시정지'}
+              </Button>
             </div>
-            <Button
-              onClick={handlePlayTrack}
-              buttonStyle='bg-jihyegra text-white'
-            >
-              {!isPlay ? '재생' : '일시정지'}
-            </Button>
-          </div>
+          )}
 
           {/* <WavePlay isPlay={isPlay} /> */}
           <PlayBar currentTime={currentTime} endTime={endTime} />
