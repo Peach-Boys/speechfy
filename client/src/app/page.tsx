@@ -167,7 +167,7 @@ export default async function Home() {
       </section>
 
       {/* CTA 섹션 */}
-      <section className='w-[90%] mx-auto py-16 text-center'>
+      <section className='w-[90%] mx-auto py-16 flex flex-col items-center text-center'>
         {/* CTA 제목에 그라디언트 적용 */}
         <h2 className='text-4xl font-bold mb-6 bg-gradient-to-r from-[#b73abb] via-[#d0579a] to-[#e46e80] bg-clip-text text-transparent'>
           지금 바로 시작해보세요!
