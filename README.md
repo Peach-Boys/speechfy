@@ -203,10 +203,16 @@ TensorFlow.js를 활용해 클라이언트 브라우저에서 직접 연산되�
 
 # 6. 기획 및 설계 산출물
 
+### 기획서
+https://www.notion.so/1b2aeb5043cd807fab49c8fc69e408d8
+
 ### 요구사항 명세서
+https://www.notion.so/1b2aeb5043cd808894dfc5f5a37bd2cb
+
+### 기능 명세서
+https://www.notion.so/1b4aeb5043cd8036918cece13e3d6487
 
 ### 와이어프레임
-
 https://www.figma.com/design/tkHgoXYqvnjhWHutcCX9OX/SPEECHFY?node-id=110-1923&p=f&t=bGhSZgzGGDYOuHff-0
 
 ### ERD
@@ -214,6 +220,7 @@ https://www.figma.com/design/tkHgoXYqvnjhWHutcCX9OX/SPEECHFY?node-id=110-1923&p=
 https://www.erdcloud.com/d/ehpySmpdqhvmuiFdQ
 
 ### API 명세서
+https://www.notion.so/API-1b9aeb5043cd8082bda5f5a431fb8040
 
 &nbsp;
 
