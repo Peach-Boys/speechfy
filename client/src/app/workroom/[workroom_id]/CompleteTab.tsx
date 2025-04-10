@@ -6,7 +6,7 @@ import useMergeWavFiles from '@/hooks/useMergeAudio';
 import { useSingleUpload } from '@/service/queries/useSingleUpload';
 import { useSelectSongStore } from '@/stores/selectSongStore';
 import { useWorkRoomStore } from '@/stores/workroomStore';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 interface Props {
   workroomId: string;
@@ -15,16 +15,26 @@ interface Props {
 
 function CompleteTab({ workroomId, selectTags }: Props) {
   const [title, setTitle] = useState<string>('');
+  const [imgSrc, setImgSrc] = useState<string>('');
+
   const { selectSong } = useSelectSongStore();
   const { tracks } = useWorkRoomStore();
   const { mergeWavFiles } = useMergeWavFiles();
 
-  const files = tracks.map((track) => {
-    return track.trackUrl;
-  });
-  const instruments = tracks.map((track) => {
-    return track.instrumentName;
-  });
+  const files = useMemo(
+    () =>
+      tracks.map((track) => {
+        return track.trackUrl;
+      }),
+    [tracks]
+  );
+  const instruments = useMemo(
+    () =>
+      tracks.map((track) => {
+        return track.instrumentName;
+      }),
+    [tracks]
+  );
 
   const mutation = useSingleUpload();
 
@@ -40,6 +50,9 @@ function CompleteTab({ workroomId, selectTags }: Props) {
 
     const mergeFile = await mergeWavFiles(files);
 
+    console.log('instruwes:', instruments);
+    console.log('fileS:', files);
+
     mutation.mutate({
       workroomId,
       selectSong: selectSong?.signedUrl,
@@ -48,6 +61,7 @@ function CompleteTab({ workroomId, selectTags }: Props) {
       title,
       instruments,
       mergeFile,
+      imageFilePath: imgSrc,
     });
   }
 
@@ -59,6 +73,8 @@ function CompleteTab({ workroomId, selectTags }: Props) {
           title={title}
           setTitle={setTitle}
           selectTags={selectTags}
+          imgSrc={imgSrc}
+          setImgSrc={setImgSrc}
         />
       </div>
       <button

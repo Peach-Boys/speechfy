@@ -12,6 +12,7 @@ interface Props {
   title: string;
   instruments: string[];
   mergeFile: ArrayBuffer;
+  imageFilePath: string;
 }
 
 export const useSingleUpload = () => {
@@ -25,6 +26,7 @@ export const useSingleUpload = () => {
       title,
       instruments,
       mergeFile,
+      imageFilePath,
     }: Props) => {
       const res = await getBasicPresginedUrl();
       console.log('res:', res);
@@ -44,7 +46,8 @@ export const useSingleUpload = () => {
         mood,
         genre,
         title,
-        instruments
+        instruments,
+        imageFilePath
       );
     },
     onSuccess: () => {

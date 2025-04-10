@@ -1,36 +1,50 @@
 'use client';
 
 import Input from '@/components/common/Input';
+import Spinner from '@/components/common/Spinner';
 import IconLightning from '@/components/icons/IconLightning';
 import { useGenerateImage } from '@/service/queries/useGenerateImage';
 import clsx from 'clsx';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 
 interface Props {
   title: string;
   setTitle: React.Dispatch<React.SetStateAction<string>>;
   selectTags: (string | null)[];
+  imgSrc: string;
+  setImgSrc: React.Dispatch<React.SetStateAction<string>>;
 }
 
-function GenerateImage({ title, setTitle, selectTags }: Props) {
-  const { mutate, data } = useGenerateImage();
-  const [imgSrc, setImgSrc] = useState<string>('');
+function GenerateImage({
+  title,
+  setTitle,
+  selectTags,
+  imgSrc,
+  setImgSrc,
+}: Props) {
+  const { mutate, data, isPending } = useGenerateImage();
   useEffect(() => {
     if (data) {
       setImgSrc(data.imageUrl);
     }
   }, [data]);
   function handleCreate() {
+    if (!selectTags[0] || !selectTags[1]) {
+      alert('장르와 분위기를 선택해주세요!');
+      return;
+    }
+
     if (title.length > 1) {
       mutate({
         title: title,
-        genre: selectTags[0] || '',
-        mood: selectTags[1] || '',
+        genre: selectTags[0],
+        mood: selectTags[1],
       });
     } else {
       alert('제목을 입력해주세요!');
     }
   }
+
   return (
     <div className='w-full flex flex-col justify-between items-center gap-5'>
       <div className='w-full flex text-xl'>
@@ -38,7 +52,9 @@ function GenerateImage({ title, setTitle, selectTags }: Props) {
       </div>
 
       <div className='w-full flex flex-col items-center bg-gray-900 rounded-[10px] text-m'>
-        {imgSrc === '' ? (
+        {isPending ? (
+          <Spinner />
+        ) : imgSrc === '' ? (
           <div className='py-30 flex flex-col items-center justify-center gap-2'>
             <span>제목을 입력하고 버튼을 누르면</span>
             <span>AI가 어울리는 앨범 커버를</span>

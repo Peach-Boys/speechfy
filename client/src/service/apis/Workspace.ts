@@ -75,7 +75,8 @@ export const postSaveNonAISong = async (
   mood: string,
   genre: string,
   title: string,
-  instruments: string[]
+  instruments: string[],
+  imageFilePath: string
 ): Promise<void> => {
   try {
     await client.post(`/song/studios/${workroomId}/basic/save`, {
@@ -84,6 +85,7 @@ export const postSaveNonAISong = async (
       genre,
       name: title,
       instruments,
+      imageFilePath,
     });
   } catch (err: unknown) {
     throw new Error((err as Error).message);
