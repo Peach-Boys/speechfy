@@ -53,7 +53,7 @@ function GenerateImage({
 
       <div className='w-full flex flex-col items-center bg-gray-900 rounded-[10px] text-m'>
         {isPending ? (
-          <div className='w-full h-[328px]'>
+          <div className='w-full h-[328px] flex justify-center items-center'>
             <Spinner />
           </div>
         ) : imgSrc === '' ? (

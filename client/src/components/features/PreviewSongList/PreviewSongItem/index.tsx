@@ -5,7 +5,6 @@ import Spinner from '@/components/common/Spinner';
 import Tag from '@/components/common/Tag';
 import IconPlay from '@/components/icons/IconPlay';
 import IconStop from '@/components/icons/IconStop';
-import IconTrash from '@/components/icons/IconTrash';
 import { TAGS } from '@/constants/tags';
 import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
 import { AISong } from '@/types/song';
@@ -86,9 +85,6 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
           isReady={isReady}
           onSeek={(time: number) => handleSeek(time)}
         />
-      </div>
-      <div className='w-fit h-full flex items-center cursor-pointer hover:scale-110 transition-transform active:scale-95'>
-        <IconTrash width={20} height={25} color='#ff2222' />
       </div>
       <audio ref={audioRef} src={song.signedUrl} />
     </div>

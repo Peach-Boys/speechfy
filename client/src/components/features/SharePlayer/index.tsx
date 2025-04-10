@@ -52,7 +52,7 @@ function SharePlayer({ song }: Props) {
               />
             </div>
             <h1 className='text-4xl'>{song.songName}</h1>
-            <div className='w-full max-w-200 flex justify-center items-center'>
+            <div className='w-full max-w-200'>
               <PlayBar
                 currentTime={currentTime}
                 endTime={endTime}
