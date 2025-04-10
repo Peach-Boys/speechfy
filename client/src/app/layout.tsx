@@ -1,4 +1,3 @@
-import SocketContext from '@/components/common/SocketListener';
 import Header from '@/components/layout/Header';
 import type { Metadata } from 'next';
 import React from 'react';
@@ -22,7 +21,6 @@ export default function RootLayout({
           <div className='h-[60px]' /> {/* Header space */}
           <div className='flex-1 overflow-y-auto'>{children}</div>
         </div>
-        <SocketContext />
       </body>
     </html>
   );

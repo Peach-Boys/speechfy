@@ -1,15 +1,21 @@
 'use client';
 
+import SocketContext from '@/components/common/SocketListener';
 import PreviewSongList from '@/components/features/PreviewSongList';
 import TagField from '@/components/features/TagField';
 import useMergeAudio from '@/hooks/useMergeAudio';
 import useWebSocket from '@/hooks/useWebSocket';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
 import { useWorkRoomStore } from '@/stores/workroomStore';
+import { AISong } from '@/types/song';
 import { ITrack } from '@/types/track';
 import clsx from 'clsx';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react';
+
+type WebSocketEventMap = {
+  AI_COMPOSE_SUCCESS: { result: AISong };
+};
 
 interface Props {
   selectTag: (string | null)[];
@@ -21,7 +27,7 @@ function AITab({ selectTag, setSelectTag }: Props) {
 
   const [isActive, setIsActive] = useState<boolean>(false);
 
-  const { wsConnection } = useWebSocket();
+  const { ws, wsConnection, on } = useWebSocket<WebSocketEventMap>();
   const { tracks } = useWorkRoomStore();
   const postMutation = usePostPreviewSong(workroom_id as string);
   const { mergeWavFiles } = useMergeAudio();
@@ -72,6 +78,7 @@ function AITab({ selectTag, setSelectTag }: Props) {
         </button>
       </div>
       <PreviewSongList />
+      <SocketContext on={on} ws={ws} />
     </div>
   );
 }
