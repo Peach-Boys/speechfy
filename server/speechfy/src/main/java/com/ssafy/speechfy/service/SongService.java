@@ -345,6 +345,8 @@ public class SongService {
         Studio studio = studioRepository.findById(studioId)
                         .orElseThrow(() -> new NoSuchElementException("Studio not found with id: " + studioId));
 
+        String imagePath = requestDto.getImageFilePath() == null ? "images/album-cover.png" : requestDto.getImageFilePath().replaceFirst("https://d13fqs1l8xh95y.cloudfront.net/", "");
+
         // imagePath만 null이고 나머지는 초기값이 존재함.
         Song basicSong = Song.builder()
                 .user(user)
@@ -353,6 +355,7 @@ public class SongService {
                 .genreType(requestDto.getGenre())
                 .viewCount(0)
                 .likesCount(0)
+                .imagePath(imagePath)
                 .name(requestDto.getName())
                 .filePath(requestDto.getBasicSongFilePath())
                 .isAIUsed(false)
@@ -368,10 +371,11 @@ public class SongService {
                 .basicSongId(savedSong.getId())
                 .userId(userId)
                 .studioId(studioId)
-                .viewCount(savedSong.getViewCount())
-                .likesCount(savedSong.getLikesCount())
                 .mood(savedSong.getMoodType())
                 .genre(savedSong.getGenreType())
+                .viewCount(savedSong.getViewCount())
+                .likesCount(savedSong.getLikesCount())
+                .imageFilePath(savedSong.getImagePath())
                 .name(savedSong.getName())
                 .isAIUsed(savedSong.getIsAIUsed())
                 .instruments(savedSong.getInstruments()

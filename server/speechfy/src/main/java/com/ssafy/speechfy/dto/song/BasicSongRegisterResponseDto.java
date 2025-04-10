@@ -17,6 +17,7 @@ public class BasicSongRegisterResponseDto {
     private Integer basicSongId;
     private Integer userId;
     private Integer studioId;
+    private String imageFilePath;
     private Integer viewCount;
     private Integer likesCount;
     private MoodType mood;
