@@ -26,7 +26,7 @@ public class AIWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         // 예: ws://localhost:8080/ws/ai
-        Integer userId = SecurityUtil.getCurrentUserId();
+        Integer userId = (Integer) session.getAttributes().get("userId");
 
         if (userId != null) {
             userSessions.put(userId, session);
