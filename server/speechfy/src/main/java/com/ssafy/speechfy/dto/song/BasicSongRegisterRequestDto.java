@@ -13,6 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class BasicSongRegisterRequestDto {
     private String basicSongFilePath;
+    private String imageFilePath;
     private MoodType mood;
     private GenreType genre;
     private String name;
