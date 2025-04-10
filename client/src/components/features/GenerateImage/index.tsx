@@ -76,6 +76,7 @@ function GenerateImage({
           title.length > 1 ? 'bg-pink-500' : 'bg-zinc-700'
         )}
         onClick={handleCreate}
+        disabled={isPending}
       >
         <IconLightning />
         앨범 이미지 생성
