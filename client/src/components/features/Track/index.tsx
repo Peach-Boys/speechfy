@@ -132,7 +132,7 @@ function Track({ track, isAllPlay, onFinished }: Props) {
               <IconDoubleCircle color='#ffffff' />
               <span>{track.instrumentName}</span>
               <span className='text-sm text-gray-400'>
-                {initialized ? '모델 사용 가능' : '잠시 가다려 주세요'}
+                {initialized ? '모델 사용 가능' : '잠시 기다려 주세요'}
               </span>
             </div>
             <div
