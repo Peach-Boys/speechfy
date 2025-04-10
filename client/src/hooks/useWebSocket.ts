@@ -22,11 +22,11 @@ function useWebSocket<T extends WebSocketEventMap>() {
     ws.current.onmessage = (event) => {
       try {
         const message = JSON.parse(event.data) as {
-          type: keyof T;
+          message: keyof T;
           data: unknown;
         };
 
-        const { type, data } = message;
+        const { message: type, data } = message;
         const listener = listeners.current[type];
         if (listener) {
           (listener as (data: unknown) => void)(data);
