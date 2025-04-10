@@ -3,6 +3,7 @@
 import PreviewSongList from '@/components/features/PreviewSongList';
 import TagField from '@/components/features/TagField';
 import useMergeAudio from '@/hooks/useMergeAudio';
+import useWebSocket from '@/hooks/useWebSocket';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { ITrack } from '@/types/track';
@@ -20,12 +21,15 @@ function AITab({ selectTag, setSelectTag }: Props) {
 
   const [isActive, setIsActive] = useState<boolean>(false);
 
+  const { wsConnection } = useWebSocket();
   const { tracks } = useWorkRoomStore();
   const postMutation = usePostPreviewSong(workroom_id as string);
   const { mergeWavFiles } = useMergeAudio();
 
   async function handleCreateAISong() {
     if (!isActive) return;
+
+    wsConnection();
     const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
     const instruments: string[] = tracks.map(
       (tracks: ITrack) => tracks.instrumentName

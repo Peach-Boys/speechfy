@@ -2,30 +2,23 @@
 
 import useWebSocket from '@/hooks/useWebSocket';
 import { AISong } from '@/types/song';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 
 type WebSocketEventMap = {
   AI_COMPOSE_SUCCESS: { result: AISong };
 };
 
 function SocketContext() {
-  const { wsConnection, on, ws } = useWebSocket<WebSocketEventMap>();
-  const connected = useRef<boolean>(false);
+  const { on, ws } = useWebSocket<WebSocketEventMap>();
 
   useEffect(() => {
     const isLogin = localStorage.getItem('speechfy');
-    if (isLogin && !connected.current) {
-      wsConnection();
-      connected.current = true;
+    on('AI_COMPOSE_SUCCESS', () => {
+      alert('작업이 끝났어요.\n작업실로 가서 만들어진 곡을 만나봐요!');
+    });
 
-      on('AI_COMPOSE_SUCCESS', () => {
-        alert('작업이 끝났어요.\n작업실로 가서 만들어진 곡을 만나봐요!');
-      });
-    }
-
-    if (!isLogin && connected.current && ws.current) {
+    if (!isLogin && ws.current) {
       ws.current.close();
-      connected.current = false;
     }
   }, []);
 
