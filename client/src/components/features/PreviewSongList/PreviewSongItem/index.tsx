@@ -8,7 +8,6 @@ import IconStop from '@/components/icons/IconStop';
 import IconTrash from '@/components/icons/IconTrash';
 import { TAGS } from '@/constants/tags';
 import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
-import { useDeleteCompletedSong } from '@/service/queries/useDeleteCompletedSong';
 import { AISong } from '@/types/song';
 import clsx from 'clsx';
 
@@ -28,12 +27,6 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
     isPlaying,
     isReady,
   } = useAudioPlayBar(song.signedUrl);
-
-  const deleteMutation = useDeleteCompletedSong(song.aiSongId);
-
-  function handleDelete() {
-    deleteMutation.mutate();
-  }
 
   return (
     <div
@@ -94,10 +87,7 @@ function PreviewSongItem({ song, selected, onSelect }: Props) {
           onSeek={(time: number) => handleSeek(time)}
         />
       </div>
-      <div
-        className='w-fit h-full flex items-center cursor-pointer hover:scale-110 transition-transform active:scale-95'
-        onClick={handleDelete}
-      >
+      <div className='w-fit h-full flex items-center cursor-pointer hover:scale-110 transition-transform active:scale-95'>
         <IconTrash width={20} height={25} color='#ff2222' />
       </div>
       <audio ref={audioRef} src={song.signedUrl} />
