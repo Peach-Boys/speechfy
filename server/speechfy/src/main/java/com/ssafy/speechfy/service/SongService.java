@@ -282,7 +282,7 @@ public class SongService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 요청 생성
-        OpenAIRequestDto request = new OpenAIRequestDto(prompt, 1, "1024x1024");
+        OpenAIRequestDto request = new OpenAIRequestDto(prompt, 1, "512x512");
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
