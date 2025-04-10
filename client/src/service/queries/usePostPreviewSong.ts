@@ -27,7 +27,7 @@ export const usePostPreviewSong = (workroomId: string) => {
       }
 
       const song: IPreviewSong = {
-        basicSongUFilePath: res.basicSongFilePath,
+        basicSongFilePath: res.basicSongFilePath,
         genre: genre,
         mood: mood,
         name: '',

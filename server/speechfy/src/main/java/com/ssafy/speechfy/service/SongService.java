@@ -508,7 +508,7 @@ public class SongService {
         CompletableFuture.runAsync(() -> {
             log.info("AI 서버로 비동기 요청 시작");
             webClient.post()
-                    .uri("http://192.168.45.47:8000/api/compose")
+                    .uri("http://musicgenb105.iptime.org:11111/api/compose")
                     .header("Content-Type", "application/json")
                     .bodyValue(payload)
                     .retrieve()

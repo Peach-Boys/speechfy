@@ -66,7 +66,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 new AntPathRequestMatcher("/api/login", "POST"),
-                                new AntPathRequestMatcher("/api/refresh", "GET")
+                                new AntPathRequestMatcher("/api/refresh", "GET"),
+                                // 수정필요!!!
+                                new AntPathRequestMatcher("/api/song/ai/presignedUrl", "GET"),
+                                new AntPathRequestMatcher("/api/song/studios/*/ai/save", "POST")
                         ).permitAll()
                         .anyRequest().authenticated()
                 )
@@ -90,6 +93,7 @@ public class SecurityConfig {
         configuration.addAllowedOrigin("http://localhost:3000");
         configuration.addAllowedOrigin("http://j12b105.p.ssafy.io"); // 허용할 도메인
         configuration.addAllowedOrigin("https://j12b105.p.ssafy.io");
+        configuration.addAllowedOrigin("http://musicgenb105.iptime.org:11111");
         configuration.addAllowedMethod("*"); // 모든 HTTP 메서드 허용
         configuration.addAllowedHeader("*"); // 모든 헤더 허용
         configuration.setAllowCredentials(true); // 쿠키 포함 허용
