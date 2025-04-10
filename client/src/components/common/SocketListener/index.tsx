@@ -1,6 +1,7 @@
 'use client';
 
 import { AISong } from '@/types/song';
+import { useQueryClient } from '@tanstack/react-query';
 import React, { useEffect } from 'react';
 
 type WebSocketEventMap = {
@@ -16,9 +17,13 @@ interface Props {
 }
 
 function SocketContext({ on, ws }: Props) {
+  const queryClient = useQueryClient();
   useEffect(() => {
     on('AI_COMPOSE_SUCCESS', () => {
       alert('작업이 끝났어요.\n작업실로 가서 만들어진 곡을 만나봐요!');
+      queryClient.invalidateQueries({
+        queryKey: ['previewSongList'],
+      });
       if (ws.current) {
         ws.current.close();
       }
