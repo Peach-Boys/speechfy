@@ -23,7 +23,7 @@ function Hamburger() {
   }
   useEffect(() => {
     setMounted(true);
-    isLogined.current = localStorage.getItem('speechfy') === 'true';
+    isLogined.current = sessionStorage.getItem('speechfy') === 'true';
   }, []);
 
   if (!mounted) return null;

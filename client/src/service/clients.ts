@@ -63,7 +63,7 @@ client.interceptors.response.use(
 
       isRefreshing = true;
       try {
-        localStorage.setItem('speechfy', 'true');
+        sessionStorage.setItem('speechfy', 'true');
         // GET /refresh 호출 (쿠키를 통해 새 토큰이 설정됨)
         await refreshToken();
         // 대기 중인 요청 재시도
@@ -72,7 +72,7 @@ client.interceptors.response.use(
       } catch (err) {
         // refresh 실패 시, 예를 들어 로그인 페이지로 리다이렉트 처리할 수 있음
         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
-        localStorage.removeItem('speechfy');
+        sessionStorage.removeItem('speechfy');
         window.location.href = '/';
         return Promise.reject(err);
       } finally {

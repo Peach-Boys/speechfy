@@ -11,7 +11,7 @@ export function useLogin() {
     mutationKey: ['logout'],
     onSuccess: () => {
       setIsLogin(false);
-      localStorage.removeItem('speechfy');
+      sessionStorage.removeItem('speechfy');
       navigation.push('/');
     },
     onError: () => {
