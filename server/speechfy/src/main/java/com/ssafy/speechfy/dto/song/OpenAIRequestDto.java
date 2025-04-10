@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OpenAIRequestDto {
+    private String model;
     private String prompt;
     private int n;
     private String size;

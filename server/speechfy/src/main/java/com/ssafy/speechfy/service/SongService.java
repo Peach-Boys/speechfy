@@ -199,11 +199,9 @@ public class SongService {
     }
 
     public SongShareResponseDto getSongShareById(int songId) {
-        System.out.println("반가워요");
         Song song = songRepository.findById(songId).orElseThrow(
                 () -> new NoSuchElementException("Song not found")
         );
-        System.out.println("이게 뭐임");
         URL songCloudFrontUrl = checkMalformedUrlException(song.getFilePath());
         URL imageCloudFrontUrl = checkMalformedUrlException(song.getImagePath());
 
@@ -282,7 +280,7 @@ public class SongService {
         RestTemplate restTemplate = new RestTemplate();
 
         // 요청 생성
-        OpenAIRequestDto request = new OpenAIRequestDto(prompt, 1, "512x512");
+        OpenAIRequestDto request = new OpenAIRequestDto("dall-e-3",prompt, 1, "1024x1024");
 
         // HTTP 헤더 설정
         HttpHeaders headers = new HttpHeaders();
