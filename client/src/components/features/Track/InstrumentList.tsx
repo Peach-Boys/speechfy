@@ -22,7 +22,7 @@ function InstrumentList({ instrument, setInstrument }: Props) {
         onClick={() => setInstrument('VIOLIN')}
         disabled={instrument === 'VIOLIN' ? true : false}
       >
-        <IconTrumpet />
+        <IconViolin />
       </button>
       <button
         className={clsx(
@@ -32,7 +32,7 @@ function InstrumentList({ instrument, setInstrument }: Props) {
         onClick={() => setInstrument('TRUMPET')}
         disabled={instrument === 'TRUMPET' ? true : false}
       >
-        <IconViolin />
+        <IconTrumpet />
       </button>
       {/* {instrumentId !== 2 && (
         <div

@@ -1,7 +1,6 @@
 'use client';
 
 import useWebSocket from '@/hooks/useWebSocket';
-import { useAuthStore } from '@/stores/useAuthStore';
 import { AISong } from '@/types/song';
 import { useEffect, useRef } from 'react';
 
@@ -10,11 +9,11 @@ type WebSocketEventMap = {
 };
 
 function SocketContext() {
-  const { isLogin } = useAuthStore();
   const { wsConnection, on, ws } = useWebSocket<WebSocketEventMap>();
   const connected = useRef<boolean>(false);
 
   useEffect(() => {
+    const isLogin = localStorage.getItem('speechfy');
     if (isLogin && !connected.current) {
       wsConnection();
       connected.current = true;

@@ -6,8 +6,9 @@ import useMergeAudio from '@/hooks/useMergeAudio';
 import { usePostPreviewSong } from '@/service/queries/usePostPreviewSong';
 import { useWorkRoomStore } from '@/stores/workroomStore';
 import { ITrack } from '@/types/track';
+import clsx from 'clsx';
 import { useParams } from 'next/navigation';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface Props {
   selectTag: (string | null)[];
@@ -16,11 +17,15 @@ interface Props {
 
 function AITab({ selectTag, setSelectTag }: Props) {
   const { workroom_id } = useParams();
+
+  const [isActive, setIsActive] = useState<boolean>(false);
+
   const { tracks } = useWorkRoomStore();
   const postMutation = usePostPreviewSong(workroom_id as string);
   const { mergeWavFiles } = useMergeAudio();
 
   async function handleCreateAISong() {
+    if (!isActive) return;
     const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
     const instruments: string[] = tracks.map(
       (tracks: ITrack) => tracks.instrumentName
@@ -35,6 +40,11 @@ function AITab({ selectTag, setSelectTag }: Props) {
     });
   }
 
+  useEffect(() => {
+    const isFilled = selectTag.every((tag) => typeof tag === 'string');
+    setIsActive(isFilled);
+  }, [selectTag]);
+
   return (
     <div className='w-full h-full min-h-4/5 max-h-5/6 p-5 flex flex-col items-center gap-3'>
       <div className='text-sm h-fit'>
@@ -46,10 +56,15 @@ function AITab({ selectTag, setSelectTag }: Props) {
       <TagField select={selectTag} setSelect={setSelectTag} />
       <div className='w-full h-fit'>
         <button
-          className='w-full h-fit py-3 mb-5 rounded-[10px] bg-gray-600 cursor-pointer'
+          className={clsx(
+            'w-full h-fit py-3 mb-5 rounded-[10px]',
+            isActive
+              ? 'bg-jihyegra  cursor-pointer'
+              : 'bg-gray-500 cursor-not-allowed'
+          )}
           onClick={handleCreateAISong}
         >
-          AI 추천 받기 (임시 버튼)
+          AI로 노래 완성하기
         </button>
       </div>
       <PreviewSongList />
