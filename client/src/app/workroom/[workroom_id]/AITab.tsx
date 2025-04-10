@@ -34,6 +34,10 @@ function AITab({ selectTag, setSelectTag }: Props) {
 
   async function handleCreateAISong() {
     if (!isActive) return;
+    if (ws.current) {
+      alert('먼저 만들고 있는 노래가 있어요.\n 잠시만 기다려주세요!');
+      return;
+    }
 
     wsConnection();
     const fileUrls: string[] = tracks.map((track: ITrack) => track.trackUrl);
