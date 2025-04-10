@@ -4,7 +4,6 @@ import Background from '@/components/common/Background';
 import PlayBar from '@/components/common/PlayBar';
 import { useAudioPlayBar } from '@/hooks/useAudioPlayBar';
 import { IShareSong } from '@/types/song';
-import Image from 'next/image';
 import WavePlay from '../Track/WavePlay';
 
 interface Props {
@@ -45,14 +44,11 @@ function SharePlayer({ song }: Props) {
         <div className='w-full h-full p-5 flex flex-col items-center gap-10'>
           <div className='max-w-screen-sm w-full p-5 flex flex-col items-center gap-6'>
             <div className='relative w-full aspect-[1/1] max-w-100 max-h-100 shadow-lg'>
-              <Image
+              <img
                 src={imageUrl}
                 alt='이미지'
-                className='rounded-[10px]'
-                fill
-                sizes='(max-width: 768px) 90vw, (max-width: 1024px) 60vw, 400px'
+                className='w-full rounded-[10px]'
                 style={{ objectFit: 'cover' }}
-                priority
               />
             </div>
             <h1 className='text-4xl'>{song.songName}</h1>

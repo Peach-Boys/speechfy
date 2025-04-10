@@ -53,7 +53,9 @@ function GenerateImage({
 
       <div className='w-full flex flex-col items-center bg-gray-900 rounded-[10px] text-m'>
         {isPending ? (
-          <Spinner />
+          <div className='w-full h-[328px]'>
+            <Spinner />
+          </div>
         ) : imgSrc === '' ? (
           <div className='py-30 flex flex-col items-center justify-center gap-2'>
             <span>제목을 입력하고 버튼을 누르면</span>

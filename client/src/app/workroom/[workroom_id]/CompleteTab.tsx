@@ -50,9 +50,6 @@ function CompleteTab({ workroomId, selectTags }: Props) {
 
     const mergeFile = await mergeWavFiles(files);
 
-    console.log('instruwes:', instruments);
-    console.log('fileS:', files);
-
     mutation.mutate({
       workroomId,
       selectSong: selectSong?.signedUrl,
