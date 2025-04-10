@@ -72,6 +72,7 @@ client.interceptors.response.use(
       } catch (err) {
         // refresh 실패 시, 예를 들어 로그인 페이지로 리다이렉트 처리할 수 있음
         alert('세션이 만료되었습니다. 다시 로그인해주세요.');
+        localStorage.removeItem('speechfy');
         window.location.href = '/';
         return Promise.reject(err);
       } finally {

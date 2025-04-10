@@ -19,9 +19,10 @@ function Recording({ isRecording, stopRecording, startRecording }: Props) {
   }
 
   function handleStartRecording() {
+    const time = 60000 / 125;
     setTimeout(async () => {
       await startRecording();
-    }, 4000);
+    }, time);
   }
 
   return (
