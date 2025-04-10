@@ -1,4 +1,4 @@
-# SPEACHFY
+# SPEECHFY
 
 > 내 목소리로 여러 악기들을 연주하고 음악 자동완성을 통해 쉬운 작곡을 제공하는 서비스
 
@@ -114,36 +114,47 @@ SPEECHFY는 음성 기반으로 작곡을 할 수 있도록 도와주는 인공�
 
 ### **프론트엔드**
 
--
+- NextJS 15.2.2
+- ReactJS 19.0.
+- TailwindCSS 4
+- TypeScript 5
+- Zustand 5.0.3
+- React-Query 5.69.0
+- MSW 2.7.3
+- TensorflowJS 2.7.0
 
 ### **백엔드**
 
-- Spring Boot 3.3.7, Oracle Open JDK 17
-- Spring Data JPA, Spring Security 6.4.2
-- MySQL 8.0.41
--
+- Spring Boot 3.4.3
+- MySQL 8.0.33
+- Spring Data JPA
+- FastAPI
+- EC2
+- S3
+- CloudFront
+- Docker
+- Jenkins
+- Nginx
 
 ### **AI 기술**
 
 - DDSP
 - MAGENTA
--
-
-### **CI/CD 및 서버**
-
--
+- MusicVAE
 
 &nbsp;
 
 # 3. 서비스 화면
 
-<img src="/" width="100%">
+<img src="./assets/StudioPage.png" width="100%">
+<img src="./assets/SongPage.png" width="100%">
+<img src="./assets/TrackPage.png" width="100%">
 
 &nbsp;
 
 # 4. 개발 환경
 
-<img src="/" width="100%">
+<img src="./assets/Architecture.png" width="100%">
 
 # 5. 기술 특이점
 
@@ -191,19 +202,11 @@ TensorFlow.js를 활용해 클라이언트 브라우저에서 직접 연산되�
 
 &nbsp;
 
-## 📡 외부 서비스
-
-### **카카오 API**
-
-- 소셜 로그인
-
-### **AWS S3**
-
-- 파일 저장 및 관리
-
 # 6. 기획 및 설계 산출물
 
 ### 요구사항 명세서
+
+https://www.notion.so/1b2aeb5043cd808894dfc5f5a37bd2cb?pvs=25
 
 ### 와이어프레임
 
@@ -214,6 +217,8 @@ https://www.figma.com/design/tkHgoXYqvnjhWHutcCX9OX/SPEECHFY?node-id=110-1923&p=
 https://www.erdcloud.com/d/ehpySmpdqhvmuiFdQ
 
 ### API 명세서
+
+https://www.notion.so/API-1b9aeb5043cd8082bda5f5a431fb8040?pvs=25
 
 &nbsp;
 
