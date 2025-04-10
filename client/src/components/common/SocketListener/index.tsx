@@ -12,14 +12,12 @@ function SocketContext() {
   const { on, ws } = useWebSocket<WebSocketEventMap>();
 
   useEffect(() => {
-    const isLogin = localStorage.getItem('speechfy');
     on('AI_COMPOSE_SUCCESS', () => {
       alert('작업이 끝났어요.\n작업실로 가서 만들어진 곡을 만나봐요!');
+      if (ws.current) {
+        ws.current.close();
+      }
     });
-
-    if (!isLogin && ws.current) {
-      ws.current.close();
-    }
   }, []);
 
   return <></>;
