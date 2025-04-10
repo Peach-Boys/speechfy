@@ -67,6 +67,7 @@ public class SecurityConfig {
                         .requestMatchers(
                                 new AntPathRequestMatcher("/api/login", "POST"),
                                 new AntPathRequestMatcher("/api/refresh", "GET"),
+                                new AntPathRequestMatcher("/api/song/share/*", "GET"),
                                 // 수정필요!!!
                                 new AntPathRequestMatcher("/api/song/ai/presignedUrl", "GET"),
                                 new AntPathRequestMatcher("/api/song/studios/*/ai/save", "POST")
