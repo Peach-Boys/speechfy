@@ -262,7 +262,7 @@ public class SongService {
         String title = createDto.getTitle();
         String prompt = "A stunning album cover for a " + genre + " music album, evoking a " + mood + " atmosphere. The title '" + title + "' is featured in a stylish font. The artwork is visually captivating, with a blend of cinematic lighting, rich colors, and artistic composition.";
         // 이미지 생성
-        String imageUrl = generateImage(prompt);
+        // String imageUrl = generateImage(prompt);
         // String objectKey = "images/" + UUID.randomUUID();
         // 이미지 S3에 업로드
         // s3Service.uploadImageFromUrl(imageUrl, objectKey);
