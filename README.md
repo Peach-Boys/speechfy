@@ -35,7 +35,7 @@
         <td height="140px" align="center"> <a href="/">
             <img src="/" width="140px" /> <br><br> 강성엽 <br>(Front-end) </a> <br></td>
         <td height="140px" align="center"> <a href="/">
-            <img src="/" width="140px" /> <br><br> 정윤선 <br>(Back-end, AI) </a> <br></td>
+            <img src="https://avatars.githubusercontent.com/u/79686751?v=4" width="140px" /> <br><br> 정윤선 <br>(Back-end, AI) </a> <br></td>
         <td height="140px" align="center"> <a href="/">
             <img src="/" width="140px" /> <br><br> 고대권 <br>(Back-end) </a> <br></td>
         <td height="140px" align="center"> <a href="/">
@@ -141,6 +141,7 @@ SPEECHFY는 음성 기반으로 작곡을 할 수 있도록 도와주는 인공�
 - DDSP
 - MAGENTA
 - MusicVAE
+- MusicGen
 
 &nbsp;
 
