@@ -30,31 +30,23 @@
 
 <table>
     <tr>
-        <td height="140px" align="center"> <a href="/">
-            <img src="/" width="140px" /> <br><br> 이해루 <br>(Team Leader, Front-end, AI) </a> <br></td>
-        <td height="140px" align="center"> <a href="/">
-            <img src="/" width="140px" /> <br><br> 강성엽 <br>(Front-end) </a> <br></td>
-        <td height="140px" align="center"> <a href="/">
-            <img src="https://avatars.githubusercontent.com/u/79686751?v=4" width="140px" /> <br><br> 정윤선 <br>(Back-end, AI) </a> <br></td>
-        <td height="140px" align="center"> <a href="/">
-            <img src="/" width="140px" /> <br><br> 고대권 <br>(Back-end) </a> <br></td>
-        <td height="140px" align="center"> <a href="/">
-            <img src="/" width="140px" /> <br><br> 정진용 <br>(Back-end) </a> <br></td>
-        <td height="140px" align="center"> <a href="/">
-            <img src="/" width="140px" /> <br><br> 지수인 <br>(Back-end, Infra) </a> <br></td>
-    </tr>
-    <tr>
-        <td>
+        <td height="140px" align="center">
+            이해루 <br>(Team Leader, Front-end, AI)
         </td>
-        <td>
+        <td height="140px" align="center">
+            강성엽 <br>(Front-end)
         </td>
-        <td>
+        <td height="140px" align="center">
+            정윤선 <br>(Back-end, AI)
         </td>
-        <td>
+        <td height="140px" align="center">
+            고대권 <br>(Back-end)
         </td>
-        <td>
+        <td height="140px" align="center">
+            정진용 <br>(Back-end)
         </td>
-        <td>
+        <td height="140px" align="center">
+            지수인 <br>(Back-end, Infra)
         </td>
     </tr>
 </table>
